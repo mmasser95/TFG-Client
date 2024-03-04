@@ -1,28 +1,29 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
+    <ion-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col>
+            <h1 class="ion-text-center">Too Good To Go</h1>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12" sizeMd="6"><p>Aquesta serà una app per al reaprofitament d'aliments i begudes</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique cupiditate, consequatur consequuntur in corrupti reiciendis sunt ipsa adipisci cum totam, ducimus deleniti minus ab explicabo molestiae laborum praesentium quas quis.</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
+      
   </ion-page>
 </template>
 
 <script setup lang="js">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCol, IonRow, IonGrid } from '@ionic/vue';
 </script>
 
 <style scoped>

@@ -3,22 +3,26 @@
     <ion-page>
       <ion-tabs>
         <ion-router-outlet />
-	<ion-tab-bar slot="bottom">
+	      <ion-tab-bar slot="bottom">
           <ion-tab-button tab="home" href="/home">
-            <ion-icon :icon="playCircle" />
-            <ion-label>Listen now</ion-label>
+            <ion-icon :icon="home" />
+            <ion-label>Home</ion-label>
           </ion-tab-button>
-          <ion-tab-button tab="radio" href="/radio">
-            <ion-icon :icon="radio" />
-            <ion-label>Radio</ion-label>
+          <ion-tab-button tab="mapa" href="/mapa">
+            <ion-icon :icon="map" />
+            <ion-label>Map</ion-label>
           </ion-tab-button>
-          <ion-tab-button tab="library" href="/library">
-            <ion-icon :icon="library" />
-	    <ion-label>Library</ion-label>
-	  </ion-tab-button>
           <ion-tab-button tab="search" href="/search">
             <ion-icon :icon="search" />
-            <ion-label>Search</ion-label>
+	          <ion-label>Cercar</ion-label>
+	        </ion-tab-button>
+          <ion-tab-button v-if="logged" tab="settings" href="/settings">
+            <ion-icon :icon="person" />
+            <ion-label>Jo</ion-label>
+          </ion-tab-button>
+          <ion-tab-button v-if="!logged" tab="login" href="/login">
+            <ion-icon :icon="logIn" />
+            <ion-label>Login</ion-label>
           </ion-tab-button>
         </ion-tab-bar>
       </ion-tabs>
@@ -28,15 +32,17 @@
 
 <script lang="js">
 import { IonApp, IonRouterOutlet, IonPage, IonTabs, IonTabBar, IonTabButton, IonLabel, IonIcon } from '@ionic/vue';
-import { playCircle, radio, library, search } from 'ionicons/icons';
+import { home, map,person, search, logIn } from 'ionicons/icons';
 
 export default{
 	components:{IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon,IonApp},
 	data(){
 		return {
-			playCircle,
-			radio,
-			library,
+      logged:false,
+      logIn,
+			home,
+			person,
+			map,
 			search
 		}
 	},
