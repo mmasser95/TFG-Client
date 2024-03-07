@@ -49,14 +49,14 @@
                                 </ion-input>
                             </ion-item>
                             <ion-item>
-                                <ion-label position="floating">Contrassenya</ion-label>
+                                <ion-label position="floating">Contrasenya</ion-label>
                                 <ion-input 
                                     type="password"
                                     v-model="form.contrassenya">
                                 </ion-input>
                             </ion-item>
                             <ion-item>
-                                <ion-label position="floating">Repeteix la contrassenya</ion-label>
+                                <ion-label position="floating">Repeteix la contrasenya</ion-label>
                                 <ion-input 
                                     type="password"
                                     v-model="form.contrassenya2">
