@@ -5,7 +5,7 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col>
-                        <h1 class="ion-text-center">El meu perfil</h1>
+                        <h1 class="ion-text-center">El meu perfil {{ loginStore.user_id }}</h1>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -30,10 +30,14 @@
 <script lang="js">
 import { IonPage, IonList, IonItem, IonLabel, IonIcon, IonButton, IonContent, IonCol, IonRow,IonGrid} from '@ionic/vue';
 import { person, storefront, documentText, settings, helpCircle,briefcase, newspaper} from 'ionicons/icons';
-
+import {mapStores, mapState} from 'pinia';
+import {useStore} from '../stores';
 export default {
     components:{IonPage, IonList,IonItem,IonLabel,IonIcon, IonButton, IonContent, IonCol, IonRow, IonGrid},
-    
+    computed:{
+        ...mapStores(useStore),
+        ...mapState(useStore,['getUser_id','getLogged']),
+    },
     data(){
         return{
             person,
@@ -74,6 +78,12 @@ export default {
                     to:"/news"
                 }
             ]
+        }
+    },
+    mounted(){
+        console.log(this.getLogged);
+        if(!this.getLogged){
+            this.$router.push('/login');
         }
     }
 }

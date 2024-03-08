@@ -10,7 +10,7 @@
     </ion-card>
 </template>
 <script>
-    import {IonCard, IonCardTitle, IonCardSubtitle, IonCardHeader, IonCardContent} from '@ionic/vue';
+    import {IonCard, IonCardTitle, IonCardSubtitle, IonCardHeader, IonCardContent, IonButton} from '@ionic/vue';
     export default {
         components:{
             IonCard,
@@ -18,6 +18,7 @@
             IonCardSubtitle,
             IonCardHeader,
             IonCardContent,
+            IonButton
         },
         props:['title','subtitle','content', 'imageURL'],
         name:'MyCard'
@@ -27,6 +28,6 @@
 <style>
     img{
         width: 100%;
-        height: 100px;
+        height: 150px;
     }
 </style>

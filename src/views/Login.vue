@@ -54,8 +54,14 @@
 </template>
 <script>
     import {IonPage, IonContent, IonGrid, IonRow, IonCol, IonItem, IonList, IonButton, IonInput, IonLabel} from '@ionic/vue';
+    import {mapStores,mapState,mapActions} from 'pinia'
+    import {useStore} from '../stores';
     export default{
         components:{IonPage, IonContent,IonGrid, IonRow, IonCol, IonItem, IonList, IonButton, IonInput, IonLabel},
+        computed:{
+            ...mapStores(useStore),
+            ...mapState(useStore,['getUser_id','getToken']),
+        },
         data(){
             return{
                 email:'',
@@ -63,8 +69,10 @@
             }
         },
         methods:{
+            ...mapActions(useStore,['set_user_id','set_token','set_logged']),
             login(){
-                console.log(this.email,this.password);
+                this.set_user_id(this.loginStore,this.email);
+                this.set_logged(this.loginStore,true);
                 this.$router.push('/settings');
             }
         }

@@ -16,11 +16,11 @@
             <ion-icon :icon="search" />
 	          <ion-label>Cercar</ion-label>
 	        </ion-tab-button>
-          <ion-tab-button v-if="logged" tab="settings" href="/settings">
+          <ion-tab-button v-if="loginStore.logged" tab="settings" href="/settings">
             <ion-icon :icon="person" />
             <ion-label>Jo</ion-label>
           </ion-tab-button>
-          <ion-tab-button v-if="!logged" tab="login" href="/login">
+          <ion-tab-button v-if="!loginStore.logged" tab="login" href="/login">
             <ion-icon :icon="logIn" />
             <ion-label>Login</ion-label>
           </ion-tab-button>
@@ -33,9 +33,13 @@
 <script lang="js">
 import { IonApp, IonRouterOutlet, IonPage, IonTabs, IonTabBar, IonTabButton, IonLabel, IonIcon } from '@ionic/vue';
 import { home, map,person, search, logIn } from 'ionicons/icons';
-
+import {mapStores, mapState,mapActions} from 'pinia';
+import {useStore} from './stores';
 export default{
 	components:{IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon,IonApp},
+  computed:{
+        ...mapStores(useStore),
+    },
 	data(){
 		return {
       logged:false,
@@ -46,5 +50,8 @@ export default{
 			search
 		}
 	},
+  methods:{
+    ...mapActions(useStore,['set_user_id','set_token']),
+  }
 }
 </script>
