@@ -20,7 +20,7 @@
           <ion-col></ion-col>
           <ion-col size="12" sizeMd="6">
             <swiper
-            :slides-per-view="3"
+            :slides-per-view="1"
             :freemode="true"
             :space-between="5">
               <swiper-slide><MyCard imageURL="https://ionicframework.com/docs/img/demos/card-media.png" title="Hola Carta1" subtitle="Prova" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus excepturi enim voluptatum provident minima cumque laboriosam ducimus. Tempore labore delectus ratione, distinctio vel blanditiis sint temporibus amet culpa nulla quis."/></swiper-slide>
