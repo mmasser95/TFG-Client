@@ -1,7 +1,0 @@
-{
-  "name": "TFG-Client",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue-vite"
-}
