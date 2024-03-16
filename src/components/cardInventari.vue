@@ -9,7 +9,7 @@
             </ion-text>
         </ion-card-content>
 
-        <ion-button :router-link="`/inventari/${idd}`">Entrar</ion-button>
+        <ion-button :router-link="`/rebost/${idd}`">Entrar</ion-button>
         <ion-button :router-link="`/admin/inventari/${idd}`">Gestionar</ion-button>
     </ion-card>
 </template>

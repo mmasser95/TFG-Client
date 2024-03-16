@@ -41,15 +41,19 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonLabel, IonRow, IonCol, IonList, IonItem, IonInput, IonButton, IonText } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonLabel, IonRow, IonCol, IonList, IonItem, IonInput, IonButton, IonText, alertController } from '@ionic/vue';
+
 import { useLoginStore } from '../store/loginStore';
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, computed } from 'vue';
-import { doLogin } from '../APIService/index';
+import { doLogin,doTest } from '../APIService/index';
 
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength } from '@vuelidate/validators'
+
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 //Store
 const store = useLoginStore();
 const { userId, token } = storeToRefs(store);
@@ -83,15 +87,37 @@ const rules = {
 
 const v$ = useVuelidate(rules, state);
 
+const presentAlert = async (prompt:string)=>{
+  const alert = await alertController.create({
+    header:'Missatge del sistema',
+    message:prompt,
+    buttons:['Exit']
+  })
+  await alert.present()
+}
+
 const login = async () => {
-  const valid = await v$.value.$validate();
+  // const valid = await v$.value.$validate();
+  const valid=true
+  doTest().then((result) => {
+    presentAlert(result.data)
+  }).catch((err) => {
+    presentAlert(err)
+  });
   if (valid) {
     doLogin(state.email, state.password).then(res => {
-      setToken(res.data.token);
-      setUserId(res.data.user_id)
-      loginError.value = '';
+      if(res.status==200){
+        setToken(res.data.token);
+        setUserId(res.data.user_id)
+        loginError.value = '';
+        router.push('/tabs/tab3');
+      }else{
+        loginError.value=res.data.message
+        presentAlert(res.data.message)
+      }
     }).catch((err) => {
       loginError.value=err.response.data.message
+      presentAlert(err.response.data.message)
     })
   }
 }

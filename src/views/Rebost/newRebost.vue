@@ -1,56 +1,63 @@
 <template>
-    <ion-page>
-        <ion-content>
-            <ion-grid>
-                <ion-row>
-                    <ion-col></ion-col>
-                    <ion-col>
-                        <ion-title class="ion-text-center"></ion-title>
-                    </ion-col>
-                    <ion-col></ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col></ion-col>
-                    <ion-col size="12" sizeXl="8">
-                        <ion-list>
-                            <ion-item>
-                                <ion-input v-model="state.name"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-button>Creat</ion-button>
-                            </ion-item>
-                        </ion-list>
-                    </ion-col>
-                    <ion-col></ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-content>
-    </ion-page>
+    <ion-content>
+        <ion-modal ref="modal" trigger="open-modal">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-button @click="cancel()">Cancel</ion-button>
+                    </ion-buttons>
+                    <ion-title class="ion-text-center">Nou Rebost</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button :strong="true" @click="confirm()">Confirma</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-item>
+                    <ion-input type="text" label="Nom" labelPlacement="floating" v-model="state.nom"></ion-input>
+                </ion-item>
+            </ion-content>
+        </ion-modal>
+    </ion-content>
 </template>
 <script setup lang="ts">
-import { IonContent, IonPage, IonGrid, IonRow, IonCol, IonList, IonItem, IonIcon, IonTitle, IonText, IonButton, IonInput } from '@ionic/vue';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonModal, IonButtons, IonItem, IonInput } from '@ionic/vue';
 import { newRebost } from '../../APIService/';
 import { ref, reactive, computed, onMounted, defineProps } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, maxLength, minLength } from '@vuelidate/validators'
-import {storeToRefs} from 'pinia'
+import { storeToRefs } from 'pinia'
 import { useLoginStore } from '../../store/loginStore';
 
+const cancel = () => {
+    modal.value.$el.dismiss(null, 'cancel');
+};
+
+
+const modal = ref();
+
+
 const state = reactive({
-    name: '',
-    userId: ''
+    nom: ''
 });
 
 const store = useLoginStore();
-const {userId,token}=storeToRefs(store);
+const { userId, token } = storeToRefs(store);
 
+const confirm = () => { 
+    newRebost(state).then(
+        (res) => {
+            modal.value.$el.dismiss(null, 'cancel');
+            console.log(res);
+        }
+    ).catch(
+        (err) => {
+            console.log(err);
+        }
+    );
+};
 const rules = {
-    name: {
-        required,
-        minLength: minLength(3),
-        maxLength: maxLength(20)
-    },
-    userId: {
+    nom: {
         required,
         minLength: minLength(3),
         maxLength: maxLength(20)
@@ -59,13 +66,7 @@ const rules = {
 
 const v$ = useVuelidate(rules, state);
 
-onMounted(() => {
-    state.userId=userId.value;
-});
 
-const createRebost = () => {
-    newRebost(state).then().catch();
-};
 
 </script>
 <style></style>
