@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content>
+    <ion-content :fullscreen="true" class="ion-padding">
       <ion-grid>
         <ion-row>
           <ion-col></ion-col>

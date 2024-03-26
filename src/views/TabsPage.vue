@@ -21,9 +21,9 @@
           <ion-icon aria-hidden="true" :icon="logIn"></ion-icon>
           <ion-label>Log In</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="tab5" href="/rebost/524656">
+        <ion-tab-button tab="tab5" href="/establiments">
           <ion-icon aria-hidden="true" :icon="golf"></ion-icon>
-          <ion-label>Prova</ion-label>
+          <ion-label>Establiments</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>

@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { CapacitorHttp } from '@capacitor/core';
 import { useLoginStore } from '../store/loginStore';
-const base_url = 'http://192.168.1.10:5000/api/v1';
+//const base_url = 'http://192.168.1.10:5000/api/v1';
+const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
 
 
 const instance = axios.create({
   baseURL: base_url,
   timeout: 10000,
+  headers:{
+    "ngrok-skip-browser-warning": "69420"
+  }
 });
 
 const getHeaders = () => {
@@ -22,13 +26,13 @@ export function doTest() {
 }
 
 export function doLogin(email: string, pass: string) {
-  return axios.post(base_url + '/login', { email, pass });
+  return axios.post(base_url + '/login', { correu:email, contrasenya:pass });
   
 }
 
 export function dosignIn(data: any) {
   // return axios.post(base_url + '/signin', data);
-  return axios.post(base_url+'/signin',data)
+  return axios.post(base_url+'/signup',data)
 }
 //Establiments
 export function getEstabliments() {
@@ -39,16 +43,16 @@ export function getEstabliment(id_establiment: any) {
   return instance.get(`/establiments/${id_establiment}`);
 }
 
-export function createEstabliment(data: any) {
-  return instance.post('/establiments', data);
+export function crearEstabliment(data: any) {
+  return instance.post('/establiments', data, getHeaders());
 }
 
 export function updateEstabliment(id_establiment: any, data: any) {
-  return instance.put(`/establiments/${id_establiment}`, data);
+  return instance.put(`/establiments/${id_establiment}`, data, getHeaders());
 }
 
 export function deleteEstabliment(id_establiment: any) {
-  return instance.delete(`/establiments/${id_establiment}`);
+  return instance.delete(`/establiments/${id_establiment}`,getHeaders());
 }
 
 //Rebosts
@@ -60,7 +64,7 @@ export function getRebost(id_rebost: string) {
   return instance.get(`/rebosts/${id_rebost}`, getHeaders());
 }
 
-export function newRebost(data: any) {
+export function crearRebost(data: any) {
   return instance.post(`/rebosts`, data, getHeaders());
 }
 
@@ -82,14 +86,19 @@ export function getOferta(id_oferta: any) {
   return instance.get(`/ofertes/${id_oferta}`);
 }
 
-export function newOferta(data: any) {
-  return instance.post(`/ofertes`, data);
+export function crearOferta(data: any) {
+  return instance.post(`/ofertes`, data, getHeaders());
 }
 
 export function updateOferta(id_oferta: any, data: any) {
-  return instance.put(`/ofertes/${id_oferta}`, data);
+  return instance.put(`/ofertes/${id_oferta}`, data, getHeaders());
 }
 
 export function deleteOferta(id_oferta: any) {
-  return instance.delete(`/ofertes/${id_oferta}`);
+  return instance.delete(`/ofertes/${id_oferta}`, getHeaders());
+}
+
+
+export function getArticleCategories(){
+  return instance.get(`/articles/tipus`);
 }

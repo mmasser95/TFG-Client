@@ -15,3 +15,10 @@ useBackButton(-1, ()=>{
   }
 })
 </script>
+
+<style>
+ion-fab{
+    bottom:25px;
+    right:25px;
+}
+</style>

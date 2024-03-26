@@ -13,8 +13,9 @@
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="8">
             <swiper>
-              <swiper-slide v-for="(i,k) in rebosts">
-                <cardInventari :title="i.nom" :idd="i._id"/>
+              <swiper-slide v-for="(i, k) in rebosts">
+                <cardInventari :title="i.nom" :idd="i._id" @updateRebost="openModalUpdate"
+                  @deleteRebost="fillRebosts" />
               </swiper-slide>
             </swiper>
           </ion-col>
@@ -22,9 +23,8 @@
         </ion-row>
       </ion-grid>
     </ion-content>
-    <newRebost />
     <ion-fab slot="fixed" vertical="bottom" horitzontal="end">
-      <ion-fab-button id="open-modal">
+      <ion-fab-button @click="openModalCreate">
         <ion-icon :icon="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
@@ -32,33 +32,78 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonFab, IonFabButton, IonIcon } from '@ionic/vue';
+import { IonPage, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonFab, IonFabButton, IonIcon, modalController } from '@ionic/vue';
 import { onMounted, ref, reactive, onBeforeUpdate, computed } from 'vue';
-import type {Ref} from 'vue'
+import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { add } from 'ionicons/icons'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import cardInventari from '../components/cardInventari.vue'
-import { getRebosts } from '../APIService'
+import { getRebosts, crearRebost, updateRebost } from '../APIService'
 import 'swiper/css'
 import newRebost from './Rebost/newRebost.vue';
 import { useLoginStore } from '../store/loginStore'
-import { useRouter } from 'vue-router';
 
-interface Rebost{
-  _id:string,
-  nom:string
+interface Rebost {
+  _id: string,
+  nom: string
 }
-const rebosts: Ref<Rebost[]|undefined>=ref([]);
-const { token } = storeToRefs(useLoginStore());
 
-onMounted(() => {
+const rebosts: Ref<Rebost[] | undefined> = ref([]);
+
+const fillRebosts = () => {
   getRebosts().then((res) => {
-    console.log(res.data.rebosts)
     rebosts.value = res.data.rebosts;
   }).catch((err) => {
     console.log(err.response.data.message);
   })
+}
+
+const openModalUpdate = async (rebostId: any) => {
+  const modal = await modalController.create({
+    component: newRebost,
+    componentProps: {
+      update: rebostId
+    }
+  })
+
+  modal.present();
+
+  const { data, role } = await modal.onWillDismiss();
+  if (role == 'confirm') {
+    console.log(data)
+    updateRebost(rebostId, {nom:data})
+      .then((result) => {
+        fillRebosts()
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }
+}
+
+const openModalCreate = async () => {
+  const modal = await modalController.create({
+    component: newRebost,
+    componentProps: { update: '' }
+  })
+
+  modal.present();
+
+  const { data, role } = await modal.onWillDismiss();
+  if (role == 'confirm') {
+    crearRebost({ nom: data })
+      .then((res) => {
+        fillRebosts();
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }
+}
+
+onMounted(() => {
+  fillRebosts();
 })
 
 
