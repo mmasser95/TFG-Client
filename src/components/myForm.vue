@@ -15,7 +15,7 @@ const emit = defineEmits(['onMySubmit'])
 const props = defineProps(['schema'])
 const schema = ref(props.schema)
 const state = computed(() => schema.value.state)
-const names = computed(() => state.value.map(item => item.name))
+const names = computed(() => state.value.map((item: any) => item.name))
 const myFormSubmit = () => {
     emit('onMySubmit', schema.value)
 }

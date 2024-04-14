@@ -20,7 +20,7 @@ import { IonText, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButto
 import { defineProps } from 'vue';
 import { deleteRebost } from '@/APIService';
 
-const emit=defineEmits(['updateRebost','deleteRebost'])
+const emit = defineEmits(['updateRebost', 'deleteRebost'])
 
 const props = defineProps({
     title: String,
@@ -28,16 +28,19 @@ const props = defineProps({
     idd: String
 })
 
-const mostrarAlerta = async (missatge:string) => {
-    const alert=await alertController.create({
-        header:'Missatge del sistema',
+const mostrarAlerta = async (missatge: string) => {
+    const alert = await alertController.create({
+        header: 'Missatge del sistema',
         message: missatge,
-        buttons:['Sortir']
+        buttons: ['Ok']
     })
+
     await alert.present();
 }
 
-const updateInventari=()=>{
+
+
+const updateInventari = () => {
     emit('updateRebost', props.idd)
 }
 
@@ -45,7 +48,7 @@ const borrarInventari = (inventariId: any) => {
     deleteRebost(inventariId)
         .then((result) => {
             mostrarAlerta(`L'inventari s'ha esborrat correctament`)
-            emit('deleteRebost',null)
+            emit('deleteRebost', null)
         })
         .catch((err) => {
             mostrarAlerta(`Hi hagut un error esborrant l'inventari amb id ${inventariId}`)

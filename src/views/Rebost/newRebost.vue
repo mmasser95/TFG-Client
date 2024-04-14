@@ -12,9 +12,12 @@
         </ion-toolbar>
     </ion-header>
     <ion-content>
-        <ion-item>
-            <ion-input type="text" label="Nom" labelPlacement="floating" v-model="state.nom"></ion-input>
-        </ion-item>
+        <form action="" @submit.prevent="confirm">
+            <ion-item>
+                <ion-input type="text" label="Nom" labelPlacement="floating" v-model="state.nom"></ion-input>
+            </ion-item>
+            <ion-button class="ion-hide" type="submit"></ion-button>
+        </form>
     </ion-content>
 </template>
 <script setup lang="ts">

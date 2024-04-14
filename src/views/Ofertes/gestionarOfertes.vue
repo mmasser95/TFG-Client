@@ -1,43 +1,38 @@
 <template>
-<ion-page>
-    <ion-content>
-        <ion-grid>
-            <ion-row>
-                <ion-col></ion-col>
-                <ion-col size="12" sizeXl="8">
-                    <ion-title class="ion-text-center">Gestionar Ofertes publicades per {{ establimentId }}</ion-title>
-                </ion-col>
-                <ion-col></ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col></ion-col>
-                <ion-col>
-                    <ion-list>
-                        <ion-item v-for="(oferta, k) in ofertes" :key="k">
-                            <ion-card>
-                                <ion-card-header>
-                                    <ion-card-title>{{ oferta._id }}</ion-card-title>
-                                </ion-card-header>
-                                <ion-card-content>
-                                    {{ oferta.descripcio }}
-                                </ion-card-content>
-                                <ion-button>Entrar</ion-button>
-                                <ion-button color="success" @click="openModalUpdate(oferta._id)">Editar</ion-button>
-                                <ion-button color="danger" @click="eliminarOferta(oferta._id)">Eliminar</ion-button>
-                            </ion-card>
-                        </ion-item>
-                    </ion-list>
-                </ion-col>
-                <ion-col></ion-col>
-            </ion-row>
-        </ion-grid>
-        <ion-fab slot="fixed" vertical="bottom" horitzontal="start">
-            <ion-fab-button @click="openModalCreate">
-                <ion-icon :icon="add"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
-    </ion-content>
-</ion-page>
+    <ion-page>
+        <ion-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col size="12" sizeXl="8">
+                        <ion-title class="ion-text-center">Gestionar Ofertes publicades per {{ userId }}</ion-title>
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col>
+                        <ion-card v-for="(oferta, k) in ofertes" :key="k">
+                            <ion-card-header>
+                                <ion-card-title>{{ oferta.nom }}</ion-card-title>
+                            </ion-card-header>
+                            <ion-card-content>
+                                {{ oferta.descripcio }}
+                            </ion-card-content>
+                            <ion-button color="secondary" @click="openModalUpdate(oferta._id)">Editar</ion-button>
+                            <ion-button color="danger" @click="eliminarOferta(oferta._id)">Eliminar</ion-button>
+                        </ion-card>
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+            </ion-grid>
+            <ion-fab slot="fixed" vertical="bottom" horitzontal="start">
+                <ion-fab-button @click="openModalCreate">
+                    <ion-icon :icon="add"></ion-icon>
+                </ion-fab-button>
+            </ion-fab>
+        </ion-content>
+    </ion-page>
 </template>
 <script setup lang="ts">
 import {
@@ -67,9 +62,12 @@ import { add } from 'ionicons/icons'
 import { crearOferta, deleteOferta, getOfertes, updateOferta } from '../../APIService';
 import { Ref, ref } from 'vue';
 import newOferta from './newOferta.vue';
-const props=defineProps({
-    establimentId:String
-})
+import { useLoginStore } from '../../store/loginStore';
+import { storeToRefs } from 'pinia';
+
+const store = useLoginStore()
+const { userId } = storeToRefs(store)
+
 const presentAlert = async (prompt: string) => {
     const alert = await alertController.create({
         header: 'Missatge del sistema',
@@ -81,7 +79,7 @@ const presentAlert = async (prompt: string) => {
 
 interface Oferta {
     _id: string,
-    establiment: string,
+    nom: string
     descripcio: string,
     preu: string,
     divisa: string
@@ -147,6 +145,4 @@ const eliminarOferta = (ofertaId: any) => {
 
 fillOfertes();
 </script>
-<style>
-
-</style>
+<style></style>

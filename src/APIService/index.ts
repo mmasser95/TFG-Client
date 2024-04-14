@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { CapacitorHttp } from '@capacitor/core';
 import { useLoginStore } from '../store/loginStore';
 //const base_url = 'http://192.168.1.10:5000/api/v1';
 const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
@@ -43,12 +42,16 @@ export function getEstabliment(id_establiment: any) {
   return instance.get(`/establiments/${id_establiment}`);
 }
 
-export function crearEstabliment(data: any) {
-  return instance.post('/establiments', data, getHeaders());
+export function registreEstabliment(data: any) {
+  return instance.post('/establiments', data);
 }
 
 export function updateEstabliment(id_establiment: any, data: any) {
   return instance.put(`/establiments/${id_establiment}`, data, getHeaders());
+}
+
+export function updateDireccio(data: any) {
+  return instance.put(`/establiments/direccio`, data, getHeaders());
 }
 
 export function deleteEstabliment(id_establiment: any) {
@@ -79,11 +82,11 @@ export function deleteRebost(id_rebost: any) {
 //Oferta
 
 export function getOfertes() {
-  return instance.get('/ofertes');
+  return instance.get('/ofertes',getHeaders());
 }
 
 export function getOferta(id_oferta: any) {
-  return instance.get(`/ofertes/${id_oferta}`);
+  return instance.get(`/ofertes/${id_oferta}`, getHeaders());
 }
 
 export function crearOferta(data: any) {
