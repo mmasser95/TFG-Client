@@ -150,11 +150,21 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, IonTextarea } from '@ionic/vue';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, alertController, IonTextarea } from '@ionic/vue';
 import { useVuelidate } from '@vuelidate/core'
 import { minLength, required, email, sameAs, minValue, numeric, maxLength } from '@vuelidate/validators';
 import { reactive, computed } from 'vue';
 import ErrorMessage from '../components/ErrorMessage.vue';
+import { getCoordinates } from '../APIService';
+
+const presentAlert = async (prompt: string) => {
+    const alert = await alertController.create({
+        header: 'Missatge del sistema',
+        message: prompt,
+        buttons: ['Exit']
+    })
+    await alert.present()
+}
 const labelPlacement = "floating"
 const state = reactive({
     nom: "",
@@ -178,6 +188,7 @@ const state = reactive({
 
 const myContrasenya = computed(() => state.contrasenya)
 
+
 const rules = {
     nom: { required, minLength: minLength(3) },
     correu: { required, email },
@@ -199,10 +210,18 @@ const v$ = useVuelidate(rules, state)
 
 const cancel = () => modalController.dismiss(null, 'cancel')
 const confirm = async () => {
-    const valid = await v$.value.$validate()
-    if (valid) {
-        modalController.dismiss(state, 'confirm')
+    let valid = await v$.value.$validate()
+    try {
+        let coords = await getCoordinates(state.direccio.carrer, state.direccio.numero, state.direccio.poblacio, state.direccio.provincia, state.direccio.CP)
+        if (!coords) presentAlert("L'adreça podria tenir algun error ja que el sistema no en detecta les coordenades")
+        if (valid && coords) {
+            modalController.dismiss({ ...state, ...coords }, 'confirm')
+        }
+    } catch (err) {
+        presentAlert(`Hi ha algun error en la comprovació de les coordenades. Comprova la teva conexió i torna-ho a provar.`)
     }
+
+
 }
 </script>
 <style></style>

@@ -15,8 +15,8 @@
             <swiper
               :slides-per-view="1"
             >
-              <swiper-slide v-for="(i,k) in [0,1,2,3,4]" :key="k">
-                <myCard :title="`Prova ${i}`" subtitle="Subtitul" text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequuntur eius quas non iure, optio eveniet nulla impedit, sed perspiciatis molestias quos unde a atque veritatis tenetur inventore. Facilis, cum ipsa." image="https://ionicframework.com/docs/img/demos/card-media.png"/> 
+              <swiper-slide v-for="(i,k) in establiments" :key="k">
+                <myCard :title="i.nom" :subtitle="i.telf" :text="i.direccio" image="https://ionicframework.com/docs/img/demos/card-media.png"/> 
               </swiper-slide>
             </swiper>
             
@@ -43,4 +43,22 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, 
 import { Swiper, SwiperSlide } from'swiper/vue';
 import 'swiper/css';
 import myCard from '@/components/myCard.vue';
+import { onMounted, ref } from 'vue';
+
+import { searchEstabliments } from '../APIService';
+let latitude=ref(41.0408888)
+let longitude=ref(0.7479283)
+let radi=ref(25)
+
+let establiments=ref([])
+
+onMounted(()=>{
+  searchEstabliments(latitude.value,longitude.value,radi.value).then((result) => {
+
+    establiments.value=result.data.establiments
+  }).catch((err) => {
+    
+  });
+})
+
 </script>

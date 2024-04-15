@@ -56,6 +56,7 @@ import { reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, sameAs, minValue } from '@vuelidate/validators';
 
+
 const state = reactive({
     nom: '',
     cognoms: '',

@@ -69,7 +69,7 @@ import {
     alertController,
     modalController
 } from '@ionic/vue';
-import { getRebost } from '../../APIService/';
+import { getRebost, createElement } from '../../APIService/';
 import { ref, reactive, computed, onMounted, defineProps } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { add, camera, pencil } from 'ionicons/icons';
@@ -105,7 +105,7 @@ const readImage = async (src: any) => {
     await worker.terminate()
 }
 
-onMounted(() => {
+const fillRebost = () => {
     if (props.rebostId) {
         getRebost(props.rebostId).then((res: any) => {
             console.log(res.data.rebost);
@@ -115,6 +115,10 @@ onMounted(() => {
             console.log(err);
         });
     }
+}
+
+onMounted(() => {
+    fillRebost()
 });
 
 const openModalCreate = async () => {
@@ -126,7 +130,12 @@ const openModalCreate = async () => {
 
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
-        console.log('Ok')
+        createElement(props.rebostId, data).then((res) => {
+            presentAlert('Element creat correctament')
+            fillRebost()
+        }).catch((err) => {
+            presentAlert(`Error ${err}`)
+        });
     }
 }
 </script>

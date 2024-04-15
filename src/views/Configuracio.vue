@@ -23,15 +23,18 @@
 </template>
 <script lang="ts" setup>
 import { IonPage, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
-import { personCircle, map, eye, lockClosed, helpBuoy, exit } from 'ionicons/icons'
+import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban } from 'ionicons/icons'
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
 import canviarDireccio from './Configuracio/canviarDireccio.vue';
 import { useLoginStore } from '../store/loginStore';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { deleteEstabliment, deleteUser } from '../APIService';
 const store = useLoginStore()
 const router = useRouter()
 const { setToken, setUserId, setUserType } = store
+const { userType } = storeToRefs(store)
 const modalConfiguracioPerfil = async () => {
     const modal = await modalController.create({
         component: configuracióPerfil,
@@ -95,6 +98,77 @@ const alertSortirSessio = async () => {
     alert.present()
 }
 
+const alertEliminarCompte1 = async () => {
+    const alert = await alertController.create({
+        header: `Eliminar el compte?`,
+        message: "Estas segur?",
+        buttons: [
+            {
+                text: 'Si',
+                htmlAttributes: {
+                    'aria-label': 'Si',
+                },
+                handler: () => {
+                    alertEliminarCompte2()
+                }
+            },
+            {
+                text: 'No',
+                htmlAttributes: {
+                    'aria-label': 'No',
+                },
+            }
+        ],
+    })
+    alert.present()
+}
+const alertEliminarCompte2 = async () => {
+    const alert = await alertController.create({
+        header: "Eliminar el compte!",
+        message: "Aquesta acció no es podrà desfer si prems Si. N'estas completament segur?",
+        buttons: [
+            {
+                text: 'Si',
+                htmlAttributes: {
+                    'aria-label': 'Si',
+                },
+                handler: () => {
+                    if (userType.value == 'client') {
+                        deleteUser().then((result) => {
+                            if (result.data) {
+                                setToken('')
+                                setUserId('')
+                                setUserType('')
+                                router.push('/login')
+                            }
+                        }).catch((err) => {
+
+                        });
+                    } else {
+                        deleteEstabliment().then((result) => {
+                            if (result.data) {
+                                setToken('')
+                                setUserId('')
+                                setUserType('')
+                                router.push('/login')
+                            }
+                        }).catch((err) => {
+
+                        });
+                    }
+                }
+            },
+            {
+                text: 'No',
+                htmlAttributes: {
+                    'aria-label': 'No',
+                },
+            }
+        ],
+    })
+    alert.present()
+}
+
 const opcions = [
     {
         label: "Configuració del perfil",
@@ -118,7 +192,13 @@ const opcions = [
     {
         label: "Ajuda",
         icon: helpBuoy
-    }, {
+    },
+    {
+        label: 'Eliminar compte',
+        icon: ban,
+        modalToShow: alertEliminarCompte1
+    },
+    {
         label: "Sortir de la sessió",
         icon: exit,
         modalToShow: alertSortirSessio,
