@@ -157,7 +157,9 @@ const operModalRegistre = async () => {
 
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
-    dosignIn(data)
+    let myForm = new FormData({ ...data })
+    console.log(myForm)
+    dosignIn(myForm)
       .then((res) => {
         presentAlert("T'has registrat al sistema correctament")
       }).catch((err) => {

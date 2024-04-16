@@ -63,6 +63,14 @@ export function doLogin(email: string, pass: string) {
   return axios.post(base_url + '/login', { correu: email, contrasenya: pass });
 }
 
+export function uploadImagePerfil(data: FormData) {
+  return axios.post(base_url + '/img_perfil', data, getHeaders());
+}
+
+export function uploadImageFons(data: FormData) {
+  return axios.post(base_url + '/img_fons', data, getHeaders());
+}
+
 export function dosignIn(data: any) {
   return axios.post(base_url + '/signup', data);
 }

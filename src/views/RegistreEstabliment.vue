@@ -83,12 +83,9 @@
                                 </ion-col>
                             </ion-row>
                             <ion-row>
-                                <ion-col size="12" sizeXl="6">
+                                <ion-col size="12">
                                     <ion-input label="Web" type="text" :label-placement="labelPlacement"
                                         v-model="state.web"></ion-input>
-                                </ion-col>
-                                <ion-col size="12" sizeXl="6">
-                                    <input type="file">
                                 </ion-col>
                             </ion-row>
                             <ion-row>
@@ -150,7 +147,7 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, alertController, IonTextarea } from '@ionic/vue';
+import { IonLabel, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, alertController, IonTextarea } from '@ionic/vue';
 import { useVuelidate } from '@vuelidate/core'
 import { minLength, required, email, sameAs, minValue, numeric, maxLength } from '@vuelidate/validators';
 import { reactive, computed } from 'vue';
@@ -166,6 +163,7 @@ const presentAlert = async (prompt: string) => {
     await alert.present()
 }
 const labelPlacement = "floating"
+
 const state = reactive({
     nom: "",
     correu: "",
@@ -220,8 +218,7 @@ const confirm = async () => {
     } catch (err) {
         presentAlert(`Hi ha algun error en la comprovació de les coordenades. Comprova la teva conexió i torna-ho a provar.`)
     }
-
-
 }
+
 </script>
 <style></style>

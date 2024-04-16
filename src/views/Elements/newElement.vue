@@ -48,7 +48,7 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-            <ion-input class="ion-hide" type="submit">Provaa</ion-input>
+            <input class="ion-hide" type="submit">Provaa</input>
         </form>
     </ion-content>
 </template>

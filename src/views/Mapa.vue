@@ -24,9 +24,10 @@
 </template>
 <script setup lang="ts">
 import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonCard, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController } from '@ionic/vue'
-import { Ref, onMounted, ref, computed, defineComponent, nextTick } from 'vue';
+import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments } from '../APIService';
+import { Geolocation } from '@capacitor/geolocation';
 import "leaflet/dist/leaflet.css";
 import L, { Map, LatLngTuple } from 'leaflet'
 import 'leaflet.markercluster';
@@ -49,9 +50,12 @@ const center = computed(() => { return [latitude.value, longitude.value] })
 const zoom = ref(9)
 const establiments: Ref<Establiment[] | undefined> = ref([]);
 
-const anarEstabliment = (ruta) => {
-    router.push(ruta)
-}
+
+const printCurrentPosition = async () => {
+    const coordinates = await Geolocation.getCurrentPosition();
+
+    console.log('Current position:', coordinates);
+};
 
 const fillEstabliments = () => {
     searchEstabliments(latitude.value, longitude.value, 15)
@@ -70,14 +74,14 @@ const addMarkers = () => {
         establiments.value.forEach(element => {
             if (map.value != null) {
                 var marker = L.marker(element.coordenades)
-                var ruta=`/establiment/${element._id}`
-                var link= `<a v-onClick="anarEstabliment('${ruta}')"> Link</a>`
+                var ruta = `/establiment/${element._id}`
+                var link = `<a v-onClick="anarEstabliment('${ruta}')"> Link</a>`
                 marker.bindPopup(`Establiment: ${element.nom} ${link}`)
                 markers.addLayer(marker)
             }
         });
         if (map.value != null)
-            markers.addTo(map.value)
+            toRaw(map.value).addLayer(markers)
     }
 }
 
@@ -94,6 +98,7 @@ onMounted(async () => {
     await nextTick()
     setTimeout(() => map.value = loadMap(), 50)
     fillEstabliments()
+    printCurrentPosition()
 })
 </script>
 <style></style>
