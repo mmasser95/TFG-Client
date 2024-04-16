@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>
+      <ion-router-outlet :key="$route.fullPath"></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button v-if="userType == 'client'" v-for="(tab, k) in tabsUser" :tab="tab.tabName" :href="tab.hrf"
           :key="k">

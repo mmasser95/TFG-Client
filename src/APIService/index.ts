@@ -64,7 +64,6 @@ export function doLogin(email: string, pass: string) {
 }
 
 export function dosignIn(data: any) {
-  // return axios.post(base_url + '/signin', data);
   return axios.post(base_url + '/signup', data);
 }
 export function deleteUser() {

@@ -6,20 +6,14 @@
         <ion-content>
             <ion-grid>
                 <ion-row>
+                    <ion-col size="1">
+                        <ion-button>Filtros</ion-button>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="8">
-                        <l-map style="height: 300px;" :zoom="zoom" :center="center">
-                            <l-tile-layer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
-                            <l-marker v-for="(i, k) in establiments" :lat-lng="i.coordenades" :key="k">
-
-                                <l-popup>
-                                    <span>{{ i.nom }}</span>
-                                    <br>
-                                    <a @click="anarEstabliment(`/establiment/${i._id}`)">Anar a l'establiment</a>
-                                </l-popup>
-                            </l-marker>
-
-                        </l-map>
+                        <div id="map" style="height: 500px;"></div>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -29,12 +23,15 @@
 
 </template>
 <script setup lang="ts">
-import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonCard, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonImg, IonIcon, IonThumbnail, alertController } from '@ionic/vue'
-import { Ref, onMounted, ref, computed, defineComponent } from 'vue';
+import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonCard, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController } from '@ionic/vue'
+import { Ref, onMounted, ref, computed, defineComponent, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments } from '../APIService';
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker, LFeatureGroup, LPopup } from "@vue-leaflet/vue-leaflet";
+import L, { Map, LatLngTuple } from 'leaflet'
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css'
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 const router = useRouter()
 interface Establiment {
     _id: string,
@@ -43,11 +40,11 @@ interface Establiment {
     latitude: string,
     longitude: string,
     telf: string,
-    coordenades: [Number]
+    coordenades: LatLngTuple
 }
 let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)
-
+const map: Ref<Map | null> = ref(null)
 const center = computed(() => { return [latitude.value, longitude.value] })
 const zoom = ref(9)
 const establiments: Ref<Establiment[] | undefined> = ref([]);
@@ -60,23 +57,42 @@ const fillEstabliments = () => {
     searchEstabliments(latitude.value, longitude.value, 15)
         .then((res) => {
             establiments.value = res.data.establiments;
+            addMarkers()
         })
         .catch((err) => {
             console.log(err)
         });
 }
 
-// const loadMap = () => {
-//     var map = L.map('map').setView([51.505, -0.09], 13);
-//     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//         maxZoom: 19,
-//         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-//     }).addTo(map);
-//     var marker = L.marker([51.5, -0.09]).addTo(map);
-// }
+const addMarkers = () => {
+    var markers = L.markerClusterGroup()
+    if (establiments.value != undefined) {
+        establiments.value.forEach(element => {
+            if (map.value != null) {
+                var marker = L.marker(element.coordenades)
+                var ruta=`/establiment/${element._id}`
+                var link= `<a v-onClick="anarEstabliment('${ruta}')"> Link</a>`
+                marker.bindPopup(`Establiment: ${element.nom} ${link}`)
+                markers.addLayer(marker)
+            }
+        });
+        if (map.value != null)
+            markers.addTo(map.value)
+    }
+}
 
+const loadMap = () => {
+    var map = L.map('map').invalidateSize().setView([latitude.value, longitude.value], zoom.value);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    return map
+}
 
-onMounted(() => {
+onMounted(async () => {
+    await nextTick()
+    setTimeout(() => map.value = loadMap(), 50)
     fillEstabliments()
 })
 </script>

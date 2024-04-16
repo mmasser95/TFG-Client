@@ -54,7 +54,6 @@ let establiments=ref([])
 
 onMounted(()=>{
   searchEstabliments(latitude.value,longitude.value,radi.value).then((result) => {
-
     establiments.value=result.data.establiments
   }).catch((err) => {
     
