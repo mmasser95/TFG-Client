@@ -1,0 +1,119 @@
+<template>
+    <ion-page v-if="establiment">
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-button @click="goBack">
+                        <ion-icon :icon="arrowBack"></ion-icon> Back
+                    </ion-button>
+                </ion-buttons>
+                <ion-title class="ion-text-center">Establiment {{ establiment.nom }}</ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col ></ion-col>
+                    <ion-col class="ion-no-margin ion-no-padding"  size="12" sizeXl="6" sizeLg="8" sizeMd="10" sizeSm="12">
+                        <img src="https://ionicframework.com/docs/img/demos/card-media.png" alt="Prova">
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+                        <ion-list>
+                            <ion-item v-for="(label,k) in labels" :key="k">
+                                {{label}}: {{ establiment[k] }}
+                            </ion-item>
+                            
+                        </ion-list>
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+                        <ion-list>
+                            <ion-item v-for="oferta in ofertesActives" :key="oferta._id">
+                                    <cardOferta :oferta="oferta"></cardOferta>
+                            </ion-item>
+                        </ion-list>
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10"></ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-content>
+    </ion-page>
+</template>
+<script setup lang="ts">
+import { IonPage, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon } from '@ionic/vue'
+import { arrowBack } from 'ionicons/icons'
+import { getEstabliment } from '../../APIService';
+import { computed, onMounted, ref, Ref } from 'vue';
+import { showLoading, showAlert } from '../../composables/loader';
+import { useRouter } from 'vue-router';
+import { LatLngTuple } from 'leaflet';
+import cardOferta from '../../components/cardOferta.vue';
+const router = useRouter()
+interface Oferta {
+    _id: string,
+    nom: string,
+    descripcio: string,
+    preu: number,
+    active: boolean
+}
+interface Establiment {
+    _id: string,
+    nom: string,
+    descripcio: string,
+    latitude: string,
+    longitude: string,
+    telf: string,
+    url_imatge: string
+    coordenades: LatLngTuple,
+    url_fons: string,
+    horari: string,
+    tipus: string,
+    ofertes: Oferta[]
+}
+const labels={
+    nom:"Nom",
+    descripcio:"Descripcio",
+    telf:"Telèfon",
+    horari:"Horari",
+    tipus:"Tipus"
+}
+const props = defineProps<{
+    idd: string
+}>();
+const establiment: Ref<Establiment | undefined> = ref();
+const ofertesActives = computed(() => establiment.value?.ofertes.filter((element) => element.active))
+
+const fillEstabliment = async () => {
+    const loader = await showLoading('Carregant establiment')
+    loader.present()
+    getEstabliment(props.idd).then((result) => {
+        establiment.value = result.data.establiment
+    }).catch(async (err) => {
+        let alert = await showAlert(`S'ha produit l'error següent ${err}`)
+        alert.present()
+    }).finally(() => {
+        loader.dismiss(null, 'cancel')
+    });
+}
+
+const goBack = () => {
+    router.go(-1)
+}
+
+onMounted(() => {
+    fillEstabliment()
+})
+</script>
+<style></style>

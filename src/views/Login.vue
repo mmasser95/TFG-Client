@@ -3,14 +3,16 @@
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col>
-            <ion-title class="ion-text-center">Login</ion-title>
+          <ion-col></ion-col>
+          <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+            <img src="/logo.PNG?url" alt="Logo">
             <ion-text v-if="loginError" color="danger">{{ loginError }}</ion-text>
           </ion-col>
+          <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col size="12" sizeXl="8">
+          <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
             <form @submit.prevent="login">
               <ion-row>
                 <ion-col>
@@ -37,7 +39,9 @@
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-button type="submit" expand="block">Login</ion-button>
+                <ion-col></ion-col>
+                <ion-col size="12" sizeMd="6"><ion-button type="submit" expand="block">Login</ion-button></ion-col>
+                <ion-col></ion-col>
               </ion-row>
             </form>
           </ion-col>
@@ -76,6 +80,8 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength } from '@vuelidate/validators'
 
 import { useRouter } from 'vue-router';
+
+import { showLoading } from '../composables/loader';
 
 import ErrorMessage from '../components/ErrorMessage.vue';
 
@@ -126,6 +132,8 @@ const login = async () => {
   const valid = await v$.value.$validate();
   //const valid = true
   if (valid) {
+    const loader = await showLoading("Iniciant sessió")
+    loader.present()
     doLogin(state.correu, state.contrasenya).then(res => {
       if (res.status == 200) {
         setToken(res.data.token);
@@ -143,6 +151,8 @@ const login = async () => {
     }).catch((err) => {
       loginError.value = err.response.data.message
       presentAlert(err.response.data.message)
+    }).finally(() => {
+      loader.dismiss(null, 'cancel')
     })
   }
 }
@@ -159,11 +169,15 @@ const operModalRegistre = async () => {
   if (role == 'confirm') {
     let myForm = new FormData({ ...data })
     console.log(myForm)
+    const loader = await showLoading('Enviant informació de registre')
+    loader.present()
     dosignIn(myForm)
       .then((res) => {
         presentAlert("T'has registrat al sistema correctament")
       }).catch((err) => {
         presentAlert(err);
+      }).finally(() => {
+        loader.dismiss(null, 'cancel')
       });
   }
 
@@ -178,11 +192,15 @@ const operModalRegistreEstabliment = async () => {
 
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
+    const loader = await showLoading("Enviant informació de registre de l'establiment")
+    loader.present()
     registreEstabliment(data)
       .then((res) => {
         presentAlert("T'has registrat al sistema correctament")
       }).catch((err) => {
         presentAlert(err);
+      }).finally(() => {
+        loader.dismiss(null, 'cancel')
       });
   }
 
@@ -190,7 +208,5 @@ const operModalRegistreEstabliment = async () => {
 </script>
 
 <style>
-ion-button {
-  width: 100%;
-}
+
 </style>

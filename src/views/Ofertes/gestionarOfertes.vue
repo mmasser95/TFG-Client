@@ -11,7 +11,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-col></ion-col>
-                    <ion-col>
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-card v-for="(oferta, k) in ofertes" :key="k">
                             <ion-card-header>
                                 <ion-card-title>{{ oferta.nom }}</ion-card-title>
@@ -19,8 +19,17 @@
                             <ion-card-content>
                                 {{ oferta.descripcio }}
                             </ion-card-content>
-                            <ion-button color="secondary" @click="openModalUpdate(oferta._id)">Editar</ion-button>
-                            <ion-button color="danger" @click="eliminarOferta(oferta._id)">Eliminar</ion-button>
+                            <ion-grid>
+                                <ion-row>
+                                    <ion-col></ion-col>
+                                    <ion-col size="3" >
+                                        <ion-button expand="block" color="secondary" @click="openModalUpdate(oferta._id)">Editar</ion-button>
+                                    </ion-col>
+                                    <ion-col size="3" >
+                                        <ion-button expand="block"  color="danger" @click="eliminarOferta(oferta._id)">Eliminar</ion-button>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
                         </ion-card>
                     </ion-col>
                     <ion-col></ion-col>

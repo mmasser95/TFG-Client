@@ -1,6 +1,8 @@
 <template>
   <ion-page>
+    
     <ion-content>
+      
       <ion-grid>
         <ion-row>
           <ion-col></ion-col>
@@ -11,10 +13,10 @@
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col size="12" sizeXl="8">
-            <swiper>
+          <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+            <swiper :slides-per-view="2" :free-mode="true">
               <swiper-slide v-for="(i, k) in rebosts">
-                <cardInventari :title="i.nom" :idd="i._id" @updateRebost="openModalUpdate"
+                <cardInventari :title="i.nom" :subtitle="i.descripcio" :idd="i._id" @updateRebost="openModalUpdate"
                   @deleteRebost="fillRebosts" />
               </swiper-slide>
             </swiper>
@@ -28,6 +30,7 @@
         <ion-icon :icon="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
+    
   </ion-page>
 </template>
 
@@ -46,7 +49,8 @@ import { useLoginStore } from '../store/loginStore'
 
 interface Rebost {
   _id: string,
-  nom: string
+  nom: string,
+  descripcio:string
 }
 
 const rebosts: Ref<Rebost[] | undefined> = ref([]);

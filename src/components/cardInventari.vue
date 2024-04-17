@@ -1,32 +1,52 @@
 <template>
-    <ion-card>
+    <ion-card :router-link="`/rebost/${idd}`">
         <ion-card-header>
             <ion-card-title>{{ title }}</ion-card-title>
+            <ion-card-subtitle>{{ subtitle }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
             <ion-text>
                 {{ content }}
             </ion-text>
+            <ion-grid>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col size="4" class="">
+                        <ion-button expand="block" click.stop="updateInventari">
+                            <ion-icon :icon="pencilSharp"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                    <ion-col size="4" class="">
+                        <ion-button expand="block" @click.stop="borrarInventari(idd)">
+                            <ion-icon :icon="trashBinSharp"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
         </ion-card-content>
 
-        <ion-button :router-link="`/rebost/${idd}`">Entrar</ion-button>
-        <ion-button @click="updateInventari">Editar</ion-button>
-        <ion-button @click="borrarInventari(idd)">Esborrar</ion-button>
     </ion-card>
 </template>
 <script setup lang="ts">
-import { IonText, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, alertController } from '@ionic/vue'
-
+import { IonText, IonCard, IonIcon, IonCardHeader, IonCardTitle, IonCardContent, IonButton, alertController, IonCol, IonRow, IonGrid, IonCardSubtitle } from '@ionic/vue'
+import { boat, pencilSharp, pencil, trashBinSharp } from 'ionicons/icons'
 import { defineProps } from 'vue';
 import { deleteRebost } from '@/APIService';
-
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const emit = defineEmits(['updateRebost', 'deleteRebost'])
 
 const props = defineProps({
     title: String,
+    subtitle: String,
     content: String,
     idd: String
 })
+
+const goToRebost = () => {
+    router.push(``)
+}
 
 const mostrarAlerta = async (missatge: string) => {
     const alert = await alertController.create({

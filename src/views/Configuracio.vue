@@ -7,7 +7,14 @@
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
-                    <ion-col size="12" sizeMd="8" sizeXl="6">
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+                        <img src="/logo.PNG?url" alt="Logotip de FlyFood">
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
                             <ion-item v-for="(item, k) in opcions" :key="k" @click="item.modalToShow">
                                 <ion-icon :icon="item.icon" slot="start"></ion-icon>

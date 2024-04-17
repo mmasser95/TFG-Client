@@ -11,11 +11,10 @@
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col size="12" sizeXl="8">
+          <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
             <swiper :slides-per-view="1">
-              <swiper-slide v-if="establiments" v-for="(i, k) in establiments" :key="k">
-                <myCard :title="i.nom" :subtitle="i.telf" :text="i.descripcio"
-                  image="https://ionicframework.com/docs/img/demos/card-media.png" />
+              <swiper-slide v-if="establiments" v-for="(i, k) in establiments" :key="i._id">
+                <myCard :establiment="i" />
               </swiper-slide>
             </swiper>
 
@@ -50,9 +49,17 @@ let longitude = ref(0.7479283)
 let radi = ref(25)
 
 interface Establiment {
+  _id: string,
   nom: string,
+  descripcio: string,
+  latitude: string,
+  longitude: string,
   telf: string,
-  descripcio: string
+  url_imatge: string
+  coordenades: LatLngTuple,
+  url_fons: string,
+  horari: string,
+  tipus: string
 }
 
 let establiments: Ref<[Establiment] | null> = ref(null)

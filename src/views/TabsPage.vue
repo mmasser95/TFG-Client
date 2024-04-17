@@ -56,8 +56,8 @@ const tabsUser = ref([{
   icon: home,
   label: 'Home'
 }, {
-  tabName: 'tab2',
-  hrf: '/tabs/tab2',
+  tabName: 'explorar',
+  hrf: '/tabs/explorar',
   icon: map,
   label: 'Mapa'
 }, {

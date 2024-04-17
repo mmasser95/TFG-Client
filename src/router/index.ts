@@ -11,9 +11,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     component: () => import('@/views/Login.vue'),
-    meta:{
-      requiresAuth:'NoAuth'
-    }
+    meta: {
+      requiresAuth: 'NoAuth',
+    },
   },
   {
     path: '/tabs/',
@@ -28,8 +28,9 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Tab2Page.vue'),
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/Mapa.vue'),
+        path: 'explorar',
+        component: () => import('@/views/Explorar.vue'),
+        
       },
       {
         path: 'tab3',
@@ -40,13 +41,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Configuracio.vue'),
       },
       {
-        path:'tab5',
-        component:()=>import('@/views/Ofertes/gestionarOfertes.vue')
-      }
+        path: 'tab5',
+        component: () => import('@/views/Ofertes/gestionarOfertes.vue'),
+      },
     ],
   },
-  
-  
+  {
+    path: '/establiment/:idd',
+    component: () => import('@/views/Ofertes/viewEstabliment.vue'),
+    props: true,
+  },
   // {
   //   path: '/establiments',
   //   component: () => import('@/views/Establiments/gestionarEstabliments.vue'),
@@ -80,7 +84,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth!='NoAuth') {
+  if (to.meta.requiresAuth != 'NoAuth') {
     if (!useLoginStore().loggedIn) {
       next('/login');
       // next();

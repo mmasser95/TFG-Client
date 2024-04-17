@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build && npx cap add android && cp AndroidManifest.xml android/app/src/main/AndroidManifest.xml &&cd android && ./gradlew assembleDebug",
-    "build2": "vue-tsc && vite build",
+    "build2": "vue-tsc",
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
