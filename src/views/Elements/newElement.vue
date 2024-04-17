@@ -30,18 +30,18 @@
                 </ion-row>
                 <ion-row>
                     <ion-col size="12" sizeXl="6">
-                        <ion-input type="date" label="Data de compra" :label-placement="labelPlacement"></ion-input>
+                        <ion-input type="date" label="Data de compra" :label-placement="labelPlacement" v-model="data.data_compra"></ion-input>
                     </ion-col>
                     <ion-col size="12" sizeXl="6">
-                        <ion-input type="date" label="Data de caducitat" :label-placement="labelPlacement"></ion-input>
+                        <ion-input type="date" label="Data de caducitat" :label-placement="labelPlacement" v-model="data.data_caducitat"></ion-input>
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col size="12" sizeXl="6">
-                        <ion-input label="Quantitat" type="number" :label-placement="labelPlacement"></ion-input>
+                        <ion-input label="Quantitat" type="number" v-model="data.quantitat" :label-placement="labelPlacement"></ion-input>
                     </ion-col>
                     <ion-col size="12" sizeXl="6">
-                        <ion-select label="Unitat" :label-placement="labelPlacement">
+                        <ion-select label="Unitat" :label-placement="labelPlacement" v-model="data.q_unitat" >
                             <ion-select-option v-for="(i, k) in unitats_quantitat" :value="i" :key="k">{{ i
                                 }}</ion-select-option>
                         </ion-select>

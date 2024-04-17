@@ -17,7 +17,7 @@
                         </ion-button>
                     </ion-col>
                     <ion-col size="4" class="">
-                        <ion-button expand="block" @click.stop="borrarInventari(idd)">
+                        <ion-button expand="block" @click.stop="createConfirmationAlert('Estas segur que vols eliminar aquest rebost i el seu contingut?',estasSegur)">
                             <ion-icon :icon="trashBinSharp"></ion-icon>
                         </ion-button>
                     </ion-col>
@@ -36,6 +36,31 @@ import { deleteRebost } from '@/APIService';
 import { useRouter } from 'vue-router';
 const router = useRouter()
 const emit = defineEmits(['updateRebost', 'deleteRebost'])
+
+const createConfirmationAlert = async (message: string, myHandler: any) => {
+    let alert = await alertController.create({
+        header: "Missatge del sistema",
+        message,
+        buttons: [{
+            text: 'Si',
+            htmlAttributes: {
+                'aria-label': 'Si'
+            },
+            handler: myHandler
+        },
+        {
+            text: 'No',
+            htmlAttributes: {
+                'aria-label': 'No'
+            }
+        }]
+    })
+    alert.present()
+}
+
+const estasSegur = async () => {
+    await createConfirmationAlert("Recorda que aquesta acció no es pot desfer. Estas segur?", borrarInventari)
+}
 
 const props = defineProps({
     title: String,
@@ -64,7 +89,8 @@ const updateInventari = () => {
     emit('updateRebost', props.idd)
 }
 
-const borrarInventari = (inventariId: any) => {
+const borrarInventari = () => {
+    let inventariId=props.idd
     deleteRebost(inventariId)
         .then((result) => {
             mostrarAlerta(`L'inventari s'ha esborrat correctament`)

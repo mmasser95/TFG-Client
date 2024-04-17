@@ -4,6 +4,9 @@
             <ion-title class="ion-text-center">Mapa</ion-title>
         </ion-header>
         <ion-content>
+            <ion-refresher slot="fixed" @ion-refresh.stop="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
@@ -44,7 +47,7 @@
 
 </template>
 <script setup lang="ts">
-import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController } from '@ionic/vue'
+import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent } from '@ionic/vue'
 import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments } from '../APIService';
@@ -57,7 +60,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 // import {location} from 'ionicons/icons'
 import location from "leaflet/dist/images/marker-icon.png"
 import myCard from '../components/myCard.vue';
-import { showLoading,showAlert } from '../composables/loader';
+import { showLoading, showAlert } from '../composables/loader';
 
 const router = useRouter()
 interface Establiment {
@@ -72,7 +75,7 @@ interface Establiment {
     url_fons: string,
     horari: string,
     tipus: string,
-    
+
 }
 let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)
@@ -92,9 +95,17 @@ const changePestanya = (event) => {
     }
 }
 
+const handleRefresh = async (event: RefresherCustomEvent) => {
+    searchEstabliments(latitude.value, longitude.value, 15).then((res) => {
+        establiments.value = res.data.establiments
+    }).catch((err) => {
+
+    }).finally(() => event.target.complete());
+}
+
 const printCurrentPosition = async () => {
     const coordinates = await Geolocation.getCurrentPosition();
-    let alerta=await showAlert('Current position:'+coordinates);
+    let alerta = await showAlert('Current position:' + coordinates);
     alerta.present()
 };
 

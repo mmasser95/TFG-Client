@@ -1,22 +1,34 @@
 <template>
     <ion-page>
-
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-button @click="$router.go(-1)">
+                        <ion-icon :icon="arrowBack" ></ion-icon>Endarrere
+                    </ion-button>
+                </ion-buttons>
+                <ion-title class="ion-text-center"></ion-title>
+            </ion-toolbar>
+        </ion-header>
         <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
-                    <ion-col>
+                    <ion-col >
                         <ion-title class="ion-text-center">Inventari {{ rebostId }}</ion-title>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
                 <ion-row>
-                    <ion-col>
-                        <ion-list>
-                            <ion-item v-for="(i, k) in rebost">{{ k }} : {{ i }}</ion-item>
+                    <ion-col></ion-col>
+                    <ion-col size="12" sizeSm="10" sizeMd="8" sizeLg="6">
+                        <ion-list v-if="rebostId">
+                            <ion-item v-for="element in elements" :key="element._id">
+                                <cardElement :rebostId="rebostId" :element="element" @deleteElement="fillRebost"></cardElement>
+                            </ion-item>
                         </ion-list>
                     </ion-col>
-
+                    <ion-col></ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col>
@@ -66,24 +78,40 @@ import {
     IonFabList,
     IonFabButton,
     IonButton,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
     alertController,
     modalController
 } from '@ionic/vue';
-import { getRebost, createElement } from '../../APIService/';
-import { ref, reactive, computed, onMounted, defineProps } from 'vue';
+import {arrowBack} from 'ionicons/icons'
+import { getAllElements, createElement } from '../../APIService/';
+import { ref,Ref, reactive, computed, onMounted, defineProps } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { add, camera, pencil } from 'ionicons/icons';
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
 import { createWorker } from 'tesseract.js';
 import newElement from '@/views/Elements/newElement.vue'
+import cardElement from '../../components/cardElement.vue';
+import { showLoading } from '../../composables/loader';
 const { takePhoto, photos } = usePhotoGallery();
 const { loggedIn } = useLoginStore();
+interface Aliment {
+    _id:string,
+    nom:string,
+    tipus:string
+}
 
+interface Element {
+    _id: string,
+    quantitat:number,
+    q_unitat:string,
+    data_compra: string,
+    data_caducitat: string,
+    aliment?:Aliment
+}
 
-const rebost = reactive({
-    nom: '',
-    elements: []
-});
+const elements: Ref<Element[]|null>=ref(null)
 
 const props = defineProps({
     rebostId: String
@@ -105,16 +133,17 @@ const readImage = async (src: any) => {
     await worker.terminate()
 }
 
-const fillRebost = () => {
+const fillRebost = async() => {
+    const loader=await showLoading("Carregant els elements del rebost")
+    loader.present()
     if (props.rebostId) {
-        getRebost(props.rebostId).then((res: any) => {
-            console.log(res.data.rebost);
-            rebost.nom = res.data.rebost.nom;
-            rebost.elements = res.data.rebost.elements;
-        }).catch((err: any) => {
-            console.log(err);
+        getAllElements(props.rebostId).then((res) => {
+            elements.value=res.data.elements
+        }).catch((err) => {
+            
         });
     }
+    loader.dismiss(null,'cancel')
 }
 
 onMounted(() => {

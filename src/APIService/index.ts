@@ -158,6 +158,13 @@ export function getAllAlimentsByTipus(tipus: any) {
   return instance.get(`/aliments/tipus/${tipus}`);
 }
 
+export function getAllElements(rebostId:any){
+  return instance.get(`/rebosts/${rebostId}/elements/`,getHeaders())
+}
 export function createElement(rebostId: any, data: any) {
   return instance.post(`/rebosts/${rebostId}/elements/`, data, getHeaders());
+}
+
+export function deleteElement(rebostId:any,elementId:any){
+  return instance.delete(`/rebosts/${rebostId}/elements/${elementId}`,getHeaders())
 }
