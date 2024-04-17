@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonFab, IonFabButton, IonIcon, modalController, IonRefresher, IonRefresherContent } from '@ionic/vue';
+import { IonPage, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonFab, IonFabButton, IonIcon, modalController, IonRefresher,RefresherCustomEvent, IonRefresherContent } from '@ionic/vue';
 import { onMounted, ref, reactive, onBeforeUpdate, computed } from 'vue';
 import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
