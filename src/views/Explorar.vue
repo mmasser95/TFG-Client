@@ -85,7 +85,7 @@ const zoom = ref(9)
 const establiments: Ref<Establiment[] | undefined> = ref([]);
 const pestanyaMapa = ref(true)
 
-const changePestanya = (event) => {
+const changePestanya = (event:any) => {
     console.log('event.detail.value :>>', event.detail.value);
     if (event.detail.value != 'mapa') { pestanyaMapa.value = false }
     else {

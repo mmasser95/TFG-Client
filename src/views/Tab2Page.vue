@@ -45,7 +45,7 @@ import 'swiper/css';
 import myCard from '../components/myCard.vue';
 import { onMounted, ref, Ref } from 'vue';
 import { showLoading } from '../composables/loader';
-
+import {  LatLngTuple } from 'leaflet'
 import { searchEstabliments } from '../APIService';
 let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)

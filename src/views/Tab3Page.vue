@@ -112,7 +112,7 @@ const openModalCreate = async () => {
   }
 }
 
-const handleRefresh = async (event) => {
+const handleRefresh = async (event:RefresherCustomEvent) => {
   await fillRebosts();
   event.target.complete()
 }
