@@ -80,6 +80,8 @@
                                         @ion-blur="v$.horari.$touch" v-model="state.horari"></ion-input>
                                     <ErrorMessage v-if="v$.horari.$error && v$.horari.required.$invalid"
                                         message="Aquest camp és obligatori" />
+                                    <ErrorMessage v-if="v$.horari.$error && v$.horari.customHorariValidator.$invalid"
+                                        message="Has de posar l'horari amb el format HH:MM-HH:MM. Pots posar més d'un interval separant per comes HH:MM-HH:MM,HH:MM-HH:MM" />
                                 </ion-col>
                             </ion-row>
                             <ion-row>
@@ -153,7 +155,7 @@ import { minLength, required, email, sameAs, minValue, numeric, maxLength } from
 import { reactive, computed } from 'vue';
 import ErrorMessage from '../components/ErrorMessage.vue';
 import { getCoordinates } from '../APIService';
-
+import { parse } from 'date-fns/parse'
 const presentAlert = async (prompt: string) => {
     const alert = await alertController.create({
         header: 'Missatge del sistema',
@@ -186,6 +188,10 @@ const state = reactive({
 
 const myContrasenya = computed(() => state.contrasenya)
 
+const customHorariValidator = (value) => {
+    const regex = /^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)(,([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d))*$/;
+    return regex.test(value)
+}
 
 const rules = {
     nom: { required, minLength: minLength(3) },
@@ -194,7 +200,7 @@ const rules = {
     rcontrasenya: { required, sameAs: sameAs(myContrasenya) },
     descripcio: { required, minLength: minLength(20) },
     telf: { required, numeric, minLength: minLength(9), maxLength: maxLength(9) },
-    horari: { required },
+    horari: { required, customHorariValidator },
     direccio: {
         carrer: { required },
         numero: { required, numeric },
@@ -202,6 +208,21 @@ const rules = {
         poblacio: { required },
         provincia: { required }
     }
+}
+
+const parseHorari = (value: any) => {
+    let horaris = value.split(',')
+    let result=[]
+    horaris.forEach(element => {
+        let iniciFinal = element.split('-')
+        let inici=iniciFinal[0]
+        let final=iniciFinal[1]
+        result.push({
+            inici,
+            final
+        })
+    });
+    return result
 }
 
 const v$ = useVuelidate(rules, state)
@@ -212,8 +233,10 @@ const confirm = async () => {
     try {
         let coords = await getCoordinates(state.direccio.carrer, state.direccio.numero, state.direccio.poblacio, state.direccio.provincia, state.direccio.CP)
         if (!coords) presentAlert("L'adreça podria tenir algun error ja que el sistema no en detecta les coordenades")
+        let myBody = { ...state }
+        myBody.horari = parseHorari(state.horari)
         if (valid && coords) {
-            modalController.dismiss({ ...state, ...coords }, 'confirm')
+            modalController.dismiss({ ...myBody, ...coords }, 'confirm')
         }
     } catch (err) {
         presentAlert(`Hi ha algun error en la comprovació de les coordenades. Comprova la teva conexió i torna-ho a provar.`)

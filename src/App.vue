@@ -17,6 +17,9 @@ useBackButton(-1, ()=>{
 </script>
 
 <style>
+*{
+  font-family: 'Exo 2';
+}
 ion-fab{
     bottom:25px;
     right:25px;

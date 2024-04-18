@@ -112,7 +112,7 @@ const printCurrentPosition = async () => {
 const fillEstabliments = async () => {
     const loader = await showLoading('Carregant establiments')
     loader.present()
-    searchEstabliments(latitude.value, longitude.value, 15)
+    searchEstabliments(latitude.value, longitude.value, 50)
         .then((res) => {
             establiments.value = res.data.establiments;
             addMarkers()
