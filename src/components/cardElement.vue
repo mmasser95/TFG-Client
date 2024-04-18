@@ -34,10 +34,8 @@ import { computed } from 'vue';
 import { showAlert, showLoading } from '../composables/loader';
 import { pencil, trash } from 'ionicons/icons';
 import { deleteElement } from '../APIService';
-import parseIso from 'date-fns/parseISO'
-import caLocale from 'date-fns/locale/ca'
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
-import formatRelative from 'date-fns/formatRelative'
+import {ca} from 'date-fns/locale'
+import * as dateFns from 'date-fns'
 import {Element} from '../types'
 const props = defineProps<{
     element: Element,
@@ -84,11 +82,11 @@ const eliminarElement = async () => {
 }
 const dataCompraAgo = computed(() => {
     if (props.element)
-        return formatDistanceToNow(props.element.data_compra,{addSuffix:true,locale:caLocale})
+        return dateFns.formatDistanceToNow(props.element.data_compra,{addSuffix:true,locale:ca})
 })
 const dataCaducitatRelative = computed(() => {
     if (props.element)
-        return formatDistanceToNow(props.element.data_caducitat,{addSuffix:true,locale:caLocale})
+        return dateFns.formatDistanceToNow(props.element.data_caducitat,{addSuffix:true,locale:ca})
 })
 </script>
 <style></style>

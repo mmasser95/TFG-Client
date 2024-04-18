@@ -23,7 +23,7 @@ export interface Establiment {
     telf: string,
     url_imatge: string
     coordenades: LatLngTuple,
-    url_fons: string,
+    url_fondo: string,
     horari: string,
     tipus: string,
     ofertes: Oferta[],

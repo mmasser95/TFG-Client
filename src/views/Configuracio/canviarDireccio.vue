@@ -9,6 +9,8 @@
                 <ion-button color="primary" @click="confirm">Confirmar</ion-button>
             </ion-buttons>
         </ion-toolbar>
+    </ion-header>
+    <ion-content>
         <ion-grid>
             <ion-row>
                 <ion-col>
@@ -60,7 +62,7 @@
                 </ion-col>
             </ion-row>
         </ion-grid>
-    </ion-header>
+    </ion-content>
 </template>
 <script lang="ts" setup>
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButton, IonButtons, IonTitle, IonGrid, IonRow, IonCol, IonInput, modalController } from '@ionic/vue';

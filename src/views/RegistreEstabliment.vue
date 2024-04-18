@@ -77,10 +77,11 @@
                                 </ion-col>
                                 <ion-col size="12" sizeXl="6">
                                     <ion-input label="Horari" type="text" :label-placement="labelPlacement"
-                                        @ion-blur="v$.horari.$touch" v-model="state.horari"></ion-input>
-                                    <ErrorMessage v-if="v$.horari.$error && v$.horari.required.$invalid"
+                                        @ion-blur="v$.horari.$touch" v-model="state.horariString"></ion-input>
+                                    <ErrorMessage v-if="v$.horariString.$error && v$.horariString.required.$invalid"
                                         message="Aquest camp és obligatori" />
-                                    <ErrorMessage v-if="v$.horari.$error && v$.horari.customHorariValidator.$invalid"
+                                    <ErrorMessage
+                                        v-if="v$.horariString.$error && v$.horariString.customHorariValidator.$invalid"
                                         message="Has de posar l'horari amb el format HH:MM-HH:MM. Pots posar més d'un interval separant per comes HH:MM-HH:MM,HH:MM-HH:MM" />
                                 </ion-col>
                             </ion-row>
@@ -173,7 +174,7 @@ const state = reactive({
     rcontrasenya: "",
     descripcio: "",
     tipus: "establiment",
-    horari: "",
+    horariString: '',
     telf: "",
     web: "",
     image: "",
@@ -188,7 +189,7 @@ const state = reactive({
 
 const myContrasenya = computed(() => state.contrasenya)
 
-const customHorariValidator = (value) => {
+const customHorariValidator = (value: string) => {
     const regex = /^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)(,([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d))*$/;
     return regex.test(value)
 }
@@ -200,7 +201,7 @@ const rules = {
     rcontrasenya: { required, sameAs: sameAs(myContrasenya) },
     descripcio: { required, minLength: minLength(20) },
     telf: { required, numeric, minLength: minLength(9), maxLength: maxLength(9) },
-    horari: { required, customHorariValidator },
+    horariString: { required, customHorariValidator },
     direccio: {
         carrer: { required },
         numero: { required, numeric },
@@ -212,11 +213,11 @@ const rules = {
 
 const parseHorari = (value: any) => {
     let horaris = value.split(',')
-    let result=[]
-    horaris.forEach(element => {
+    let result: any[] = []
+    horaris.forEach((element: any) => {
         let iniciFinal = element.split('-')
-        let inici=iniciFinal[0]
-        let final=iniciFinal[1]
+        let inici = iniciFinal[0]
+        let final = iniciFinal[1]
         result.push({
             inici,
             final
@@ -233,10 +234,8 @@ const confirm = async () => {
     try {
         let coords = await getCoordinates(state.direccio.carrer, state.direccio.numero, state.direccio.poblacio, state.direccio.provincia, state.direccio.CP)
         if (!coords) presentAlert("L'adreça podria tenir algun error ja que el sistema no en detecta les coordenades")
-        let myBody = { ...state }
-        myBody.horari = parseHorari(state.horari)
         if (valid && coords) {
-            modalController.dismiss({ ...myBody, ...coords }, 'confirm')
+            modalController.dismiss({ ...state, ...coords, horari: parseHorari(state.horariString) }, 'confirm')
         }
     } catch (err) {
         presentAlert(`Hi ha algun error en la comprovació de les coordenades. Comprova la teva conexió i torna-ho a provar.`)

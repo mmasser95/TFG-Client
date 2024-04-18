@@ -61,22 +61,9 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import location from "leaflet/dist/images/marker-icon.png"
 import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
-
+import { Establiment } from '../types';
 const router = useRouter()
-interface Establiment {
-    _id: string,
-    nom: string,
-    descripcio: string,
-    latitude: string,
-    longitude: string,
-    telf: string,
-    url_imatge: string
-    coordenades: LatLngTuple,
-    url_fons: string,
-    horari: string,
-    tipus: string,
 
-}
 let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)
 const map: Ref<Map | null> = ref(null)

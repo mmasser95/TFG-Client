@@ -2,7 +2,7 @@
     <ion-card :router-link="`/establiment/${establiment._id}`">
         <div class="container">
             <img class="img_fons" :alt="`Imatge de fons del negoci ${establiment.nom}`"
-                src="https://ionicframework.com/docs/img/demos/card-media.png" />
+                :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" />
             <ion-thumbnail class="img_perfil">
                 <img :alt="`Imatge del logotip del negoci ${establiment.nom}`"
                     src="https://ionicframework.com/docs/img/demos/card-media.png" />

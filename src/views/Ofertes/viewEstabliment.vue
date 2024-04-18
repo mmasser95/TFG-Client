@@ -16,7 +16,7 @@
                     <ion-col></ion-col>
                     <ion-col class="ion-no-margin ion-no-padding" size="12" sizeXl="6" sizeLg="8" sizeMd="10"
                         sizeSm="12">
-                        <img src="https://ionicframework.com/docs/img/demos/card-media.png" alt="Prova">
+                        <img crossorigin="use-credentials" :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" alt="Prova">
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>

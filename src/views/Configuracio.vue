@@ -34,6 +34,7 @@ import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban } from 'ionicon
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
 import canviarDireccio from './Configuracio/canviarDireccio.vue';
+import canviarFotoPerfil from './Configuracio/canviarImatges.vue'
 import { useLoginStore } from '../store/loginStore';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
@@ -75,6 +76,16 @@ const modalConfiguracioDireccio = async () => {
         breakpoints: [0, 0.33, 0.66, 1]
     })
     modal.present()
+}
+
+const modalCanviarFotoPerfil = async () => {
+    const modal = await modalController.create({
+        component: canviarFotoPerfil,
+        initialBreakpoint: 0.66,
+        breakpoints: [0, 0.33, 0.66, 1]
+    })
+    modal.present()
+    
 }
 
 const alertSortirSessio = async () => {
@@ -191,6 +202,10 @@ const opcions = [
         label: "Canviar direcció",
         icon: map,
         modalToShow: modalConfiguracioDireccio
+    },
+    {
+        label: "Canviar foto perfil",
+        modalToShow: modalCanviarFotoPerfil
     },
     {
         label: "Politica Privacitat",

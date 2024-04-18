@@ -47,23 +47,11 @@ import { onMounted, ref, Ref } from 'vue';
 import { showLoading } from '../composables/loader';
 import {  LatLngTuple } from 'leaflet'
 import { searchEstabliments } from '../APIService';
+import { Establiment } from '../types';
 let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)
 let radi = ref(25)
 
-interface Establiment {
-  _id: string,
-  nom: string,
-  descripcio: string,
-  latitude: string,
-  longitude: string,
-  telf: string,
-  url_imatge: string
-  coordenades: LatLngTuple,
-  url_fons: string,
-  horari: string,
-  tipus: string
-}
 
 let establiments: Ref<[Establiment] | null> = ref(null)
 

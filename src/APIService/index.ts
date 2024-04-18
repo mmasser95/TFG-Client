@@ -19,6 +19,15 @@ const getHeaders = () => {
   };
 };
 
+const getMultiPartHeaders=()=>{
+  return {
+    headers: {
+      Authorization: 'Bearer ' + useLoginStore().token,
+      'Content-Type':'multipart/form-data'
+    },
+  };
+}
+
 export async function getCoordinates(
   carrer: String,
   numero: number,
@@ -180,4 +189,11 @@ export function createFav(establimentId:string){
 
 export function deleteFav(establimentId:string){
   return instance.delete(`/fav/${establimentId}`,getHeaders())
+}
+
+export function putImatgePerfil(formData:any){
+  return instance.put(`/establiments/img_perfil`,formData,getMultiPartHeaders())
+}
+export function putImatgeFondo(formData:any){
+  return instance.put(`/establiments/img_fondo`,formData,getMultiPartHeaders())
 }
