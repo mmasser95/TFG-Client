@@ -85,11 +85,15 @@ import { showLoading } from '../composables/loader';
 
 import ErrorMessage from '../components/ErrorMessage.vue';
 
+import { useFavStore } from '../store/favStore'
+
 const router = useRouter();
 //Store
 const store = useLoginStore();
 const { userId, token } = storeToRefs(store);
 const { setToken, setUserId, setUserType } = store;
+
+const { setLoginFavs } = useFavStore()
 
 const loginError = ref('');
 
@@ -139,9 +143,12 @@ const login = async () => {
         setToken(res.data.token);
         setUserId(res.data.userId)
         setUserType(res.data.userType)
+
         loginError.value = '';
-        if (res.data.userType == 'client')
+        if (res.data.userType == 'client') {
+          setLoginFavs()
           router.push('/tabs/tab1');
+        }
         else
           router.push('/tabs/tab5')
       } else {
@@ -207,6 +214,4 @@ const operModalRegistreEstabliment = async () => {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

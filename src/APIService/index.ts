@@ -168,3 +168,16 @@ export function createElement(rebostId: any, data: any) {
 export function deleteElement(rebostId:any,elementId:any){
   return instance.delete(`/rebosts/${rebostId}/elements/${elementId}`,getHeaders())
 }
+
+
+export function getFavs(){
+  return instance.get(`/fav`,getHeaders())
+}
+
+export function createFav(establimentId:string){
+  return instance.post(`/fav`,{establimentId},getHeaders())
+}
+
+export function deleteFav(establimentId:string){
+  return instance.delete(`/fav/${establimentId}`,getHeaders())
+}

@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonFab, IonFabButton, IonIcon, modalController, IonRefresher,RefresherCustomEvent, IonRefresherContent } from '@ionic/vue';
+import { IonPage, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonFab, IonFabButton, IonIcon, modalController, IonRefresher, RefresherCustomEvent, IonRefresherContent } from '@ionic/vue';
 import { onMounted, ref, reactive, onBeforeUpdate, computed } from 'vue';
 import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -50,12 +50,8 @@ import { getRebosts, crearRebost, updateRebost } from '../APIService'
 import 'swiper/css'
 import newRebost from './Rebost/newRebost.vue';
 import { showLoading } from '../composables/loader';
+import { Rebost } from '../types'
 
-interface Rebost {
-  _id: string,
-  nom: string,
-  descripcio: string
-}
 
 const rebosts: Ref<Rebost[] | undefined> = ref([]);
 
@@ -112,7 +108,7 @@ const openModalCreate = async () => {
   }
 }
 
-const handleRefresh = async (event:RefresherCustomEvent) => {
+const handleRefresh = async (event: RefresherCustomEvent) => {
   await fillRebosts();
   event.target.complete()
 }

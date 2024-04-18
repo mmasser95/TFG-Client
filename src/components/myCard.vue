@@ -12,7 +12,7 @@
             <ion-card-title>
                 <ion-title>
                     {{ establiment.nom }}
-                    <ion-icon color="danger" size="64" :icon="heart"></ion-icon>
+                    <favButton :establimentId="establiment._id"></favButton>
                 </ion-title>
             </ion-card-title>
             <ion-card-subtitle>{{ establiment.descripcio }}</ion-card-subtitle>
@@ -37,22 +37,11 @@
 
 <script setup lang="ts">
 import { IonCard, IonTitle, IonCardTitle, IonGrid, IonRow, IonCol, IonCardSubtitle, IonCardHeader, IonCardContent, IonThumbnail, IonImg, IonIcon } from '@ionic/vue'
-import { heart, heartOutline, heartCircle } from 'ionicons/icons';
+
 import { defineProps, onMounted } from 'vue';
 import { LatLngTuple } from 'leaflet'
-interface Establiment {
-    _id: string,
-    nom: string,
-    descripcio: string,
-    latitude: string,
-    longitude: string,
-    telf: string,
-    url_imatge: string
-    coordenades: LatLngTuple,
-    url_fons: string,
-    horari: string,
-    tipus: String
-}
+import favButton from './favButton.vue';
+import { Establiment } from '../types';
 const props = defineProps<{ establiment: Establiment }>()
 
 
