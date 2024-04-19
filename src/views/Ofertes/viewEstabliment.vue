@@ -102,7 +102,6 @@ const ofertesActives = computed(() => establiment.value?.ofertes.filter((element
 const direccio = computed(() => `Carrer ${establiment.value?.direccio.carrer} nº ${establiment.value?.direccio.numero},${establiment.value?.direccio.CP} ${establiment.value?.direccio.poblacio},${establiment.value?.direccio.provincia}`)
 const zoom = ref(16)
 const map: Ref<Map | undefined> = ref()
-const rating = ref(4.5)
 const fillEstabliment = async () => {
     const loader = await showLoading('Carregant establiment')
     loader.present()
