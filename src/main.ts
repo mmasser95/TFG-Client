@@ -1,10 +1,10 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
 
-import {defineCustomElements} from '@ionic/pwa-elements/loader';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 defineCustomElements(window);
 
 /* Core CSS required for Ionic components to work properly */
@@ -27,15 +27,18 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 
 /* Store Pinia*/
-import {createPinia} from 'pinia';
+import { createPinia } from 'pinia';
+import vue3starRatings from "vue3-star-ratings";
 
-const pinia=createPinia();
+const pinia = createPinia();
 
 const app = createApp(App)
-  .use(IonicVue)
-  .use(router)
-  .use(pinia);
-  
+.use(IonicVue)
+.use(router)
+.use(pinia)
+.component('star-rating',vue3starRatings)
+
+
 router.isReady().then(() => {
   app.mount('#app');
 });

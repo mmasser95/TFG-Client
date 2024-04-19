@@ -16,7 +16,8 @@
                     <ion-col></ion-col>
                     <ion-col class="ion-no-margin ion-no-padding" size="12" sizeXl="6" sizeLg="8" sizeMd="10"
                         sizeSm="12">
-                        <img crossorigin="anonymous" :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" alt="Prova">
+                        <img crossorigin="anonymous"
+                            :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" alt="Prova">
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -51,7 +52,8 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-                        <star-rating v-model:rating="rating"></star-rating>
+                        <div ref="rater"></div>
+                        <star-rating v-model="rating"></star-rating>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -62,23 +64,29 @@
 <script setup lang="ts">
 import { IonPage, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon } from '@ionic/vue'
 import { arrowBack } from 'ionicons/icons'
-import { getEstabliment,getEstadistiques } from '../../APIService';
-import { computed, onMounted, ref, Ref } from 'vue';
+import { getEstabliment, getEstadistiques } from '../../APIService';
+import { computed, nextTick, onMounted, onBeforeUnmount, ref, Ref, defineComponent } from 'vue';
 import { showLoading, showAlert } from '../../composables/loader';
 import { useRouter } from 'vue-router';
 import cardOferta from '../../components/cardOferta.vue';
 import { Establiment } from '../../types'
-
 import "leaflet/dist/leaflet.css";
 import L, { Map, LatLngTuple, Icon } from 'leaflet'
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import location from "leaflet/dist/images/marker-icon.png"
+import Rater from 'rater-js'
+
 
 
 const router = useRouter()
 
+const rater: Ref<null | HTMLElement> = ref(null)
+
+const rating=ref(4)
+
+const qualitat = ref(0)
 const labels = {
     nom: "Nom",
     descripcio: "Descripcio",
@@ -94,7 +102,7 @@ const ofertesActives = computed(() => establiment.value?.ofertes.filter((element
 const direccio = computed(() => `Carrer ${establiment.value?.direccio.carrer} nº ${establiment.value?.direccio.numero},${establiment.value?.direccio.CP} ${establiment.value?.direccio.poblacio},${establiment.value?.direccio.provincia}`)
 const zoom = ref(16)
 const map: Ref<Map | undefined> = ref()
-const rating=ref(4.5)
+const rating = ref(4.5)
 const fillEstabliment = async () => {
     const loader = await showLoading('Carregant establiment')
     loader.present()
@@ -116,7 +124,7 @@ const loadMap = () => {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-        let marker=L.marker(establiment.value.coordenades,{icon: new Icon({ iconUrl: location, iconSize: [25, 41], iconAnchor: [12, 41] })})
+        let marker = L.marker(establiment.value.coordenades, { icon: new Icon({ iconUrl: location, iconSize: [25, 41], iconAnchor: [12, 41] }) })
         // let marker = L.marker(establiment.value.coordenades,)
         marker.bindPopup(direccio.value)
         map.addLayer(marker)
@@ -128,8 +136,28 @@ const goBack = () => {
     router.go(-1)
 }
 
-onMounted(() => {
-    fillEstabliment()
+const loadRater = () => {
+    if (rater.value){
+        var myRater = Rater({
+            element: rater.value,
+            rateCallback: (rating, done) => {
+                qualitat.value = rating
+                if (done != undefined)
+                    done()
+            },
+        })
+    myRater.enable()}
+    console.log('rater :>> ', rater);
+}
+
+onMounted(async () => {
+    await fillEstabliment()
+    await nextTick()
+    setTimeout(() => loadRater(), 500)
+
+})
+onBeforeUnmount(() => {
+    console.log('rater :>> ', rater);
 })
 </script>
 <style></style>

@@ -59,7 +59,9 @@ import { searchEstabliments,getMyFavs } from '../APIService';
 import { Establiment } from '../types';
 import { useFavStore } from '../store/favStore';
 import { storeToRefs } from 'pinia';
-const {favorites} =storeToRefs(useFavStore())
+import {useDebounceFn} from '@vueuse/core'
+const favStore=useFavStore()
+const {favorites} =storeToRefs(favStore)
 let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)
 let radi = ref(25)
@@ -71,10 +73,10 @@ interface favs{
 let establiments: Ref<[Establiment] | null> = ref(null)
 let establimentsPreferits: Ref<[favs] | null> = ref(null)
 
-watch(favorites.value,async(before,after)=>{
-  // await fillEstablimentsPreferits()
+watch(favStore.favorites,async(before,after)=>{
+  await fillEstablimentsPreferits()
   console.log(before,after)
-})
+},{deep:true})
 
 const fillEstabliments = async () => {
   const loader = await showLoading("Carregant establiments")
@@ -88,7 +90,7 @@ const fillEstabliments = async () => {
   });
 }
 
-const fillEstablimentsPreferits=async()=>{
+const fillEstablimentsPreferits=useDebounceFn(async()=>{
   const loader = await showLoading("Carregant establiments preferits")
   loader.present()
   getMyFavs().then((result) => {
@@ -98,7 +100,7 @@ const fillEstablimentsPreferits=async()=>{
   }).finally(() => {
     loader.dismiss(null, 'cancel')
   });
-}
+},250)
 
 const handleRefresh = (event:RefresherCustomEvent) => {
   console.log("Fa mitja entrada");

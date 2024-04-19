@@ -1,18 +1,21 @@
 <template>
-    <ion-card :router-link="`/establiment/${establiment._id}`">
-        <div class="container">
-            <img class="img_fons" :alt="`Imatge de fons del negoci ${establiment.nom}`"
+    <ion-card :router-link="`/establiment/${establiment._id}`" class="container">
+        <div class="img_fons">
+            <img :alt="`Imatge de fons del negoci ${establiment.nom}`"
                 :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" />
-            <ion-thumbnail class="img_perfil">
+        </div>
+        <div class="img_perfil">
+            <ion-thumbnail class="miniatura">
                 <img :alt="`Imatge del logotip del negoci ${establiment.nom}`"
                     src="https://ionicframework.com/docs/img/demos/card-media.png" />
             </ion-thumbnail>
         </div>
+
+        <favButton class="fav" :establimentId="establiment._id"></favButton>
         <ion-card-header>
             <ion-card-title>
                 <ion-title>
                     {{ establiment.nom }}
-                    <favButton :establimentId="establiment._id"></favButton>
                 </ion-title>
             </ion-card-title>
             <ion-card-subtitle>{{ establiment.descripcio }}</ion-card-subtitle>
@@ -39,7 +42,6 @@
 import { IonCard, IonTitle, IonCardTitle, IonGrid, IonRow, IonCol, IonCardSubtitle, IonCardHeader, IonCardContent, IonThumbnail, IonImg, IonIcon } from '@ionic/vue'
 
 import { defineProps, onMounted } from 'vue';
-import { LatLngTuple } from 'leaflet'
 import favButton from './favButton.vue';
 import { Establiment } from '../types';
 const props = defineProps<{ establiment: Establiment }>()
@@ -47,4 +49,31 @@ const props = defineProps<{ establiment: Establiment }>()
 
 </script>
 
-<style></style>
+<style>
+.container {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+    margin:10px;
+    padding:15px;
+}
+
+.fav {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+}
+
+.img_fons {
+    height: 100px;
+}
+
+.img_perfil {
+    position: absolute;
+    left: 25px;
+    top: 60px;
+}
+.miniatura{
+    border-radius:25px;
+}
+</style>

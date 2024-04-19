@@ -46,7 +46,7 @@
 </template>
 <script setup lang="ts">
 import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange } from '@ionic/vue'
-import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw, watch } from 'vue';
+import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments } from '../APIService';
 import { Geolocation } from '@capacitor/geolocation';
@@ -61,7 +61,7 @@ import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
 import { Establiment } from '../types';
 import { LatLng } from 'leaflet';
-import { watchDebounced,useDebounceFn } from '@vueuse/core'
+import { watchDebounced, useDebounceFn } from '@vueuse/core'
 const router = useRouter()
 
 const map: Ref<Map | null> = ref(null)
@@ -93,7 +93,7 @@ const printCurrentPosition = async () => {
     alerta.present()
 };
 
-const fillEstabliments = useDebounceFn( async () => {
+const fillEstabliments = useDebounceFn(async () => {
     const loader = await showLoading('Carregant establiments')
     loader.present()
     searchEstabliments(mapCoordinates.value[0], mapCoordinates.value[1], cercleRadi.value)
@@ -106,7 +106,7 @@ const fillEstabliments = useDebounceFn( async () => {
         }).finally(() => {
             loader.dismiss(null, 'cancel')
         });
-},1000)
+}, 1000)
 
 
 
@@ -167,6 +167,12 @@ onMounted(async () => {
     setTimeout(() => map.value = loadMap(), 50)
     fillEstabliments()
     printCurrentPosition()
+})
+
+onBeforeUnmount(async () => {
+    if (map.value) {
+        map.value.remove()
+    }
 })
 
 watch(cercleRadi, async (newValue, oldValue) => {
