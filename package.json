@@ -28,6 +28,7 @@
     "@ionic/vue-router": "^7.0.0",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.7",
     "date-fns": "^3.6.0",
     "ionicons": "^7.0.0",
@@ -37,6 +38,7 @@
     "tesseract.js": "^5.0.5",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0",
+    "vue-star-rating": "^1.7.0",
     "vuelidate": "^0.7.7"
   },
   "devDependencies": {

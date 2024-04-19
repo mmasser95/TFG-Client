@@ -178,9 +178,12 @@ export function deleteElement(rebostId:any,elementId:any){
   return instance.delete(`/rebosts/${rebostId}/elements/${elementId}`,getHeaders())
 }
 
-
 export function getFavs(){
   return instance.get(`/fav`,getHeaders())
+}
+
+export function getMyFavs(){
+  return instance.get(`/myfav`,getHeaders())
 }
 
 export function createFav(establimentId:string){
@@ -196,4 +199,7 @@ export function putImatgePerfil(formData:any){
 }
 export function putImatgeFondo(formData:any){
   return instance.put(`/establiments/img_fondo`,formData,getMultiPartHeaders())
+}
+export function getEstadistiques(establimentId:any){
+  return instance.get(`/estadistiques/${establimentId}`,getHeaders())
 }

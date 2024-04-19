@@ -4,9 +4,6 @@
             <ion-title class="ion-text-center">Mapa</ion-title>
         </ion-header>
         <ion-content>
-            <ion-refresher slot="fixed" @ion-refresh.stop="handleRefresh($event)">
-                <ion-refresher-content></ion-refresher-content>
-            </ion-refresher>
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
@@ -25,8 +22,9 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col v-show="pestanyaMapa" size="12" sizeXl="10">
-                        <div id="map" style="height: 500px;"></div>
-
+                        {{ cercleRadi }}
+                        <ion-range :min="1" :max="25" v-model="cercleRadi"></ion-range>
+                        <div id="map"></div>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -47,13 +45,13 @@
 
 </template>
 <script setup lang="ts">
-import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent } from '@ionic/vue'
-import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw } from 'vue';
+import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange } from '@ionic/vue'
+import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments } from '../APIService';
 import { Geolocation } from '@capacitor/geolocation';
 import "leaflet/dist/leaflet.css";
-import L, { Map, LatLngTuple, Icon } from 'leaflet'
+import L, { Map, LatLngExpression, Icon, Circle } from 'leaflet'
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
@@ -62,17 +60,24 @@ import location from "leaflet/dist/images/marker-icon.png"
 import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
 import { Establiment } from '../types';
+import { LatLng } from 'leaflet';
+import { watchDebounced,useDebounceFn } from '@vueuse/core'
 const router = useRouter()
 
-let latitude = ref(41.0408888)
-let longitude = ref(0.7479283)
 const map: Ref<Map | null> = ref(null)
-const center = computed(() => { return [latitude.value, longitude.value] })
+const mapCoordinates = ref([41.0408888, 0.7479283])
+const latitude = computed(() => { if (mapCoordinates.value) { return mapCoordinates.value[0] } })
+const longitude = computed(() => { if (mapCoordinates.value) { return mapCoordinates.value[1] } })
 const zoom = ref(9)
 const establiments: Ref<Establiment[] | undefined> = ref([]);
 const pestanyaMapa = ref(true)
 
-const changePestanya = (event:any) => {
+const cercleMapa: Ref<null | Circle> = ref(null)
+const cercleRadi = ref(15)
+
+const markersLayer: Ref<any> = ref(null)
+
+const changePestanya = (event: any) => {
     console.log('event.detail.value :>>', event.detail.value);
     if (event.detail.value != 'mapa') { pestanyaMapa.value = false }
     else {
@@ -82,24 +87,16 @@ const changePestanya = (event:any) => {
     }
 }
 
-const handleRefresh = async (event: RefresherCustomEvent) => {
-    searchEstabliments(latitude.value, longitude.value, 15).then((res) => {
-        establiments.value = res.data.establiments
-    }).catch((err) => {
-
-    }).finally(() => event.target.complete());
-}
-
 const printCurrentPosition = async () => {
     const coordinates = await Geolocation.getCurrentPosition();
     let alerta = await showAlert('Current position:' + coordinates);
     alerta.present()
 };
 
-const fillEstabliments = async () => {
+const fillEstabliments = useDebounceFn( async () => {
     const loader = await showLoading('Carregant establiments')
     loader.present()
-    searchEstabliments(latitude.value, longitude.value, 50)
+    searchEstabliments(mapCoordinates.value[0], mapCoordinates.value[1], cercleRadi.value)
         .then((res) => {
             establiments.value = res.data.establiments;
             addMarkers()
@@ -109,33 +106,59 @@ const fillEstabliments = async () => {
         }).finally(() => {
             loader.dismiss(null, 'cancel')
         });
-}
+},1000)
+
+
 
 const addMarkers = () => {
+    if (markersLayer.value != null && map.value != null)
+        map.value.removeLayer(markersLayer.value)
     var markers = L.markerClusterGroup()
     if (establiments.value != undefined) {
         establiments.value.forEach(element => {
             if (map.value != null) {
                 var marker = L.marker(element.coordenades, {
-                    icon: new Icon({ iconUrl: location })
+                    icon: new Icon({ iconUrl: location, iconSize: [25, 41], iconAnchor: [12, 41] })
                 })
                 var ruta = `/establiment/${element._id}`
                 var link = `<a v-onClick="anarEstabliment('${ruta}')"> Link</a>`
-                marker.bindPopup(`Establiment: ${element.nom} ${link}`)
+                var popup = L.popup()
+                popup.setContent(element.nom + link)
+                marker.bindPopup(popup)
                 markers.addLayer(marker)
             }
         });
-        if (map.value != null)
+        if (map.value != null) {
             toRaw(map.value).addLayer(markers)
+            markersLayer.value = markers
+        }
     }
 }
 
 const loadMap = () => {
-    var map = L.map('map').invalidateSize().setView([latitude.value, longitude.value], zoom.value);
+    var map = L.map('map').invalidateSize().setView([mapCoordinates.value[0], mapCoordinates.value[1]], zoom.value);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+    cercleMapa.value = new L.Circle([mapCoordinates.value[0], mapCoordinates.value[1]], cercleRadi.value * 1000)
+    cercleMapa.value.addTo(map)
+
+    map.on('drag', (event) => {
+        var map = event.target
+        var center = map.getCenter();  //get map center
+        cercleMapa.value?.setLatLng(center)
+        mapCoordinates.value = [center.lat, center.lng]
+    })
+
+    map.on('moveend', async (event) => {
+        var map = event.target
+        var center = map.getCenter()
+        mapCoordinates.value = [center.lat, center.lng]
+        cercleMapa.value?.setLatLng(center)
+        await fillEstabliments()
+    })
+
     return map
 }
 
@@ -145,5 +168,17 @@ onMounted(async () => {
     fillEstabliments()
     printCurrentPosition()
 })
+
+watch(cercleRadi, async (newValue, oldValue) => {
+    cercleMapa.value?.setRadius((newValue) * 1000)
+    await fillEstabliments()
+})
+
+
+
 </script>
-<style></style>
+<style>
+#map {
+    height: 55vh;
+}
+</style>

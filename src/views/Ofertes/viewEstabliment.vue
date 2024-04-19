@@ -16,7 +16,7 @@
                     <ion-col></ion-col>
                     <ion-col class="ion-no-margin ion-no-padding" size="12" sizeXl="6" sizeLg="8" sizeMd="10"
                         sizeSm="12">
-                        <img crossorigin="use-credentials" :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" alt="Prova">
+                        <img crossorigin="anonymous" :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" alt="Prova">
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -50,7 +50,9 @@
                 </ion-row>
                 <ion-row>
                     <ion-col></ion-col>
-                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10"></ion-col>
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+                        <star-rating v-model:rating="rating"></star-rating>
+                    </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
             </ion-grid>
@@ -60,7 +62,7 @@
 <script setup lang="ts">
 import { IonPage, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon } from '@ionic/vue'
 import { arrowBack } from 'ionicons/icons'
-import { getEstabliment } from '../../APIService';
+import { getEstabliment,getEstadistiques } from '../../APIService';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { showLoading, showAlert } from '../../composables/loader';
 import { useRouter } from 'vue-router';
@@ -92,6 +94,7 @@ const ofertesActives = computed(() => establiment.value?.ofertes.filter((element
 const direccio = computed(() => `Carrer ${establiment.value?.direccio.carrer} nº ${establiment.value?.direccio.numero},${establiment.value?.direccio.CP} ${establiment.value?.direccio.poblacio},${establiment.value?.direccio.provincia}`)
 const zoom = ref(16)
 const map: Ref<Map | undefined> = ref()
+const rating=ref(4.5)
 const fillEstabliment = async () => {
     const loader = await showLoading('Carregant establiment')
     loader.present()
@@ -113,8 +116,8 @@ const loadMap = () => {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-        // let marker=L.marker(establiment.value.coordenades,{icon:new Icon({iconUrl:location})})
-        let marker = L.marker(establiment.value.coordenades,)
+        let marker=L.marker(establiment.value.coordenades,{icon: new Icon({ iconUrl: location, iconSize: [25, 41], iconAnchor: [12, 41] })})
+        // let marker = L.marker(establiment.value.coordenades,)
         marker.bindPopup(direccio.value)
         map.addLayer(marker)
         return map

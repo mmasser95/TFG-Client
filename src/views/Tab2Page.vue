@@ -25,13 +25,21 @@
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col></ion-col>
+          <ion-col>
+            <ion-title class="ion-text-center">Negocis preferits</ion-title>
+          </ion-col>
           <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col></ion-col>
-          <ion-col></ion-col>
+          <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+            <swiper :slides-per-view="1">
+              <swiper-slide v-if="establimentsPreferits" v-for="d in establimentsPreferits" :key="d.establimentId._id">
+                <myCard :establiment="d.establimentId"/>
+              </swiper-slide>
+            </swiper>
+          </ion-col>
+          <ion-col>{{ favorites }}</ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
@@ -42,24 +50,49 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
+import 'swiper/css/free-mode'
 import myCard from '../components/myCard.vue';
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref,watch } from 'vue';
 import { showLoading } from '../composables/loader';
 import {  LatLngTuple } from 'leaflet'
-import { searchEstabliments } from '../APIService';
+import { searchEstabliments,getMyFavs } from '../APIService';
 import { Establiment } from '../types';
+import { useFavStore } from '../store/favStore';
+import { storeToRefs } from 'pinia';
+const {favorites} =storeToRefs(useFavStore())
 let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)
 let radi = ref(25)
 
+interface favs{
+  establimentId:Establiment
+}
 
 let establiments: Ref<[Establiment] | null> = ref(null)
+let establimentsPreferits: Ref<[favs] | null> = ref(null)
+
+watch(favorites.value,async(before,after)=>{
+  // await fillEstablimentsPreferits()
+  console.log(before,after)
+})
 
 const fillEstabliments = async () => {
   const loader = await showLoading("Carregant establiments")
   loader.present()
   searchEstabliments(latitude.value, longitude.value, radi.value).then((result) => {
     establiments.value = result.data.establiments
+  }).catch((err) => {
+
+  }).finally(() => {
+    loader.dismiss(null, 'cancel')
+  });
+}
+
+const fillEstablimentsPreferits=async()=>{
+  const loader = await showLoading("Carregant establiments preferits")
+  loader.present()
+  getMyFavs().then((result) => {
+    establimentsPreferits.value = result.data.preferits.establiments_fav
   }).catch((err) => {
 
   }).finally(() => {
@@ -77,6 +110,7 @@ const handleRefresh = (event:RefresherCustomEvent) => {
 
 onMounted(async () => {
   await fillEstabliments()
+  await fillEstablimentsPreferits()
 })
 
 </script>
