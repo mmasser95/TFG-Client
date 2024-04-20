@@ -30,7 +30,6 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'explorar',
         component: () => import('@/views/Explorar.vue'),
-        
       },
       {
         path: 'tab3',
@@ -48,7 +47,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/establiment/:idd',
-    component: () => import('@/views/Ofertes/viewEstabliment.vue'),
+    component: () => import('@/views/Explorar/viewEstabliment.vue'),
     props: true,
   },
   // {

@@ -26,7 +26,20 @@
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
                             <ion-item v-for="(label, k) in labels" :key="k">
-                                {{ label }}: {{ establiment[k] }}
+                                <div v-if="label == 'Horari'">
+                                    {{ label }}:
+                                    <badgeHorari :horaris="establiment.horari" />
+                                </div>
+                                <div v-else-if="label == 'Telèfon'">
+                                    Telèfon: <ion-badge class="telfBadge">
+                                        <div class="myBadge">
+                                            {{ establiment.telf }} <ion-icon :icon="call"></ion-icon>
+                                        </div>
+                                    </ion-badge>
+                                </div>
+                                <div v-else>
+                                    {{ label }}: {{ establiment[k] }}
+                                </div>
                             </ion-item>
                             <ion-item>
                                 Direccio: {{ direccio }}
@@ -43,7 +56,7 @@
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
                             <ion-item v-for="oferta in ofertesActives" :key="oferta._id">
-                                <cardOferta :oferta="oferta"></cardOferta>
+                                <cardOferta :establimentId="idd" :oferta="oferta"></cardOferta>
                             </ion-item>
                         </ion-list>
                     </ion-col>
@@ -52,8 +65,7 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-                        <div ref="rater"></div>
-                        <star-rating v-model="rating"></star-rating>
+                        <comentariComponent />
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -62,31 +74,27 @@
     </ion-page>
 </template>
 <script setup lang="ts">
-import { IonPage, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon } from '@ionic/vue'
-import { arrowBack } from 'ionicons/icons'
+import { IonPage, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, IonTextarea,IonBadge } from '@ionic/vue'
+import { arrowBack,call } from 'ionicons/icons'
 import { getEstabliment, getEstadistiques } from '../../APIService';
 import { computed, nextTick, onMounted, onBeforeUnmount, ref, Ref, defineComponent } from 'vue';
 import { showLoading, showAlert } from '../../composables/loader';
 import { useRouter } from 'vue-router';
 import cardOferta from '../../components/cardOferta.vue';
-import { Establiment } from '../../types'
+import { Establiment2 } from '../../types'
 import "leaflet/dist/leaflet.css";
 import L, { Map, LatLngTuple, Icon } from 'leaflet'
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import location from "leaflet/dist/images/marker-icon.png"
-import Rater from 'rater-js'
-
+import badgeHorari from '../../components/badgeHorari.vue';
+import comentariComponent from '../../components/comentariComponent.vue';
 
 
 const router = useRouter()
 
-const rater: Ref<null | HTMLElement> = ref(null)
 
-const rating=ref(4)
-
-const qualitat = ref(0)
 const labels = {
     nom: "Nom",
     descripcio: "Descripcio",
@@ -97,7 +105,7 @@ const labels = {
 const props = defineProps<{
     idd: string
 }>();
-const establiment: Ref<Establiment | undefined> = ref();
+const establiment: Ref<Establiment2 | undefined> = ref();
 const ofertesActives = computed(() => establiment.value?.ofertes.filter((element) => element.active))
 const direccio = computed(() => `Carrer ${establiment.value?.direccio.carrer} nº ${establiment.value?.direccio.numero},${establiment.value?.direccio.CP} ${establiment.value?.direccio.poblacio},${establiment.value?.direccio.provincia}`)
 const zoom = ref(16)
@@ -135,28 +143,18 @@ const goBack = () => {
     router.go(-1)
 }
 
-const loadRater = () => {
-    if (rater.value){
-        var myRater = Rater({
-            element: rater.value,
-            rateCallback: (rating, done) => {
-                qualitat.value = rating
-                if (done != undefined)
-                    done()
-            },
-        })
-    myRater.enable()}
-    console.log('rater :>> ', rater);
-}
+
 
 onMounted(async () => {
     await fillEstabliment()
     await nextTick()
-    setTimeout(() => loadRater(), 500)
 
 })
-onBeforeUnmount(() => {
-    console.log('rater :>> ', rater);
-})
 </script>
-<style></style>
+<style scoped>
+.telfBadge {
+    background: #008b90;
+    display: flex;
+    align-items: center;
+}
+</style>

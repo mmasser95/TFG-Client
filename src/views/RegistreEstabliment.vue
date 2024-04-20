@@ -77,7 +77,7 @@
                                 </ion-col>
                                 <ion-col size="12" sizeXl="6">
                                     <ion-input label="Horari" type="text" :label-placement="labelPlacement"
-                                        @ion-blur="v$.horari.$touch" v-model="state.horariString"></ion-input>
+                                        @ion-blur="v$.horariString.$touch" v-model="state.horariString"></ion-input>
                                     <ErrorMessage v-if="v$.horariString.$error && v$.horariString.required.$invalid"
                                         message="Aquest camp és obligatori" />
                                     <ErrorMessage

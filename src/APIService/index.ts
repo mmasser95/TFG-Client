@@ -147,6 +147,10 @@ export function getOferta(id_oferta: any) {
   return instance.get(`/ofertes/${id_oferta}`, getHeaders());
 }
 
+export function getOfertaUser(establimentId:any,id_oferta: any) {
+  return instance.get(`/establiments/${establimentId}/oferta/${id_oferta}`, getHeaders());
+}
+
 export function crearOferta(data: any) {
   return instance.post(`/ofertes`, data, getHeaders());
 }

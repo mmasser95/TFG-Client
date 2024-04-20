@@ -34,7 +34,7 @@
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
             <swiper :slides-per-view="1">
-              <swiper-slide v-if="establimentsPreferits" v-for="d in establimentsPreferits" :key="d.establimentId._id">
+              <swiper-slide v-if="!establimentsPreferits" v-for="d in establimentsPreferits" :key="d.establimentId._id">
                 <myCard :establiment="d.establimentId"/>
               </swiper-slide>
             </swiper>

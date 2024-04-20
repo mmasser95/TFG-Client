@@ -8,22 +8,15 @@
             <ion-text>
                 {{ content }}
             </ion-text>
-            <ion-grid>
-                <ion-row>
-                    <ion-col></ion-col>
-                    <ion-col size="4" class="">
-                        <ion-button expand="block" click.stop="updateInventari">
-                            <ion-icon :icon="pencilSharp"></ion-icon>
-                        </ion-button>
-                    </ion-col>
-                    <ion-col size="4" class="">
-                        <ion-button expand="block" @click.stop="createConfirmationAlert('Estas segur que vols eliminar aquest rebost i el seu contingut?',estasSegur)">
-                            <ion-icon :icon="trashBinSharp"></ion-icon>
-                        </ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-
+            <div class="buttons">
+                <ion-button expand="block" color="secondary" click.stop="updateInventari" class="editBtn">
+                    <ion-icon :icon="pencilSharp"></ion-icon>
+                </ion-button>
+                <ion-button expand="block" class="deleteBtn" color="secondary"
+                    @click.stop="createConfirmationAlert('Estas segur que vols eliminar aquest rebost i el seu contingut?', estasSegur)">
+                    <ion-icon :icon="trashBinSharp"></ion-icon>
+                </ion-button>
+            </div>
         </ion-card-content>
 
     </ion-card>
@@ -90,7 +83,7 @@ const updateInventari = () => {
 }
 
 const borrarInventari = () => {
-    let inventariId=props.idd
+    let inventariId = props.idd
     deleteRebost(inventariId)
         .then((result) => {
             mostrarAlerta(`L'inventari s'ha esborrat correctament`)
@@ -101,4 +94,18 @@ const borrarInventari = () => {
         });
 }
 </script>
-<style></style>
+<style scoped>
+ion-card {
+    height: 130px;
+    position: relative;
+    background-image: linear-gradient(to right top, #5ec268, #57a25d, #508453, #476648, #3d4a3d);
+    border-radius:10px;
+}
+
+
+.buttons {
+    position: absolute;
+    right: 10px;
+    display: flex
+}
+</style>

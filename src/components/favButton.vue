@@ -1,9 +1,9 @@
 <template>
     <div>
-        <ion-button size="small" v-if="isFav(establimentId)" @click.stop="removeFav(establimentId)" shape="round">
+        <ion-button class="favButton" size="small" v-if="isFav(establimentId)" @click.stop="removeFav(establimentId)" shape="round">
             <ion-icon slot="icon-only" color="danger" :icon="heart"></ion-icon>
         </ion-button>
-        <ion-button size="small" v-if="!isFav(establimentId)" @click.stop="addFav(establimentId)" shape="round">
+        <ion-button class="favButton" size="small" v-if="!isFav(establimentId)" @click.stop="addFav(establimentId)" shape="round">
             <ion-icon slot="icon-only" color="danger" :icon="heartOutline"></ion-icon>
         </ion-button>
     </div>
@@ -19,4 +19,8 @@ const props = defineProps<{
     establimentId: string
 }>()
 </script>
-<style></style>
+<style scoped>
+.favButton{
+   --background:rgba(136, 136, 136, 0.75) 
+}
+</style>

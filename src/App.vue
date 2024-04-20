@@ -21,7 +21,7 @@ useBackButton(-1, ()=>{
   font-family: 'Exo 2';
 }
 ion-fab{
-    bottom:25px;
-    right:25px;
+    bottom:7px;
+    right:15px;
 }
 </style>
