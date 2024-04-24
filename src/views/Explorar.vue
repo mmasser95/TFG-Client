@@ -91,8 +91,9 @@ const changePestanya = (event: any) => {
 const printCurrentPosition = async () => {
     try {
         const coordinates = await Geolocation.getCurrentPosition();
-        let alerta = await showAlert('Current position:' + coordinates);
+        let alerta = await showAlert('Current position:' + coordinates.coords.latitude + " " + coordinates.coords.longitude);
         alerta.present()
+        myLocation.value = [coordinates.coords.latitude, coordinates.coords.longitude]
     } catch (err) {
         if (err instanceof GeolocationPositionError) {
             let alerta2 = await showAlert('Error message: ' + err.message.toString());
