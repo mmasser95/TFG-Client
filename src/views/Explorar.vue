@@ -37,7 +37,7 @@
                             </ion-item>
                         </ion-list>
                     </ion-col>
-                    <ion-col></ion-col>
+                    <ion-col> {{ myLocation }}</ion-col>
                 </ion-row>
             </ion-grid>
         </ion-content>
@@ -48,7 +48,7 @@
 import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange } from '@ionic/vue'
 import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
-import { searchEstabliments } from '../APIService';
+import { searchEstabliments, doIPLocation } from '../APIService';
 import { Geolocation } from '@capacitor/geolocation';
 import "leaflet/dist/leaflet.css";
 import L, { Map, LatLngExpression, Icon, Circle } from 'leaflet'
@@ -66,6 +66,7 @@ const router = useRouter()
 
 const map: Ref<Map | null> = ref(null)
 const mapCoordinates = ref([41.0408888, 0.7479283])
+const myLocation: Ref<[number, number]> = ref([0, 0])
 const latitude = computed(() => { if (mapCoordinates.value) { return mapCoordinates.value[0] } })
 const longitude = computed(() => { if (mapCoordinates.value) { return mapCoordinates.value[1] } })
 const zoom = ref(9)
@@ -88,9 +89,29 @@ const changePestanya = (event: any) => {
 }
 
 const printCurrentPosition = async () => {
-    const coordinates = await Geolocation.getCurrentPosition();
-    let alerta = await showAlert('Current position:' + coordinates);
-    alerta.present()
+    try {
+        const coordinates = await Geolocation.getCurrentPosition();
+        let alerta = await showAlert('Current position:' + coordinates);
+        alerta.present()
+    } catch (err) {
+        if (err instanceof GeolocationPositionError) {
+            let alerta2 = await showAlert('Error message: ' + err.message.toString());
+            alerta2.present()
+            let alerta = await showAlert('Error code:' + err.code.toString());
+            alerta.present()
+            if (err.code == 1)
+                doIPLocation().then((res) => {
+                    let d = res.data
+                    myLocation.value = [d.location.lat, d.location.lon]
+                }).catch((err3) => {
+                    console.log('err3 :>> ', err3);
+                });
+        }
+    }
+
+
+
+
 };
 
 const fillEstabliments = useDebounceFn(async () => {

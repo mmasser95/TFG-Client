@@ -76,8 +76,6 @@ const mostrarAlerta = async (missatge: string) => {
     await alert.present();
 }
 
-
-
 const updateInventari = () => {
     emit('updateRebost', props.idd)
 }

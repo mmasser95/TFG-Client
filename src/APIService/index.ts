@@ -64,6 +64,10 @@ export async function getCoordinates(
   }
 }
 
+export function doIPLocation(){
+  return axios.get('https://api.my-ip.io/v2/ip.json')
+}
+
 export function doTest() {
   return axios.get('https://baconipsum.com/api/?type=meat-and-filler');
 }

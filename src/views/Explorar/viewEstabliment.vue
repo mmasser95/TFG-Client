@@ -26,7 +26,7 @@
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
                             <ion-item v-for="(label, k) in labels" :key="k">
-                                <div v-if="label == 'Horari'">
+                                <div v-if="label == 'Horari'&&typeof establiment.horari!='string'">
                                     {{ label }}:
                                     <badgeHorari :horaris="establiment.horari" />
                                 </div>

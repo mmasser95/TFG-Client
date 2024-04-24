@@ -50,20 +50,6 @@ const labels = {
     categoria: "Categoria"
 }
 
-const fillOferta = async () => {
-    console.log('props.establimentId :>> ', props.establimentId);
-    const loader = await showLoading('Carregant oferta')
-    loader.present()
-    getOfertaUser(props.establimentId, props.idd).then((res) => {
-        oferta.value = res.data.oferta
-    }).catch(async (err) => {
-        let alert = await showAlert(`S'ha produit l'error següent ${err}`)
-        alert.present()
-    }).finally(() => {
-        loader.dismiss(null, 'cancel')
-    });
-}
-
 onMounted(() => {
 })
 

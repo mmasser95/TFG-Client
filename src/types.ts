@@ -42,7 +42,7 @@ export interface Establiment2 {
   url_imatge: string;
   coordenades: LatLngTuple;
   url_fondo: string;
-  horari: Horari[];
+  horari: Horari[]|string;
   tipus: string;
   ofertes: Oferta[];
   direccio: Direccio;

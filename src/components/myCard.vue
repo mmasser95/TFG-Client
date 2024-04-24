@@ -33,7 +33,13 @@
                     </ion-badge>
                 </div>
                 <div class="content-item">
-                    Horari: <badgeHorari :horaris="establiment.horari"></badgeHorari>
+                    <div v-if="typeof establiment.horari=='string'">
+                        Horari: {{establiment.horari}}
+                    </div>
+                    <div v-else>
+                        Horari: <badgeHorari :horaris="establiment.horari"></badgeHorari>
+                    </div>
+                    
                 </div>
             </div>
             <div class="content-item">

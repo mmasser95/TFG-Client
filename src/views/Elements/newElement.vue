@@ -4,7 +4,8 @@
             <ion-buttons slot="start">
                 <ion-button color="secondary" @click="cancel">Cancel</ion-button>
             </ion-buttons>
-            <ion-title class="ion-text-center">Crear element</ion-title>
+            <ion-title v-if="!element" class="ion-text-center">Crear element</ion-title>
+            <ion-title v-if="element" class="ion-text-center">Editar element</ion-title>
             <ion-buttons slot="end">
                 <ion-button color="primary" @click="confirm">Crear</ion-button>
             </ion-buttons>
@@ -22,7 +23,7 @@
                         </ion-select>
                     </ion-col>
                     <ion-col size="12" sizeXl="6">
-                        <ion-select label="Aliment" :label-placement="labelPlacement" v-model="info.aliment">
+                        <ion-select label="Aliment" v-if="false" :label-placement="labelPlacement" v-model="info.aliment">
                             <ion-select-option v-for="(i, k) in aliments" :key="k" :value="i._id">{{ i.nom
                                 }}</ion-select-option>
                         </ion-select>
@@ -59,12 +60,14 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonLabel, IonHeader, IonContent, IonItem, IonIcon, IonToolbar, IonButtons, IonButton, IonTitle, IonInput, modalController, IonSelect, IonSelectOption } from '@ionic/vue';
+import { IonLabel, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonItem, IonIcon, IonToolbar, IonButtons, IonButton, IonTitle, IonInput, modalController, IonSelect, IonSelectOption } from '@ionic/vue';
 import { Ref, ref, reactive, defineProps, onMounted, } from 'vue';
-
+import {parseISO} from 'date-fns'
 import { getArticleCategories, getAllAlimentsByTipus } from '@/APIService';
 
 import cercadorAliments from '../../components/cercadorAliments.vue';
+
+import { Aliment, Element } from '../../types';
 
 const openCercadorAliments = async () => {
     const modal = await modalController.create({
@@ -81,13 +84,12 @@ const openCercadorAliments = async () => {
 
 }
 
+const props = defineProps<{
+    element?: Element,
+    rebostId?:string
+}>()
 
 const labelPlacement = 'floating'
-
-interface Aliment {
-    _id: string,
-    nom: string
-}
 
 const info = reactive({
     categoria: '',
@@ -96,7 +98,6 @@ const info = reactive({
     data_caducitat: '',
     quantitat: 0,
     q_unitat: ''
-
 })
 
 const aliments: Ref<Aliment[] | undefined> = ref([]);
@@ -122,11 +123,27 @@ const fillAliments = () => {
     });
 }
 
+const fillElementOnUpdate = () => {
+    if (props.element) {
+        console.log('props.element.aliment :>> ', props.element.aliment?._id);
+        info.aliment = props.element.aliment!=undefined ? props.element.aliment._id : ''
+        console.log('info.aliment :>> ', info.aliment);
+        info.categoria = props.element.aliment ? props.element.aliment.tipus : ''
+        info.data_compra = props.element.data_compra.split('T')[0]
+        info.data_caducitat = props.element.data_caducitat.split('T')[0]
+        info.q_unitat = props.element.q_unitat
+        info.quantitat = props.element.quantitat
+    }
+    fillAliments()
+}
 
 const cancel = () => modalController.dismiss(null, 'cancel')
 const confirm = () => modalController.dismiss(info, 'confirm')
 
-onMounted(() => getCategories())
+onMounted(() => {
+    getCategories()
+    fillElementOnUpdate()
+})
 
 </script>
 <style></style>

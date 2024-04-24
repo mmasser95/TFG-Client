@@ -20,7 +20,7 @@
         </ion-row>
     </ion-grid>
     <ion-buttons>
-        <ion-button expand="block">
+        <ion-button @click="updateElement" expand="block">
             <ion-icon :icon="pencil"></ion-icon>
         </ion-button>
         <ion-button @click="createConfirmationAlert('Estas segur que vols eliminar-lo del rebost?', estasSegur)">
@@ -88,5 +88,10 @@ const dataCaducitatRelative = computed(() => {
     if (props.element)
         return formatDistanceToNow(props.element.data_caducitat,{addSuffix:true,locale:ca})
 })
+
+const updateElement=()=>{
+    emit('updateElement',{...props})
+}
+
 </script>
 <style></style>
