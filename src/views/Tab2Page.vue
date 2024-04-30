@@ -33,14 +33,14 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1">
-              <div v-if="false">
-                <swiper-slide v-if="establimentsPreferits!=null" v-for="d in establimentsPreferits"
-                  :key="d.establimentId._id">
+            <swiper :slides-per-view="1" v-if="establimentsPreferits!=null">
+                <swiper-slide v-for="d in establimentsPreferits"
+                  :key="d._id" v-if="establimentsPreferits.length>0">
+                  <myCard :establiment="d"></myCard>
                 </swiper-slide>
-              </div>
-
+                <p v-else class="ion-text-center">No es troba cap establiment com a preferit</p>
             </swiper>
+            
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
@@ -69,12 +69,10 @@ let latitude = ref(41.0408888)
 let longitude = ref(0.7479283)
 let radi = ref(25)
 
-interface favs {
-  establimentId: Establiment
-}
+
 
 let establiments: Ref<[Establiment] | null> = ref(null)
-let establimentsPreferits: Ref<[favs] | null> = ref(null)
+let establimentsPreferits: Ref<[Establiment] | null> = ref(null)
 
 watch(favStore.favorites, async (before, after) => {
   await fillEstablimentsPreferits()

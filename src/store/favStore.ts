@@ -12,7 +12,7 @@ export const useFavStore = defineStore('fav', () => {
   const setLoginFavs = () => {
     getFavs()
       .then((res) => {
-        if (res.data.preferits) setFavs(res.data.preferits.map((el:any)=>el.establimentId));
+        if (res.data.preferits) setFavs(res.data.preferits);
       })
       .catch((err) => {
         console.log('err :>> ', err);

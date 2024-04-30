@@ -16,9 +16,13 @@
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
-                            <ion-item v-for="(item, k) in opcions" :key="k" @click="item.modalToShow">
+                            <ion-item v-for="(item, k) in opcionsUser" :key="k" @click="item.modalToShow" v-if="userType=='client'">
                                 <ion-icon :icon="item.icon" slot="start"></ion-icon>
-                                <ion-label>{{ item.label }}</ion-label>
+                                {{ item.label }}
+                            </ion-item>
+                            <ion-item v-for="(item, k) in opcionsEstabliment" :key="k" @click="item.modalToShow" v-if="userType=='establiment'">
+                                <ion-icon :icon="item.icon" slot="start"></ion-icon>
+                                {{ item.label }}
                             </ion-item>
                         </ion-list>
                     </ion-col>
@@ -30,7 +34,7 @@
 </template>
 <script lang="ts" setup>
 import { IonPage, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
-import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban } from 'ionicons/icons'
+import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban, bag } from 'ionicons/icons'
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
 import canviarDireccio from './Configuracio/canviarDireccio.vue';
@@ -39,10 +43,16 @@ import { useLoginStore } from '../store/loginStore';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { deleteEstabliment, deleteUser } from '../APIService';
+import { onMounted } from 'vue';
 const store = useLoginStore()
 const router = useRouter()
 const { setToken, setUserId, setUserType } = store
 const { userType } = storeToRefs(store)
+
+onMounted(()=>{
+    console.log('userType.value :>> ', userType);
+})
+
 const modalConfiguracioPerfil = async () => {
     const modal = await modalController.create({
         component: configuracióPerfil,
@@ -85,7 +95,7 @@ const modalCanviarFotoPerfil = async () => {
         breakpoints: [0, 0.33, 0.66, 1]
     })
     modal.present()
-    
+
 }
 
 const alertSortirSessio = async () => {
@@ -151,7 +161,7 @@ const alertEliminarCompte2 = async () => {
                     'aria-label': 'Si',
                 },
                 handler: () => {
-                    if (userType.value == 'client') {
+                    if (userType.value == 'user') {
                         deleteUser().then((result) => {
                             if (result.data) {
                                 setToken('')
@@ -187,7 +197,43 @@ const alertEliminarCompte2 = async () => {
     alert.present()
 }
 
-const opcions = [
+const opcionsUser = [
+    {
+        label: "Configuració del perfil",
+        icon: personCircle,
+        modalToShow: modalConfiguracioPerfil,
+    },
+    {
+        label: "Configuració de la vista",
+        icon: eye,
+        modalToShow: modalConfiguracioVista,
+    },
+    {
+        label: "Comandes",
+        icon: bag,
+        modalToShow: modalConfiguracioDireccio
+    },
+    {
+        label: "Politica Privacitat",
+        icon: lockClosed
+    },
+    {
+        label: "Ajuda",
+        icon: helpBuoy
+    },
+    {
+        label: 'Eliminar compte',
+        icon: ban,
+        modalToShow: alertEliminarCompte1
+    },
+    {
+        label: "Sortir de la sessió",
+        icon: exit,
+        modalToShow: alertSortirSessio,
+    }
+
+]
+const opcionsEstabliment = [
     {
         label: "Configuració del perfil",
         icon: personCircle,
@@ -227,6 +273,5 @@ const opcions = [
     }
 
 ]
-
 </script>
-<style></style>
+<style ></style>

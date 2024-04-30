@@ -9,7 +9,7 @@
                 {{ content }}
             </ion-text>
             <div class="buttons">
-                <ion-button expand="block" color="secondary" click.stop="updateInventari" class="editBtn">
+                <ion-button expand="block" color="secondary" @click.stop="updateInventari" class="editBtn">
                     <ion-icon :icon="pencilSharp"></ion-icon>
                 </ion-button>
                 <ion-button expand="block" class="deleteBtn" color="secondary"

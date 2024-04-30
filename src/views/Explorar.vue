@@ -20,8 +20,16 @@
                     <ion-col></ion-col>
                 </ion-row>
                 <ion-row>
+                    <ion-col size="10"></ion-col>
+                    <ion-col>
+                        <ion-button @click="openFiltresModal">
+                            <ion-icon :icon="filter"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
                     <ion-col></ion-col>
-                    <ion-col v-show="pestanyaMapa" size="12" sizeXl="10">
+                    <ion-col v-show="pestanyaMapa" size="10" sizeXl="8">
                         {{ cercleRadi }}
                         <ion-range :min="1" :max="25" v-model="cercleRadi"></ion-range>
                         <div id="map"></div>
@@ -45,7 +53,7 @@
 
 </template>
 <script setup lang="ts">
-import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange } from '@ionic/vue'
+import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange, modalController } from '@ionic/vue'
 import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments, doIPLocation } from '../APIService';
@@ -55,13 +63,15 @@ import L, { Map, LatLngExpression, Icon, Circle } from 'leaflet'
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
-// import {location} from 'ionicons/icons'
+import { filter } from 'ionicons/icons'
 import location from "leaflet/dist/images/marker-icon.png"
 import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
 import { Establiment } from '../types';
 import { LatLng } from 'leaflet';
-import { watchDebounced, useDebounceFn } from '@vueuse/core'
+import { useDebounceFn } from '@vueuse/core'
+import Filtres from './Explorar/Filtres.vue';
+import { useFiltresStore } from '../store/filtersStore';
 const router = useRouter()
 
 const map: Ref<Map | null> = ref(null)
@@ -77,6 +87,8 @@ const cercleMapa: Ref<null | Circle> = ref(null)
 const cercleRadi = ref(15)
 
 const markersLayer: Ref<any> = ref(null)
+
+const { filtres, horari, preu } = useFiltresStore()
 
 const changePestanya = (event: any) => {
     console.log('event.detail.value :>>', event.detail.value);
@@ -182,6 +194,15 @@ const loadMap = () => {
     })
 
     return map
+}
+
+const openFiltresModal = async () => {
+    const modal = await modalController.create({
+        component: Filtres,
+        initialBreakpoint: 0.5,
+        breakpoints: [0, 0.5, 0.75, 1]
+    })
+    modal.present()
 }
 
 onMounted(async () => {

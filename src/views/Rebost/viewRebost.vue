@@ -86,15 +86,15 @@ import {
     modalController
 } from '@ionic/vue';
 import { arrowBack } from 'ionicons/icons'
-import { getAllElements, createElement } from '../../APIService/';
-import { ref, Ref, reactive, computed, onMounted, defineProps } from 'vue';
+import { getAllElements, createElement, putElement } from '../../APIService/';
+import { ref, Ref, reactive, computed, onMounted, defineProps, watch } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { add, camera, pencil } from 'ionicons/icons';
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
 import { createWorker } from 'tesseract.js';
 import newElement from '@/views/Elements/newElement.vue'
 import cardElement from '../../components/cardElement.vue';
-import { showLoading } from '../../composables/loader';
+import { showAlert, showLoading } from '../../composables/loader';
 const { takePhoto, photos } = usePhotoGallery();
 const { loggedIn } = useLoginStore();
 interface Aliment {
@@ -128,10 +128,21 @@ const presentAlert = async (prompt: string) => {
 }
 
 const readImage = async (src: any) => {
-    const worker = await createWorker('spa');
-    const ret = await worker.recognize(src)
-    presentAlert(ret.data.text)
-    await worker.terminate()
+    const loader = await showLoading("Llegint imatge")
+    loader.present()
+    try {
+        const worker = await createWorker('spa');
+        const ret = await worker.recognize(src)
+        presentAlert(ret.data.text)
+        await worker.terminate()
+    } catch (err) {
+        await presentAlert(`Error ${err}`)
+    } finally {
+        loader.dismiss()
+    }
+
+
+
 }
 
 const fillRebost = async () => {
@@ -146,7 +157,9 @@ const fillRebost = async () => {
     }
     loader.dismiss(null, 'cancel')
 }
-
+watch(photos, async (v: any, oV: any) => {
+    await readImage(v[v.length - 1].webviewPath)
+}, { deep: true })
 onMounted(() => {
     fillRebost()
 });
@@ -180,6 +193,16 @@ const showUpdateModal = async (event: { element: Element, rebostId: string }) =>
     })
 
     modal.present();
+    const { data, role } = await modal.onWillDismiss();
+    if (role == 'confirm') {
+        putElement(event.rebostId, event.element._id, data).then(async (res) => {
+            let alert = await showAlert(`Confirmat`)
+            alert.present()
+        }).catch((err) => {
+
+        });
+    }
+
 }
 
 </script>

@@ -174,8 +174,7 @@ const operModalRegistre = async () => {
 
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
-    let myForm = new FormData({ ...data })
-    console.log(myForm)
+    let myForm = data
     const loader = await showLoading('Enviant informació de registre')
     loader.present()
     dosignIn(myForm)

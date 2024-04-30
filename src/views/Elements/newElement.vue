@@ -23,12 +23,14 @@
                         </ion-select>
                     </ion-col>
                     <ion-col size="12" sizeXl="6">
-                        <ion-select label="Aliment" v-if="false" :label-placement="labelPlacement" v-model="info.aliment">
+                        <ion-select label="Aliment" v-if="false" :label-placement="labelPlacement"
+                            v-model="info.aliment">
                             <ion-select-option v-for="(i, k) in aliments" :key="k" :value="i._id">{{ i.nom
                                 }}</ion-select-option>
                         </ion-select>
                         <ion-item :button="true" :detail="false" @click="openCercadorAliments">
-                            <ion-label>Aliment</ion-label>
+                            <ion-label v-if="!info.aliment">Aliment</ion-label>
+                            <ion-label v-if="info.aliment">{{ getNomOfIdAliment(info.aliment) }}</ion-label>
                         </ion-item>
                     </ion-col>
                 </ion-row>
@@ -55,14 +57,14 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-            <input class="ion-hide" type="submit">Provaa</input>
+            <ion-button class="ion-hide" type="submit"></ion-button>
         </form>
     </ion-content>
 </template>
 <script setup lang="ts">
 import { IonLabel, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonItem, IonIcon, IonToolbar, IonButtons, IonButton, IonTitle, IonInput, modalController, IonSelect, IonSelectOption } from '@ionic/vue';
 import { Ref, ref, reactive, defineProps, onMounted, } from 'vue';
-import {parseISO} from 'date-fns'
+import { parseISO } from 'date-fns'
 import { getArticleCategories, getAllAlimentsByTipus } from '@/APIService';
 
 import cercadorAliments from '../../components/cercadorAliments.vue';
@@ -86,7 +88,7 @@ const openCercadorAliments = async () => {
 
 const props = defineProps<{
     element?: Element,
-    rebostId?:string
+    rebostId?: string
 }>()
 
 const labelPlacement = 'floating'
@@ -101,6 +103,14 @@ const info = reactive({
 })
 
 const aliments: Ref<Aliment[] | undefined> = ref([]);
+
+const getNomOfIdAliment = (alimentId:any) => {
+    if (aliments.value) {
+        if (aliments.value.length > 0)
+            return aliments.value?.filter((element) => element._id == alimentId)[0].nom
+    }
+    return ""
+}
 
 const categories = ref([])
 const unitats_quantitat = ref(['kg', 'g', 'l', 'unitats'])
@@ -126,15 +136,13 @@ const fillAliments = () => {
 const fillElementOnUpdate = () => {
     if (props.element) {
         console.log('props.element.aliment :>> ', props.element.aliment?._id);
-        info.aliment = props.element.aliment!=undefined ? props.element.aliment._id : ''
-        console.log('info.aliment :>> ', info.aliment);
         info.categoria = props.element.aliment ? props.element.aliment.tipus : ''
+        info.aliment = props.element.aliment != undefined ? props.element.aliment._id : ''
         info.data_compra = props.element.data_compra.split('T')[0]
         info.data_caducitat = props.element.data_caducitat.split('T')[0]
         info.q_unitat = props.element.q_unitat
         info.quantitat = props.element.quantitat
-    }
-    fillAliments()
+    } fillAliments()
 }
 
 const cancel = () => modalController.dismiss(null, 'cancel')

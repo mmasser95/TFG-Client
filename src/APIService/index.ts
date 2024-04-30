@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useLoginStore } from '../store/loginStore';
-//const base_url = 'http://192.168.1.10:5000/api/v1';
-const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
+const base_url = 'http://192.168.1.129:5000/api/v1';
+// const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
 
 const instance = axios.create({
   baseURL: base_url,
@@ -19,14 +19,14 @@ const getHeaders = () => {
   };
 };
 
-const getMultiPartHeaders=()=>{
+const getMultiPartHeaders = () => {
   return {
     headers: {
       Authorization: 'Bearer ' + useLoginStore().token,
-      'Content-Type':'multipart/form-data'
+      'Content-Type': 'multipart/form-data',
     },
   };
-}
+};
 
 export async function getCoordinates(
   carrer: String,
@@ -64,8 +64,8 @@ export async function getCoordinates(
   }
 }
 
-export function doIPLocation(){
-  return axios.get('https://api.my-ip.io/v2/ip.json')
+export function doIPLocation() {
+  return axios.get('https://api.my-ip.io/v2/ip.json');
 }
 
 export function doTest() {
@@ -151,8 +151,11 @@ export function getOferta(id_oferta: any) {
   return instance.get(`/ofertes/${id_oferta}`, getHeaders());
 }
 
-export function getOfertaUser(establimentId:any,id_oferta: any) {
-  return instance.get(`/establiments/${establimentId}/oferta/${id_oferta}`, getHeaders());
+export function getOfertaUser(establimentId: any, id_oferta: any) {
+  return instance.get(
+    `/establiments/${establimentId}/oferta/${id_oferta}`,
+    getHeaders()
+  );
 }
 
 export function crearOferta(data: any) {
@@ -175,39 +178,56 @@ export function getAllAlimentsByTipus(tipus: any) {
   return instance.get(`/aliments/tipus/${tipus}`);
 }
 
-export function getAllElements(rebostId:any){
-  return instance.get(`/rebosts/${rebostId}/elements/`,getHeaders())
+export function getAllElements(rebostId: any) {
+  return instance.get(`/rebosts/${rebostId}/elements/`, getHeaders());
 }
 export function createElement(rebostId: any, data: any) {
   return instance.post(`/rebosts/${rebostId}/elements/`, data, getHeaders());
 }
-
-export function deleteElement(rebostId:any,elementId:any){
-  return instance.delete(`/rebosts/${rebostId}/elements/${elementId}`,getHeaders())
+export function putElement(rebostId: any, elementId: any, data: any) {
+  return instance.put(
+    `/rebosts/${rebostId}/elements/${elementId}`,
+    data,
+    getHeaders()
+  );
+}
+export function deleteElement(rebostId: any, elementId: any) {
+  return instance.delete(
+    `/rebosts/${rebostId}/elements/${elementId}`,
+    getHeaders()
+  );
 }
 
-export function getFavs(){
-  return instance.get(`/fav`,getHeaders())
+export function getFavs() {
+  return instance.get(`/fav`, getHeaders());
 }
 
-export function getMyFavs(){
-  return instance.get(`/myfav`,getHeaders())
+export function getMyFavs() {
+  return instance.get(`/myfav`, getHeaders());
 }
 
-export function createFav(establimentId:string){
-  return instance.post(`/fav`,{establimentId},getHeaders())
+export function createFav(establimentId: string) {
+  return instance.post(`/fav`, { establimentId }, getHeaders());
 }
 
-export function deleteFav(establimentId:string){
-  return instance.delete(`/fav/${establimentId}`,getHeaders())
+export function deleteFav(establimentId: string) {
+  return instance.delete(`/fav/${establimentId}`, getHeaders());
 }
 
-export function putImatgePerfil(formData:any){
-  return instance.put(`/establiments/img_perfil`,formData,getMultiPartHeaders())
+export function putImatgePerfil(formData: any) {
+  return instance.put(
+    `/establiments/img_perfil`,
+    formData,
+    getMultiPartHeaders()
+  );
 }
-export function putImatgeFondo(formData:any){
-  return instance.put(`/establiments/img_fondo`,formData,getMultiPartHeaders())
+export function putImatgeFondo(formData: any) {
+  return instance.put(
+    `/establiments/img_fondo`,
+    formData,
+    getMultiPartHeaders()
+  );
 }
-export function getEstadistiques(establimentId:any){
-  return instance.get(`/estadistiques/${establimentId}`,getHeaders())
+export function getEstadistiques(establimentId: any) {
+  return instance.get(`/estadistiques/${establimentId}`, getHeaders());
 }

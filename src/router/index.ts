@@ -50,6 +50,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Explorar/viewEstabliment.vue'),
     props: true,
   },
+  {
+    path: '/comandes',
+    component: () => import('@/views/Comandes/viewComandes.vue'),
+  },
   // {
   //   path: '/establiments',
   //   component: () => import('@/views/Establiments/gestionarEstabliments.vue'),

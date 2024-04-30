@@ -14,33 +14,7 @@
         <ion-content>
             <ion-grid>
                 <ion-row>
-                    <ion-col size="12" sizeMd="6">
-                        <ion-radio-group :value="myIdioma" @ionChange="onChangeStyle">
-                            <ion-grid>
-                                <ion-row>
-                                    <ion-col>
-                                        <p class="ion-text-center">Idioma</p>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <ion-radio value="ca">Català</ion-radio>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <ion-radio value="es">Castellà</ion-radio>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <ion-radio value="en">Anglès</ion-radio>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
-                        </ion-radio-group>
-                    </ion-col>
-                    <ion-col size="12" sizeMd="6">
+                    <ion-col size="12">
                         <ion-radio-group :value="myTheme" @ionChange="onChangeTheme">
                             <ion-grid>
                                 <ion-row>
@@ -89,27 +63,15 @@ import { IonPage, IonToolbar, IonHeader, IonTitle, IonContent, IonGrid, IonRow, 
 import { onMounted, ref } from 'vue';
 
 const cancel = () => modalController.dismiss(null, 'cancel');
-const confirm = () => modalController.dismiss({idioma:myIdioma.value,theme:myTheme.value}, 'confirm');
+const confirm = () => modalController.dismiss({theme:myTheme.value}, 'confirm');
 
-const myIdioma=ref("")
 const myTheme=ref("")
-
-const onChangeStyle=(ev:any)=>{
-    myIdioma.value=ev.detail.value
-}
 
 const onChangeTheme=(ev:any)=>{
     myTheme.value=ev.detail.value
 }
 
 onMounted(()=>{
-    let idioma= localStorage.getItem('idioma')
-    if (!idioma) {
-        localStorage.setItem('idioma','ca')
-        idioma='ca';
-    }
-    myIdioma.value=idioma;
-
     let theme=localStorage.getItem('theme');
     if(!theme){
         localStorage.setItem('theme','sys');
