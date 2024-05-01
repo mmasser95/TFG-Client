@@ -7,11 +7,12 @@
             <ion-title v-if="!element" class="ion-text-center">Crear element</ion-title>
             <ion-title v-if="element" class="ion-text-center">Editar element</ion-title>
             <ion-buttons slot="end">
-                <ion-button color="primary" @click="confirm">Crear</ion-button>
+                <ion-button v-if="!element" color="primary" @click="confirm">Crear</ion-button>
+                <ion-button v-if="element" color="primary" @click="confirm">Guardar</ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content >
         <form @submit.prevent="confirm">
             <ion-grid>
                 <ion-row>

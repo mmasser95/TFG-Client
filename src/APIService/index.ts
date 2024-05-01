@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useLoginStore } from '../store/loginStore';
-//const base_url = 'http://192.168.1.129:5000/api/v1';
-const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
+const base_url = 'http://192.168.1.129:5000/api/v1';
+// const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
 
 const instance = axios.create({
   baseURL: base_url,
@@ -234,4 +234,20 @@ export function putImatgeFondo(formData: any) {
 }
 export function getEstadistiques(establimentId: any) {
   return instance.get(`/estadistiques/${establimentId}`, getHeaders());
+}
+
+export function getAllComandes() {
+  return instance.get(`/comandes`, getHeaders());
+}
+
+export function getComanda(comandaId: any) {
+  return instance.get(`/comandes/${comandaId}`, getHeaders());
+}
+
+export function createComanda(comandaInfo: any) {
+  return instance.post(`/comandes`, comandaInfo, getHeaders());
+}
+
+export function deleteComanda(comandaId: any) {
+  return instance.delete(`/comandes/${comandaId}`, getHeaders());
 }

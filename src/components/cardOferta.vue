@@ -22,7 +22,7 @@
                     v-model="quantitat"></ion-input>
             </ion-col>
             <ion-col size="3">
-                <ion-button @click.stop="goToComprar" expand="block">
+                <ion-button @click.stop="ferCompra" expand="block">
                     <ion-icon :icon="bag"></ion-icon>
                 </ion-button>
             </ion-col>
@@ -35,25 +35,18 @@ import { useRouter } from 'vue-router';
 import viewOferta from '../views/Explorar/viewOferta.vue';
 import { bag } from 'ionicons/icons';
 import { ref } from 'vue';
+import { Oferta } from '../types'
+import { createComanda } from '../APIService'
+
 const router = useRouter();
 
-interface Oferta {
-    _id: string,
-    nom: string,
-    descripcio: string,
-    preu: number,
-    active: boolean
-}
+
 let props = defineProps<{
     oferta: Oferta,
     establimentId: string
 }>()
 
 let quantitat = ref(1)
-
-const goToComprar = () => {
-    router.push(`/comprar/${props.oferta._id}`)
-}
 
 const showModalOferta = async () => {
     const modal = await modalController.create({
@@ -66,6 +59,19 @@ const showModalOferta = async () => {
         }
     })
     modal.present()
+}
+
+const ferCompra = () => {
+    createComanda({
+        establimentId: props.establimentId,
+        ofertaId: props.oferta._id,
+        quantitat: quantitat.value,
+        total: props.oferta.preu*quantitat.value
+    }).then((res) => {
+        console.log('res.data.comandaSaved :>> ', res.data.comandaSaved);
+    }).catch((err) => {
+        console.log('err :>> ', err);
+    });
 }
 
 </script>

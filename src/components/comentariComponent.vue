@@ -3,7 +3,7 @@
         <div class="container">
             <div class="item">
                 <ion-label>Qualitat: </ion-label>
-                <star-rating v-model="comentariState.qualitat"></star-rating>
+                <star-rating :inactive-color="inactiveColorStars()" v-model="comentariState.qualitat"></star-rating>
                 {{ comentariState.qualitat }}
             </div>
             <div class="item">
@@ -33,12 +33,11 @@
 <script setup lang="ts">
 import { IonTextarea, IonLabel, IonGrid, IonRow, IonCol, IonButton, IonIcon,IonItem } from '@ionic/vue';
 import { pencil } from 'ionicons/icons';
-import { usePreferredColorScheme } from '@vueuse/core'
+import { usePreferredColorScheme } from '@vueuse/core';
 
-const preferredColor = usePreferredColorScheme()
 
 const inactiveColorStars = () => {
-    if (preferredColor.value == "dark")
+    if (localStorage.getItem('vueuse-color-scheme') == "dark")
         return '#FFF'
     return '#000'
 }
@@ -57,6 +56,8 @@ const comentariState: Ref<{
 const confirm = () => {
 
 }
+
+
 </script>
 <style scoped>
 .container {

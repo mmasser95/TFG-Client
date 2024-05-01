@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-router-outlet :key="$route.fullPath" :animated="true" animation="fadeIn" />
+      <ion-router-outlet :key="$route.fullPath" />
       <ion-tab-bar slot="bottom">
         <ion-tab-button v-if="userType == 'client'" v-for="(tab, k) in tabsUser" :tab="tab.tabName" :href="tab.hrf"
           :key="k">
@@ -19,13 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonRow, IonGrid, IonCol } from '@ionic/vue';
+import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonRow, IonGrid, IonCol, createAnimation } from '@ionic/vue';
 import { home, map, documentText, storefront, cog, cube } from 'ionicons/icons';
 import "animate.css"
 import { ref, reactive } from 'vue';
 import { useLoginStore } from '@/store/loginStore'
 import { storeToRefs } from 'pinia';
 
+const myBuilder=(el:Element,opts?:any)=>{return createAnimation().addElement(el).duration(5000).fromTo('opacity',0,100)}
 
 //Store
 const store = useLoginStore();

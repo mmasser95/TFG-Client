@@ -5,7 +5,7 @@
         <div class="myContainer">
           <p>Inventari</p>
 
-          <ion-button class="item" size="small" shape="round" @click="startTour">
+          <ion-button class="item" size="small" shape="round" @click="onboardingElement?.start()">
             <ion-icon slot="icon-only" :icon="informationCircleOutline"></ion-icon>
           </ion-button>
 
@@ -21,7 +21,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <ion-grid>
+            <ion-grid id="rebostsSection">
               <ion-row v-for="(i, k) in rebosts">
                 <ion-col>
                   <cardInventari :title="i.nom" :subtitle="i.descripcio" :idd="i._id" @updateRebost="openModalUpdate"
@@ -33,13 +33,15 @@
           <ion-col></ion-col>
         </ion-row>
       </ion-grid>
+
+
     </ion-content>
-    <ion-fab ref="addButton" slot="fixed" vertical="bottom" horitzontal="end">
+    <ion-fab id="addBtn" ref="addButton" slot="fixed" vertical="bottom" horitzontal="end">
       <ion-fab-button @click="openModalCreate">
         <ion-icon :icon="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-
+    <onboarding :steps="onBoardingRebostSteps" @start-onboarding="startOnboarding"></onboarding>
   </ion-page>
 </template>
 
@@ -56,12 +58,21 @@ import 'swiper/css'
 import newRebost from './Rebost/newRebost.vue';
 import { showLoading } from '../composables/loader';
 import { Rebost } from '../types'
-import { useShepherd } from 'vue-shepherd'
-
+import onboarding from '../components/onboarding.vue';
+import { StepEntity } from 'v-onboarding';
 
 const rebosts: Ref<Rebost[] | undefined> = ref([]);
 
 const addButton = ref(null)
+const onBoardingRebostSteps: Ref<StepEntity[]> = ref([])
+
+
+const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
+
+const startOnboarding = (element) => {
+  console.log('element :>> ', element);
+  onboardingElement.value = element
+}
 
 const fillRebosts = async () => {
   let loader = await showLoading("Carregant rebosts")
@@ -121,24 +132,31 @@ const handleRefresh = async (event: RefresherCustomEvent) => {
   event.target.complete()
 }
 
-const startTour = () => {
-  const tour = useShepherd({
-    defaultStepOptions:
-    {
-      cancelIcon: {
-        enabled: true
-      },
-      scrollTo:{
-        behavior:'smooth',
-        block:'center'
-      }
-    }
-  })
-}
 
 onMounted(async () => {
   await fillRebosts();
-  /*startTour()*/
+  onBoardingRebostSteps.value = [{
+    attachTo: {
+      element: "#rebostsSection"
+    },
+    content: {
+      title: "Els teus rebosts",
+      description: "En aquest apartat trobaràs els teus rebosts"
+    }
+  }, {
+    attachTo: {
+      element: "#addBtn"
+    },
+    options: {
+      popper: {
+        placement: "top-end"
+      }
+    },
+    content: {
+      title: "Afegir rebosts",
+      description: "En aquest apartat podràs trobar els establiments que has marcat com a preferits"
+    }
+  }]
 })
 
 

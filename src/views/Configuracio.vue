@@ -34,7 +34,7 @@
 </template>
 <script lang="ts" setup>
 import { IonPage, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
-import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban, bag } from 'ionicons/icons'
+import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban, documentText } from 'ionicons/icons'
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
 import canviarDireccio from './Configuracio/canviarDireccio.vue';
@@ -210,8 +210,8 @@ const opcionsUser = [
     },
     {
         label: "Comandes",
-        icon: bag,
-        modalToShow: modalConfiguracioDireccio
+        icon: documentText,
+        modalToShow: ()=>router.push('/tabs/comandes')
     },
     {
         label: "Politica Privacitat",

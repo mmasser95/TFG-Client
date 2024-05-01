@@ -23,10 +23,10 @@
                     <ion-col></ion-col>
                     <ion-col size="12" sizeSm="10" sizeMd="8" sizeLg="6">
                         <ion-list v-if="rebostId">
-                            <ion-item v-for="element in elements" :key="element._id">
+                            <div v-for="element in elements" :key="element._id">
                                 <cardElement :rebostId="rebostId" :element="element" @deleteElement="fillRebost"
                                     @updateElement="showUpdateModal"></cardElement>
-                            </ion-item>
+                            </div>
                         </ion-list>
                     </ion-col>
                     <ion-col></ion-col>
@@ -218,10 +218,10 @@ const showUpdateModal = async (event: { element: Element, rebostId: string }) =>
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
         putElement(event.rebostId, event.element._id, data).then(async (res) => {
-            let alert = await showAlert(`Confirmat`)
-            alert.present()
+            presentAlert('Element editat correctament')
+            fillRebost()
         }).catch((err) => {
-
+            presentAlert(`Error ${err}`)
         });
     }
 
@@ -230,4 +230,15 @@ const showUpdateModal = async (event: { element: Element, rebostId: string }) =>
 console.log(searchAliment("Limon Cacahuetes Lechuga Iceberg Doca Nabana", 0.6))
 
 </script>
-<style></style>
+<style scoped>
+ion-list {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    -webkit-justify-content: space-evenly;
+}
+
+cardElement {
+    flex-grow: 1
+}
+</style>

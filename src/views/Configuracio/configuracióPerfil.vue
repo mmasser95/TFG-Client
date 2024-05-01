@@ -16,32 +16,81 @@
                 <ion-row>
                     <ion-col>
                         <form @submit.prevent="confirm()">
-                            <ion-item>
-                                <ion-input label="Nom" v-model="state.nom"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-input label="Cognoms" v-model="state.cognoms"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-input label="Email" type="email" v-model="state.correu"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-input label="Telefon" type="tel" v-model="state.telf"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-input label="Data de naixement" type="date"
-                                    v-model="state.data_naixement"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-input label="Contrasenya" type="password" v-model="state.contrasenya"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-input label="Repeteix la contrassenya" type="password"
-                                    v-model="state.rcontrasenya"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-button expand="block" type="submit">Submit</ion-button>
-                            </ion-item>
+                            <ion-row>
+                                <ion-col>
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Nom" @ion-blur="v$.nom.$touch" v-model="state.nom"
+                                                :label-placement="labelPlacement"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.nom.$error && v$.nom.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
+                                            message="El correu electrònic no és valid" />
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Cognoms" @ion-blur="v$.cognoms.$touch" v-model="state.cognoms"
+                                                :label-placement="labelPlacement"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
+                                            message="El correu electrònic no és valid" />
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <div class="input-container">
+                                    
+                                        <ion-item>
+                                            <ion-input label="Correu" type="email" @ion-blur="v$.correu.$touch"
+                                                v-model="state.correu" :label-placement="labelPlacement"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
+                                            message="El correu electrònic no és valid" />
+                                </div>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Telèfon" type="tel" @ion-blur="v$.telf.$touch"
+                                                v-model="state.telf" :label-placement="labelPlacement"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.telf.$error && v$.telf.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                            <ErrorMessage v-if="v$.telf.$error && v$.telf.numeric.$invalid"
+                                            message="Aquest camp ha de ser numèric" />
+                                        <ErrorMessage v-if="v$.telf.$error && v$.telf.minLength.$invalid"
+                                            message="Aquest camp ha de tenir 9 caràcters" />
+                                        <ErrorMessage v-if="v$.telf.$error && v$.telf.maxLength.$invalid"
+                                            message="Aquest camp ha de tenir 9 caràcters" />
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Data de naixement" type="date"
+                                                @ion-blur="v$.data_naixement.$touch" v-model="state.data_naixement"
+                                                :label-placement="labelPlacement"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.data_naixement.$error && v$.data_naixement.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                            <ion-button class="ion-hide" expand="block" type="submit">Submit</ion-button>
                         </form>
                     </ion-col>
                 </ion-row>
@@ -54,8 +103,11 @@ import { IonPage, IonHeader, IonContent, IonToolbar, IonButtons, IonButton, IonT
 import { reactive } from 'vue';
 
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, sameAs, minValue } from '@vuelidate/validators';
+import { required, email, minLength, maxLength, sameAs,numeric, minValue } from '@vuelidate/validators';
 
+const labelPlacement = "floating"
+
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 const state = reactive({
     nom: '',
@@ -71,7 +123,7 @@ const rules = {
     nom: { required, minLength: minLength(3) },
     cognoms: { required, minLength: minLength(3) },
     correu: { required, email },
-    telf: { required, minLength: minLength(9) },
+    telf: { required, minLength: minLength(9), maxLength: maxLength(9),numeric },
     data_naixement: { required },
     contrasenya: { required, minLength: minLength(8) },
     rcontrasenya: { required, sameAs: sameAs('contrasenya') }

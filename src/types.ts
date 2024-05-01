@@ -75,8 +75,10 @@ export interface Horari {
 }
 
 export interface Comanda {
+  establimentId: Establiment;
   ofertaId: string;
   userId: string;
-  preu: string;
+  total: string;
+  data:string
   quantitat: number;
 }

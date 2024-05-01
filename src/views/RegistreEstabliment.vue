@@ -18,127 +18,183 @@
                         <ion-grid>
                             <ion-row>
                                 <ion-col>
-                                    <ion-input label="Nom" :label-placement="labelPlacement" v-model="state.nom"
-                                        @ion-blur="v$.nom.$touch"></ion-input>
-                                    <ErrorMessage v-if="v$.nom.$error && v$.nom.required.$invalid"
-                                        message="Aquest camp és obligatori" />
-                                    <ErrorMessage v-if="v$.nom.$error && v$.nom.minLength.$invalid"
-                                        message="Aquest ha de tenir minim 3 caràcters" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Nom" :label-placement="labelPlacement" v-model="state.nom"
+                                                @ion-blur="v$.nom.$touch"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.nom.$error && v$.nom.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.nom.$error && v$.nom.minLength.$invalid"
+                                            message="Aquest ha de tenir minim 3 caràcters" />
+                                    </div>
                                 </ion-col>
                             </ion-row>
                             <ion-row>
                                 <ion-col>
-                                    <ion-input label="Correu" :label-placement="labelPlacement" v-model="state.correu"
-                                        @ion-blur="v$.correu.$touch"></ion-input>
-                                    <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
-                                        message="Aquest camp és obligatori" />
-                                    <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
-                                        message="Correu invàlid" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Correu" :label-placement="labelPlacement"
+                                                v-model="state.correu" @ion-blur="v$.correu.$touch"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
+                                            message="Correu invàlid" />
+                                    </div>
                                 </ion-col>
                             </ion-row>
                             <ion-row>
                                 <ion-col size="12" sizeXl="6">
-                                    <ion-input label="Contrasenya" :label-placement="labelPlacement" type="password"
-                                        @ion-blur="v$.contrasenya.$touch" v-model="state.contrasenya"></ion-input>
-                                    <ErrorMessage v-if="v$.contrasenya.$error && v$.contrasenya.required.$invalid"
-                                        message="Aquest camp és obligatori" />
-                                    <ErrorMessage v-if="v$.contrasenya.$error && v$.contrasenya.minLength.$invalid"
-                                        message="Mínim 8 caràcters" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Contrasenya" :label-placement="labelPlacement"
+                                                type="password" @ion-blur="v$.contrasenya.$touch"
+                                                v-model="state.contrasenya"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.contrasenya.$error && v$.contrasenya.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.contrasenya.$error && v$.contrasenya.minLength.$invalid"
+                                            message="Mínim 8 caràcters" />
+                                    </div>
                                 </ion-col>
                                 <ion-col size="12" sizeXl="6">
-                                    <ion-input label="Repeteix la contrasenya" :label-placement="labelPlacement"
-                                        type="password" @ion-blur="v$.rcontrasenya.$touch"
-                                        v-model="state.rcontrasenya"></ion-input>
-                                    <ErrorMessage v-if="v$.rcontrasenya.$error && v$.rcontrasenya.required.$invalid"
-                                        message="Aquest camp és obligatori " />
-                                    <ErrorMessage v-if="v$.rcontrasenya.$error && v$.rcontrasenya.sameAs.$invalid"
-                                        message="Aquest camp ha de ser igual a l'anterior " />
-                                </ion-col>
-                            </ion-row>
-                            <ion-row>
-                                <ion-col size="12">
-                                    <ion-textarea label="Descripció" :label-placement="labelPlacement"
-                                        @ion-blur="v$.descripcio.$touch" v-model="state.descripcio"></ion-textarea>
-                                    <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.required.$invalid"
-                                        message="Aquest camp és obligatori" />
-                                    <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.minLength.$invalid"
-                                        message="Aquest camp ha de tinir mínim 20 caràcters" />
-                                </ion-col>
-                            </ion-row>
-                            <ion-row>
-                                <ion-col size="12" sizeXl="6">
-                                    <ion-input label="Telèfon" type="tel" :label-placement="labelPlacement"
-                                        @ion-blur="v$.telf.$touch" v-model="state.telf"></ion-input>
-                                    <ErrorMessage v-if="v$.telf.$error && v$.telf.required.$invalid"
-                                        message="Aquest camp és obligatori" />
-                                    <ErrorMessage
-                                        v-if="v$.telf.$error && (v$.telf.minLength.$invalid || v$.telf.maxLength.$invalid || v$.telf.numeric.$invalid)"
-                                        message="Aquest camp ha de tinir mínim 9 caràcters. Únicament escriu el telf sense prefix ni espais." />
-                                </ion-col>
-                                <ion-col size="12" sizeXl="6">
-                                    <ion-input label="Horari" type="text" :label-placement="labelPlacement"
-                                        @ion-blur="v$.horariString.$touch" v-model="state.horariString"></ion-input>
-                                    <ErrorMessage v-if="v$.horariString.$error && v$.horariString.required.$invalid"
-                                        message="Aquest camp és obligatori" />
-                                    <ErrorMessage
-                                        v-if="v$.horariString.$error && v$.horariString.customHorariValidator.$invalid"
-                                        message="Has de posar l'horari amb el format HH:MM-HH:MM. Pots posar més d'un interval separant per comes HH:MM-HH:MM,HH:MM-HH:MM" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Repeteix la contrasenya" :label-placement="labelPlacement"
+                                                type="password" @ion-blur="v$.rcontrasenya.$touch"
+                                                v-model="state.rcontrasenya"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.rcontrasenya.$error && v$.rcontrasenya.required.$invalid"
+                                            message="Aquest camp és obligatori " />
+                                        <ErrorMessage v-if="v$.rcontrasenya.$error && v$.rcontrasenya.sameAs.$invalid"
+                                            message="Aquest camp ha de ser igual a l'anterior " />
+                                    </div>
                                 </ion-col>
                             </ion-row>
                             <ion-row>
                                 <ion-col size="12">
-                                    <ion-input label="Web" type="text" :label-placement="labelPlacement"
-                                        v-model="state.web"></ion-input>
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-textarea label="Descripció" :label-placement="labelPlacement"
+                                                @ion-blur="v$.descripcio.$touch"
+                                                v-model="state.descripcio"></ion-textarea>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.minLength.$invalid"
+                                            message="Aquest camp ha de tinir mínim 20 caràcters" />
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col size="12" sizeXl="6">
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Telèfon" type="tel" :label-placement="labelPlacement"
+                                                @ion-blur="v$.telf.$touch" v-model="state.telf"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.telf.$error && v$.telf.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage
+                                            v-if="v$.telf.$error && (v$.telf.minLength.$invalid || v$.telf.maxLength.$invalid || v$.telf.numeric.$invalid)"
+                                            message="Aquest camp ha de tinir mínim 9 caràcters numèrics. Únicament escriu el telf sense prefix ni espais." />
+                                    </div>
+                                </ion-col>
+                                <ion-col size="12" sizeXl="6">
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Horari" type="text" :label-placement="labelPlacement"
+                                                @ion-blur="v$.horariString.$touch"
+                                                v-model="state.horariString"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.horariString.$error && v$.horariString.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage
+                                            v-if="v$.horariString.$error && v$.horariString.customHorariValidator.$invalid"
+                                            message="Has de posar l'horari amb el format HH:MM-HH:MM. Pots posar més d'un interval separant per comes HH:MM-HH:MM,HH:MM-HH:MM" />
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col size="12">
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Web" type="text" :label-placement="labelPlacement"
+                                                v-model="state.web"></ion-input>
+                                        </ion-item>
+                                    </div>
                                 </ion-col>
                             </ion-row>
                             <ion-row>
                                 <ion-col size="12" sizeXl="8">
-                                    <ion-input label="Carrer" type="text" :label-placement="labelPlacement"
-                                        @ion-blur="v$.direccio.carrer.$touch"
-                                        v-model="state.direccio.carrer"></ion-input>
-                                    <ErrorMessage
-                                        v-if="v$.direccio.carrer.$error && v$.direccio.carrer.required.$invalid"
-                                        message="Aquest camp és obligatori" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Carrer" type="text" :label-placement="labelPlacement"
+                                                @ion-blur="v$.direccio.carrer.$touch"
+                                                v-model="state.direccio.carrer"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage
+                                            v-if="v$.direccio.carrer.$error && v$.direccio.carrer.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                    </div>
                                 </ion-col>
                                 <ion-col size="6" sizeXl="2">
-                                    <ion-input label="Numero" type="number" :label-placement="labelPlacement"
-                                        @ion-blur="v$.direccio.numero.$touch"
-                                        v-model="state.direccio.numero"></ion-input>
-                                    <ErrorMessage
-                                        v-if="v$.direccio.numero.$error && v$.direccio.numero.required.$invalid"
-                                        message="Aquest camp és obligatori" />
-                                    <ErrorMessage
-                                        v-if="v$.direccio.numero.$error && v$.direccio.numero.numeric.$invalid"
-                                        message="Aquest camp unicament pot contenir numeros" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Numero" type="number" :label-placement="labelPlacement"
+                                                @ion-blur="v$.direccio.numero.$touch"
+                                                v-model="state.direccio.numero"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage
+                                            v-if="v$.direccio.numero.$error && v$.direccio.numero.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage
+                                            v-if="v$.direccio.numero.$error && v$.direccio.numero.numeric.$invalid"
+                                            message="Aquest camp unicament pot contenir numeros" />
+                                    </div>
                                 </ion-col>
                                 <ion-col size="6" sizeXl="2">
-                                    <ion-input label="CP" type="text" :label-placement="labelPlacement"
-                                        @ion-blur="v$.direccio.CP.$touch" v-model="state.direccio.CP"></ion-input>
-                                    <ErrorMessage v-if="v$.direccio.CP.$error && v$.direccio.CP.required.$invalid"
-                                        message="Aquest camp és obligatori. " />
-                                    <ErrorMessage v-if="v$.direccio.CP.$error && v$.direccio.CP.numeric.$invalid"
-                                        message="Aquest camp ha de contenir numeros. " />
-                                    <ErrorMessage
-                                        v-if="v$.direccio.CP.$error && (v$.direccio.CP.minLength.$invalid || v$.direccio.CP.maxLength.$invalid)"
-                                        message="Aquest camp ha de contenir 5 numeros. " />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="CP" type="text" :label-placement="labelPlacement"
+                                                @ion-blur="v$.direccio.CP.$touch"
+                                                v-model="state.direccio.CP"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage v-if="v$.direccio.CP.$error && v$.direccio.CP.required.$invalid"
+                                            message="Aquest camp és obligatori. " />
+                                        <ErrorMessage v-if="v$.direccio.CP.$error && v$.direccio.CP.numeric.$invalid"
+                                            message="Aquest camp ha de contenir numeros. " />
+                                        <ErrorMessage
+                                            v-if="v$.direccio.CP.$error && (v$.direccio.CP.minLength.$invalid || v$.direccio.CP.maxLength.$invalid)"
+                                            message="Aquest camp ha de contenir 5 numeros. " />
+                                    </div>
                                 </ion-col>
                             </ion-row>
                             <ion-row>
                                 <ion-col size="12" sizeXl="6">
-                                    <ion-input label="Població" type="text" :label-placement="labelPlacement"
-                                        @ion-blur="v$.direccio.poblacio.$touch"
-                                        v-model="state.direccio.poblacio"></ion-input>
-                                    <ErrorMessage
-                                        v-if="v$.direccio.poblacio.$error && v$.direccio.poblacio.required.$invalid"
-                                        message="Aquest camp és obligatori" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Població" type="text" :label-placement="labelPlacement"
+                                                @ion-blur="v$.direccio.poblacio.$touch"
+                                                v-model="state.direccio.poblacio"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage
+                                            v-if="v$.direccio.poblacio.$error && v$.direccio.poblacio.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                    </div>
                                 </ion-col>
                                 <ion-col size="12" sizeXl="6">
-                                    <ion-input label="Provincia" type="text" :label-placement="labelPlacement"
-                                        @ion-blur="v$.direccio.provincia.$touch"
-                                        v-model="state.direccio.provincia"></ion-input>
-                                    <ErrorMessage
-                                        v-if="v$.direccio.provincia.$error && v$.direccio.provincia.required.$invalid"
-                                        message="Aquest camp és obligatori" />
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-input label="Provincia" type="text" :label-placement="labelPlacement"
+                                                @ion-blur="v$.direccio.provincia.$touch"
+                                                v-model="state.direccio.provincia"></ion-input>
+                                        </ion-item>
+                                        <ErrorMessage
+                                            v-if="v$.direccio.provincia.$error && v$.direccio.provincia.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                    </div>
                                 </ion-col>
                             </ion-row>
                         </ion-grid>

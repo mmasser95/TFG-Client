@@ -63,17 +63,21 @@ const routes: Array<RouteRecordRaw> = [
           tab: true,
         },
       },
+      {
+        path: 'comandes',
+        component: () => import('@/views/Comandes/viewComandes.vue'),
+        meta: {
+          order: 3,
+          tab: true,
+        },
+      },
     ],
   },
   {
     path: '/establiment/:idd',
     component: () => import('@/views/Explorar/viewEstabliment.vue'),
     props: true,
-  },
-  {
-    path: '/comandes',
-    component: () => import('@/views/Comandes/viewComandes.vue'),
-  },
+  },,
   // {
   //   path: '/establiments',
   //   component: () => import('@/views/Establiments/gestionarEstabliments.vue'),
@@ -107,7 +111,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  
   if (to.meta.requiresAuth != 'NoAuth') {
     if (!useLoginStore().loggedIn) {
       next('/login');

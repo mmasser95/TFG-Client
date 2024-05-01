@@ -42,9 +42,9 @@
     "string-similarity-js": "^2.1.4",
     "swiper": "^11.0.7",
     "tesseract.js": "^5.0.5",
+    "v-onboarding": "^2.8.1",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0",
-    "vue-shepherd": "^3.0.0",
     "vue3-google-login": "^2.0.26",
     "vue3-star-ratings": "^3.0.5",
     "vuelidate": "^0.7.7"

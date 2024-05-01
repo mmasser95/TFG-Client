@@ -8,7 +8,9 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-title class="ion-text-center">Llista de negocis</ion-title>
+            <ion-title class="ion-text-center" id="negocisSection">Llista de negocis <ion-icon
+                :icon="informationCircle" @click="onboardingElement?.start"></ion-icon></ion-title>
+
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
@@ -26,31 +28,32 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-title class="ion-text-center">Negocis preferits</ion-title>
+            <ion-title class="ion-text-center" id="preferitsSection">Negocis preferits</ion-title>
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1" v-if="establimentsPreferits!=null">
-                <swiper-slide v-for="d in establimentsPreferits"
-                  :key="d._id" v-if="establimentsPreferits.length>0">
-                  <myCard :establiment="d"></myCard>
-                </swiper-slide>
-                <p v-else class="ion-text-center">No es troba cap establiment com a preferit</p>
+            <swiper :slides-per-view="1" v-if="establimentsPreferits != null">
+              <swiper-slide v-for="d in establimentsPreferits" :key="d._id" v-if="establimentsPreferits.length > 0">
+                <myCard :establiment="d"></myCard>
+              </swiper-slide>
+              <p v-else class="ion-text-center">No es troba cap establiment com a preferit</p>
             </swiper>
-            
+
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
       </ion-grid>
+      <onboarding :steps="onboardingHomeSteps" @start-onboarding="startOnboarding"></onboarding>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
+import { IonPage, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
+import { informationCircle } from 'ionicons/icons';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/free-mode'
@@ -63,16 +66,47 @@ import { Establiment } from '../types';
 import { useFavStore } from '../store/favStore';
 import { storeToRefs } from 'pinia';
 import { useDebounceFn } from '@vueuse/core'
+import onboarding from '../components/onboarding.vue';
 const favStore = useFavStore()
 const { favorites } = storeToRefs(favStore)
-let latitude = ref(41.0408888)
-let longitude = ref(0.7479283)
-let radi = ref(25)
+const latitude = ref(41.0408888)
+const longitude = ref(0.7479283)
+const radi = ref(25)
 
 
+const establiments: Ref<[Establiment] | null> = ref(null)
+const establimentsPreferits: Ref<[Establiment] | null> = ref(null)
 
-let establiments: Ref<[Establiment] | null> = ref(null)
-let establimentsPreferits: Ref<[Establiment] | null> = ref(null)
+
+const onboardingHomeSteps = [{
+  attachTo: {
+    element: "#negocisSection"
+  },
+  content: {
+    title: "Establiments propers",
+    description: "En aquest apartat podràs trobar els millors establiments aprop teu"
+  }
+}, {
+  attachTo: {
+    element: "#preferitsSection"
+  },
+  options: {
+    popper: {
+      placement: 'top'
+    }
+  },
+  content: {
+    title: "Establiments preferits",
+    description: "En aquest apartat podràs trobar els establiments que has marcat com a preferits"
+  }
+}]
+
+const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
+
+const startOnboarding = (element) => {
+  console.log('element :>> ', element);
+  onboardingElement.value = element
+}
 
 watch(favStore.favorites, async (before, after) => {
   await fillEstablimentsPreferits()
@@ -104,9 +138,7 @@ const fillEstablimentsPreferits = useDebounceFn(async () => {
 }, 250)
 
 const handleRefresh = (event: RefresherCustomEvent) => {
-  console.log("Fa mitja entrada");
   fillEstabliments().then((res) => {
-    console.log("Ha fet l'entrada triunfal");
     event.target.complete()
   })
 }
@@ -115,6 +147,7 @@ onMounted(async () => {
   console.log(establimentsPreferits.value)
   await fillEstabliments()
   await fillEstablimentsPreferits()
+
 })
 
 </script>

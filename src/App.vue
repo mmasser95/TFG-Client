@@ -1,7 +1,7 @@
 <template>
   <ion-app>
     <UseColorMode v-slot="{ mode }">
-      <ion-router-outlet :animated="true" animation="animate__animated animate__lightSpeedInRight"/>
+      <ion-router-outlet :animated="false"/>
     </UseColorMode>
   </ion-app>
 </template>
@@ -38,6 +38,12 @@ useBackButton(-1, () => {
 ion-fab {
   bottom: 7px;
   right: 15px;
+}
+
+.input-container {
+    display: flex;
+    flex-flow: column wrap;
+    gap:3px
 }
 </style>
 popups.0

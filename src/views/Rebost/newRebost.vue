@@ -12,23 +12,42 @@
         </ion-toolbar>
     </ion-header>
     <ion-content>
-        <form action="" @submit.prevent="confirm">
-            <ion-item>
-                <ion-input type="text" label="Nom" labelPlacement="floating" v-model="state.nom"></ion-input>
-            </ion-item>
-            <ion-button class="ion-hide" type="submit"></ion-button>
-        </form>
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <form action="" @submit.prevent="confirm">
+                        <ion-row>
+                            <ion-col>
+                                <div class="input-container">
+                                    <ion-item>
+                                        <ion-input label="Nom" v-model="state.nom" @ion-blur="v$.nom.$touch"
+                                            label-placement="floating"></ion-input>
+                                    </ion-item>
+                                    <ErrorMessage v-if="v$.nom.$error && v$.nom.required.$invalid"
+                                        message="El nom és obligatori" />
+                                    <ErrorMessage v-if="v$.nom.$error && v$.nom.minLength.$invalid"
+                                        message="La llargada mínima del nom ha de ser 3 caràcters" />
+                                    <ErrorMessage v-if="v$.nom.$error && v$.nom.maxLength.$invalid"
+                                        message="La llargada màxima del nom ha de ser 20 caràcters" />
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-button class="ion-hide" type="submit"></ion-button>
+                    </form>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonModal, IonButtons, IonItem, IonInput, modalController } from '@ionic/vue';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonModal, IonButtons, IonItem, IonInput, modalController, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { ref, reactive, computed, onMounted, defineProps } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, maxLength, minLength } from '@vuelidate/validators'
 import { storeToRefs } from 'pinia'
 import { useLoginStore } from '../../store/loginStore';
 import { getRebost } from '../../APIService';
-
+import ErrorMessage from '@/components/ErrorMessage.vue'
 const props = defineProps({
     update: String
 })
