@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useLoginStore } from '../store/loginStore';
-const base_url = 'http://192.168.1.129:5000/api/v1';
-// const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
+// const base_url = 'http://192.168.1.129:5000/api/v1';
+const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
 
 const instance = axios.create({
   baseURL: base_url,
