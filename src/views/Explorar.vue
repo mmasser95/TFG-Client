@@ -50,11 +50,17 @@
             </ion-grid>
         </ion-content>
     </ion-page>
+    <div class="ion-hide">
+        <ion-item v-for="(establiment,k) in establiments">
+            <router-link :ref="el=>{popups[k]=el}" :to="`/tabs/${establiment._id}`">Anar a l'establiment</router-link>
+        </ion-item>
+        
+    </div>
 
 </template>
 <script setup lang="ts">
 import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange, modalController } from '@ionic/vue'
-import { Ref, onMounted, ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount } from 'vue';
+import { Ref, onMounted, getCurrentInstance,  ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments, doIPLocation } from '../APIService';
 import { Geolocation } from '@capacitor/geolocation';
@@ -87,6 +93,8 @@ const cercleMapa: Ref<null | Circle> = ref(null)
 const cercleRadi = ref(15)
 
 const markersLayer: Ref<any> = ref(null)
+    
+const popups:Ref<any[]>=ref([])
 
 const { filtres, horari, preu } = useFiltresStore()
 
@@ -149,15 +157,18 @@ const addMarkers = () => {
         map.value.removeLayer(markersLayer.value)
     var markers = L.markerClusterGroup()
     if (establiments.value != undefined) {
-        establiments.value.forEach(element => {
+        establiments.value.forEach((element,index) => {
             if (map.value != null) {
                 var marker = L.marker(element.coordenades, {
                     icon: new Icon({ iconUrl: location, iconSize: [25, 41], iconAnchor: [12, 41] })
                 })
                 var ruta = `/establiment/${element._id}`
-                var link = `<a v-onClick="anarEstabliment('${ruta}')"> Link</a>`
+                var link = ` <a href="${ruta}"> Link</buttoo>`
                 var popup = L.popup()
-                popup.setContent(element.nom + link)
+                // popup.setContent(element.nom + link)
+                console.log('popupEl :>> ', popups.value[index]);
+                console.log('index :>> ', index);
+                //popup.setContent(popups.value)
                 marker.bindPopup(popup)
                 markers.addLayer(marker)
             }
@@ -210,12 +221,20 @@ onMounted(async () => {
     setTimeout(() => map.value = loadMap(), 50)
     fillEstabliments()
     printCurrentPosition()
+    for (const element of popups.value) {
+        console.log("Element: ")
+        console.log(element)
+    }
 })
 
 onBeforeUnmount(async () => {
     if (map.value) {
         map.value.remove()
     }
+})
+
+onBeforeUpdate(()=>{
+    popups.value=[]
 })
 
 watch(cercleRadi, async (newValue, oldValue) => {

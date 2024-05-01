@@ -5,8 +5,8 @@ export interface Oferta {
   descripcio: string;
   preu: number;
   active: boolean;
-  quantitatDisponible:number;
-  categoria:string
+  quantitatDisponible: number;
+  categoria: string;
 }
 export interface Direccio {
   _id: string;
@@ -42,7 +42,7 @@ export interface Establiment2 {
   url_imatge: string;
   coordenades: LatLngTuple;
   url_fondo: string;
-  horari: Horari[]|string;
+  horari: Horari[] | string;
   tipus: string;
   ofertes: Oferta[];
   direccio: Direccio;
@@ -71,5 +71,12 @@ export interface Element {
 export interface Horari {
   inici: Date;
   final: Date;
-  _id:string
+  _id: string;
+}
+
+export interface Comanda {
+  ofertaId: string;
+  userId: string;
+  preu: string;
+  quantitat: number;
 }

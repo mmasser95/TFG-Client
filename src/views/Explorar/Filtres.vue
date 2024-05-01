@@ -14,7 +14,7 @@
         <ion-grid>
             <ion-row>
                 <ion-col></ion-col>
-                <ion-col>
+                <ion-col size="8">
                     <ion-range @ion-change="preuChange" :min="1" :max="50" :model-value="preu"
                         :label-placement="labelPlacement" :label="`Preu ${preu.lower} € - ${preu.upper} €`"
                         :dual-knobs="true" :pin="true" :pin-formatter="pinFormatterPreu"></ion-range>
@@ -23,7 +23,7 @@
             </ion-row>
             <ion-row>
                 <ion-col></ion-col>
-                <ion-col>
+                <ion-col size="8">
                     <ion-range @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
                         :label-placement="labelPlacement"
                         :label="`Horari ${hores[horari.lower]}-${hores[horari.upper]}`" :dual-knobs="true" :pin="true"
@@ -33,7 +33,7 @@
             </ion-row>
             <ion-row>
                 <ion-col></ion-col>
-                <ion-col>
+                <ion-col size="8">
                     <div class="checkbox-container">
                         <ion-checkbox v-model="filtres.restaurant" label-placement="fixed">Restaurant</ion-checkbox>
 

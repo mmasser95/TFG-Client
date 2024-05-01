@@ -23,24 +23,15 @@
                                     </ion-col>
                                 </ion-row>
                                 <ion-row>
-                                    <ion-col>
+                                    <div class="container">
                                         <ion-radio value="sys">Sistema</ion-radio>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
+
                                         <ion-radio value="clar">Clar</ion-radio>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
+
                                         <ion-radio value="fosc">Fosc</ion-radio>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
+
                                         <ion-radio value="acc">Accessible</ion-radio>
-                                    </ion-col>
+                                    </div>
                                 </ion-row>
                             </ion-grid>
                         </ion-radio-group>
@@ -62,23 +53,48 @@
 import { IonPage, IonToolbar, IonHeader, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, modalController, IonRadio, IonRadioGroup } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 
+import { useColorMode } from '@vueuse/core'
+
+const mode = useColorMode({
+    attribute: 'theme',
+    modes: {
+        light: 'light',
+        dark: 'dark',
+        contrast: 'contrast'
+    }
+})
+mode.value='contrast'
+
 const cancel = () => modalController.dismiss(null, 'cancel');
-const confirm = () => modalController.dismiss({theme:myTheme.value}, 'confirm');
+const confirm = () => modalController.dismiss({ theme: myTheme.value }, 'confirm');
 
-const myTheme=ref("")
+const myTheme = ref("")
 
-const onChangeTheme=(ev:any)=>{
-    myTheme.value=ev.detail.value
+const onChangeTheme = (ev: any) => {
+    myTheme.value = ev.detail.value
+    if (ev.detail.value == 'acc')
+        mode.value = 'contrast'
+    else if (ev.detail.value == 'fosc')
+        mode.value = 'dark'
+    else
+        mode.value = 'light'
 }
 
-onMounted(()=>{
-    let theme=localStorage.getItem('theme');
-    if(!theme){
-        localStorage.setItem('theme','sys');
-        theme='sys';
+onMounted(() => {
+    let theme = localStorage.getItem('theme');
+    if (!theme) {
+        localStorage.setItem('theme', 'sys');
+        theme = 'sys';
     }
-    myTheme.value=theme;
+    myTheme.value = theme;
 })
 
 </script>
-<style></style>
+<style scoped>
+.container {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 20px;
+    justify-content: space-evenly;
+}
+</style>

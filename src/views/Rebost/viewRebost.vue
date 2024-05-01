@@ -130,19 +130,23 @@ const presentAlert = async (prompt: string) => {
 const readImage = async (src: any) => {
     const loader = await showLoading("Llegint imatge")
     loader.present()
+    let result=""
     try {
         const worker = await createWorker('spa');
         const ret = await worker.recognize(src)
         presentAlert(ret.data.text)
+        result=ret.data.text
         await worker.terminate()
     } catch (err) {
         await presentAlert(`Error ${err}`)
     } finally {
         loader.dismiss()
     }
+    return result
+}
 
-
-
+const searchAliment=(text:string)=>{
+/*Logica per a buscar aliments*/
 }
 
 const fillRebost = async () => {
@@ -158,7 +162,8 @@ const fillRebost = async () => {
     loader.dismiss(null, 'cancel')
 }
 watch(photos, async (v: any, oV: any) => {
-    await readImage(v[v.length - 1].webviewPath)
+    let textOfPhoto=await readImage(v[v.length - 1].webviewPath)
+    
 }, { deep: true })
 onMounted(() => {
     fillRebost()
