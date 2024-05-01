@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vue-tsc && vite build && npx cap add android && cp google-services.json ./android && cp AndroidManifest.xml android/app/src/main/AndroidManifest.xml &&cd android && ./gradlew assembleDebug",
     "build2": "vue-tsc",
+    "build3": "vite build && npx cap add android && cp google-services.json ./android && cp AndroidManifest.xml android/app/src/main/AndroidManifest.xml &&cd android && ./gradlew assembleDebug",
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
