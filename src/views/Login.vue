@@ -87,6 +87,8 @@ import ErrorMessage from '../components/ErrorMessage.vue';
 
 import { useFavStore } from '../store/favStore'
 
+import { useAlimentStore } from '../store/alimentStore'
+
 const router = useRouter();
 //Store
 const store = useLoginStore();
@@ -94,6 +96,8 @@ const { userId, token } = storeToRefs(store);
 const { setToken, setUserId, setUserType } = store;
 
 const { setLoginFavs } = useFavStore()
+
+const { setAliments } = useAlimentStore()
 
 const loginError = ref('');
 
@@ -143,7 +147,7 @@ const login = async () => {
         setToken(res.data.token);
         setUserId(res.data.userId)
         setUserType(res.data.userType)
-
+        setAliments()
         loginError.value = '';
         if (res.data.userType == 'client') {
           setLoginFavs()

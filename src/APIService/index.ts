@@ -178,6 +178,10 @@ export function getAllAlimentsByTipus(tipus: any) {
   return instance.get(`/aliments/tipus/${tipus}`);
 }
 
+export function getAllAliments() {
+  return instance.get(`/aliments`);
+}
+
 export function getAllElements(rebostId: any) {
   return instance.get(`/rebosts/${rebostId}/elements/`, getHeaders());
 }

@@ -95,8 +95,14 @@ import { createWorker } from 'tesseract.js';
 import newElement from '@/views/Elements/newElement.vue'
 import cardElement from '../../components/cardElement.vue';
 import { showAlert, showLoading } from '../../composables/loader';
+import { useAlimentStore } from '../../store/alimentStore';
+
+import { stringSimilarity } from 'string-similarity-js'
+import { storeToRefs } from 'pinia';
+
 const { takePhoto, photos } = usePhotoGallery();
 const { loggedIn } = useLoginStore();
+const { getAllNoms } = storeToRefs(useAlimentStore())
 interface Aliment {
     _id: string,
     nom: string,
@@ -130,12 +136,12 @@ const presentAlert = async (prompt: string) => {
 const readImage = async (src: any) => {
     const loader = await showLoading("Llegint imatge")
     loader.present()
-    let result=""
+    let result = ""
     try {
         const worker = await createWorker('spa');
         const ret = await worker.recognize(src)
         presentAlert(ret.data.text)
-        result=ret.data.text
+        result = ret.data.text
         await worker.terminate()
     } catch (err) {
         await presentAlert(`Error ${err}`)
@@ -145,8 +151,17 @@ const readImage = async (src: any) => {
     return result
 }
 
-const searchAliment=(text:string)=>{
-/*Logica per a buscar aliments*/
+const searchAliment = (text: string, acceptance: number) => {
+    let aliments = getAllNoms.value?.map((val, idx, arr) => {
+        let mx = 0
+        text.split(' ').forEach((val2, idx2, arr2) => {
+            let res = stringSimilarity(val, val2)
+            if (res > mx)
+                mx = res
+        })
+        return { similarity: mx, val }
+    })
+    return aliments?.filter((val, idx, arr) => val.similarity > acceptance)
 }
 
 const fillRebost = async () => {
@@ -162,8 +177,10 @@ const fillRebost = async () => {
     loader.dismiss(null, 'cancel')
 }
 watch(photos, async (v: any, oV: any) => {
-    let textOfPhoto=await readImage(v[v.length - 1].webviewPath)
-    
+    let textOfPhoto = await readImage(v[v.length - 1].webviewPath)
+    let alimentsEscanejats = searchAliment(textOfPhoto, 0.6)
+    let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.join(' ')}`)
+    alert.present()
 }, { deep: true })
 onMounted(() => {
     fillRebost()
@@ -209,6 +226,8 @@ const showUpdateModal = async (event: { element: Element, rebostId: string }) =>
     }
 
 }
+
+console.log(searchAliment("Limon Cacahuetes Lechuga Iceberg Doca Nabana", 0.6))
 
 </script>
 <style></style>

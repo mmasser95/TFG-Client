@@ -1,7 +1,7 @@
 <template>
   <ion-app>
     <UseColorMode v-slot="{ mode }">
-      <ion-router-outlet />
+      <ion-router-outlet :animated="true" animation="animate__animated animate__lightSpeedInRight"/>
     </UseColorMode>
   </ion-app>
 </template>
