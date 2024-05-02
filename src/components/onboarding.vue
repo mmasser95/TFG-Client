@@ -1,5 +1,5 @@
 <template>
-    <VOnboardingWrapper ref="wrapper" :steps="steps" :options="myOptions">
+    <VOnboardingWrapper ref="wrapper" :steps="steps">
         <template #default="{ previous, next, step, exit, isFirst, isLast, index }">
             <VOnboardingStep>
                 <ion-card>
@@ -35,7 +35,7 @@ import { ref } from 'vue'
 import { VOnboardingWrapper, useVOnboarding, VOnboardingStep, StepEntity } from 'v-onboarding'
 const emit = defineEmits(['startOnboarding'])
 const props = defineProps<{
-    steps: StepEntity[]
+    steps: StepEntity[]|any[]
 }>()
 
 const wrapper = ref(null)

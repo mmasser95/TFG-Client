@@ -64,12 +64,12 @@ import { StepEntity } from 'v-onboarding';
 const rebosts: Ref<Rebost[] | undefined> = ref([]);
 
 const addButton = ref(null)
-const onBoardingRebostSteps: Ref<StepEntity[]> = ref([])
+const onBoardingRebostSteps: Ref<StepEntity[]|any[]> = ref([])
 
 
 const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
 
-const startOnboarding = (element) => {
+const startOnboarding = (element: any) => {
   console.log('element :>> ', element);
   onboardingElement.value = element
 }

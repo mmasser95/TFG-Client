@@ -26,50 +26,32 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'tab1',
         component: () => import('@/views/Tab2Page.vue'),
-        meta: {
-          order: 1,
-          tab: true,
-        },
+        
       },
       {
         path: 'explorar',
         component: () => import('@/views/Explorar.vue'),
-        meta: {
-          order: 2,
-          tab: true,
-        },
+        
       },
       {
         path: 'tab3',
         component: () => import('@/views/Tab3Page.vue'),
-        meta: {
-          order: 5,
-          tab: true,
-        },
+        
       },
       {
         path: 'tab4',
         component: () => import('@/views/Configuracio.vue'),
-        meta: {
-          order: 6,
-          tab: true,
-        },
+        
       },
       {
         path: 'tab5',
         component: () => import('@/views/Ofertes/gestionarOfertes.vue'),
-        meta: {
-          order: 3,
-          tab: true,
-        },
+        
       },
       {
         path: 'comandes',
         component: () => import('@/views/Comandes/viewComandes.vue'),
-        meta: {
-          order: 3,
-          tab: true,
-        },
+        
       },
     ],
   },
@@ -77,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/establiment/:idd',
     component: () => import('@/views/Explorar/viewEstabliment.vue'),
     props: true,
-  },,
+  },
   // {
   //   path: '/establiments',
   //   component: () => import('@/views/Establiments/gestionarEstabliments.vue'),

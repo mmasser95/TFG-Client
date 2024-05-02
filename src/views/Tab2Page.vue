@@ -103,7 +103,7 @@ const onboardingHomeSteps = [{
 
 const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
 
-const startOnboarding = (element) => {
+const startOnboarding = (element:any) => {
   console.log('element :>> ', element);
   onboardingElement.value = element
 }
