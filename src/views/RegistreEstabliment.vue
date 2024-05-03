@@ -172,7 +172,7 @@
                                 </ion-col>
                             </ion-row>
                             <ion-row>
-                                <ion-col size="12" sizeXl="6">
+                                <ion-col size="12" sizeXl="4">
                                     <div class="input-container">
                                         <ion-item>
                                             <ion-input label="Població" type="text" :label-placement="labelPlacement"
@@ -184,7 +184,7 @@
                                             message="Aquest camp és obligatori" />
                                     </div>
                                 </ion-col>
-                                <ion-col size="12" sizeXl="6">
+                                <ion-col size="12" sizeXl="4">
                                     <div class="input-container">
                                         <ion-item>
                                             <ion-input label="Provincia" type="text" :label-placement="labelPlacement"
@@ -194,6 +194,21 @@
                                         <ErrorMessage
                                             v-if="v$.direccio.provincia.$error && v$.direccio.provincia.required.$invalid"
                                             message="Aquest camp és obligatori" />
+                                    </div>
+                                </ion-col>
+                                <ion-col size="12" sizeXl="4">
+                                    <div class="input-container">
+                                        <ion-item>
+                                            <ion-select label="Tipus Establiment" :label-placement="labelPlacement">
+                                                <ion-select-option disabled> Seleccionar tipus d'establiment</ion-select-option>
+                                                <ion-select-option value="restaurant">Restaurant</ion-select-option>
+                                                <ion-select-option value="supermercat">Supermercat</ion-select-option>
+                                                <ion-select-option value="fleca">Fleca</ion-select-option>
+                                                <ion-select-option value="peixateria">Peixateria</ion-select-option>
+                                                <ion-select-option value="carnisseria">Carnisseria</ion-select-option>
+                                                <ion-select-option value="fruiteria_verduleria">Fruita Verdura</ion-select-option>
+                                             </ion-select>
+                                        </ion-item>
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -206,7 +221,7 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonLabel, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, alertController, IonTextarea } from '@ionic/vue';
+import { IonLabel, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent,IonSelect,IonSelectOption, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, alertController, IonTextarea } from '@ionic/vue';
 import { useVuelidate } from '@vuelidate/core'
 import { minLength, required, email, sameAs, minValue, numeric, maxLength } from '@vuelidate/validators';
 import { reactive, computed } from 'vue';

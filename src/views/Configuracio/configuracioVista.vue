@@ -63,7 +63,6 @@ const mode = useColorMode({
         contrast: 'contrast'
     }
 })
-mode.value='contrast'
 
 const cancel = () => modalController.dismiss(null, 'cancel');
 const confirm = () => modalController.dismiss({ theme: myTheme.value }, 'confirm');

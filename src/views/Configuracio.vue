@@ -1,7 +1,9 @@
 <template>
     <ion-page>
         <ion-header>
-            <ion-title class="ion-text-center">Configuració</ion-title>
+            <ion-toolbar>
+                <ion-title class="ion-text-center">Configuració</ion-title>
+            </ion-toolbar>
         </ion-header>
         <ion-content>
             <ion-grid>
@@ -16,11 +18,13 @@
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
-                            <ion-item v-for="(item, k) in opcionsUser" :key="k" @click="item.modalToShow" v-if="userType=='client'">
+                            <ion-item v-for="(item, k) in opcionsUser" :key="k" @click="item.modalToShow"
+                                v-if="userType == 'client'">
                                 <ion-icon :icon="item.icon" slot="start"></ion-icon>
                                 {{ item.label }}
                             </ion-item>
-                            <ion-item v-for="(item, k) in opcionsEstabliment" :key="k" @click="item.modalToShow" v-if="userType=='establiment'">
+                            <ion-item v-for="(item, k) in opcionsEstabliment" :key="k" @click="item.modalToShow"
+                                v-if="userType == 'establiment'">
                                 <ion-icon :icon="item.icon" slot="start"></ion-icon>
                                 {{ item.label }}
                             </ion-item>
@@ -33,7 +37,7 @@
     </ion-page>
 </template>
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
+import { IonPage, IonToolbar, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
 import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban, documentText } from 'ionicons/icons'
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
@@ -49,7 +53,7 @@ const router = useRouter()
 const { setToken, setUserId, setUserType } = store
 const { userType } = storeToRefs(store)
 
-onMounted(()=>{
+onMounted(() => {
     console.log('userType.value :>> ', userType);
 })
 
@@ -112,6 +116,7 @@ const alertSortirSessio = async () => {
                     setToken('')
                     setUserId('')
                     setUserType('')
+                    localStorage.setItem('token', '')
                     router.push('/login')
                 }
             },
@@ -211,7 +216,7 @@ const opcionsUser = [
     {
         label: "Comandes",
         icon: documentText,
-        modalToShow: ()=>router.push('/tabs/comandes')
+        modalToShow: () => router.push('/tabs/tab6')
     },
     {
         label: "Politica Privacitat",
@@ -274,4 +279,4 @@ const opcionsEstabliment = [
 
 ]
 </script>
-<style ></style>
+<style></style>

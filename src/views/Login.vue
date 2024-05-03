@@ -145,6 +145,7 @@ const login = async () => {
     doLogin(state.correu, state.contrasenya).then(res => {
       if (res.status == 200) {
         setToken(res.data.token);
+        localStorage.setItem('token',res.data.token)
         setUserId(res.data.userId)
         setUserType(res.data.userType)
         setAliments()

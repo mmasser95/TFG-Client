@@ -6,7 +6,7 @@ import { useLoginStore } from '@/store/loginStore';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/config',
+    redirect: '/tabs',
   },
   {
     path: '/login',
@@ -25,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'tab1',
-        component: () => import('@/views/Tab2Page.vue'),
+        component: () => import('@/views/HomePage.vue'),
         
       },
       {
@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'tab3',
-        component: () => import('@/views/Tab3Page.vue'),
+        component: () => import('@/views/Rebost.vue'),
         
       },
       {
@@ -49,7 +49,7 @@ const routes: Array<RouteRecordRaw> = [
         
       },
       {
-        path: 'comandes',
+        path: 'tab6',
         component: () => import('@/views/Comandes/viewComandes.vue'),
         
       },

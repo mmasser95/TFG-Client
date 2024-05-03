@@ -15,19 +15,35 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <ion-range @ion-change="preuChange" :min="1" :max="50" :model-value="preu"
-                        :label-placement="labelPlacement" :label="`Preu ${preu.lower} € - ${preu.upper} €`"
-                        :dual-knobs="true" :pin="true" :pin-formatter="pinFormatterPreu"></ion-range>
+                    <ion-row>
+                        <ion-col>
+                            <ion-range @ion-change="preuChange" :min="1" :max="50" :model-value="preu"
+                                :label-placement="labelPlacement" :label="`Preu ${preu.lower} € - ${preu.upper} €`"
+                                :dual-knobs="true" :pin="true" :pin-formatter="pinFormatterPreu"></ion-range></ion-col>
+                        <ion-col>
+                            <ion-range @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
+                                :label-placement="labelPlacement"
+                                :label="`Horari ${hores[horari.lower]}-${hores[horari.upper]}`" :dual-knobs="true"
+                                :pin="true" :pin-formatter="pinFormatterHorari"></ion-range>
+                        </ion-col>
+                    </ion-row>
+
                 </ion-col>
                 <ion-col></ion-col>
             </ion-row>
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <ion-range @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
-                        :label-placement="labelPlacement"
-                        :label="`Horari ${hores[horari.lower]}-${hores[horari.upper]}`" :dual-knobs="true" :pin="true"
-                        :pin-formatter="pinFormatterHorari"></ion-range>
+                    <ion-row>
+                        <ion-col>
+                            <ion-range v-model="qualitatMinima" @ion-change="qualitatChange" :label="`Valoració qualitat: ${qualitatMinima}`"
+                                :label-placement="labelPlacement" :max="4" :min="0" :pin="true"></ion-range>
+                        </ion-col>
+                        <ion-col>
+                            <ion-range v-model="quantitatMinima" :label="`Valoraciò quantitat:${quantitatMinima}`"
+                                :label-placement="labelPlacement" :max="4" :min="0" :pin="true"></ion-range>
+                        </ion-col>
+                    </ion-row>
                 </ion-col>
                 <ion-col></ion-col>
             </ion-row>
@@ -36,19 +52,17 @@
                 <ion-col size="8">
                     <div class="checkbox-container">
                         <ion-checkbox v-model="filtres.restaurant" label-placement="fixed">Restaurant</ion-checkbox>
-
                         <ion-checkbox v-model="filtres.supermercat" label-placement="fixed">Supermercat</ion-checkbox>
                         <ion-checkbox v-model="filtres.fleca" label-placement="fixed">Fleca</ion-checkbox>
                         <ion-checkbox v-model="filtres.peixateria" label-placement="fixed">Peixateria</ion-checkbox>
                         <ion-checkbox v-model="filtres.carnisseria" label-placement="fixed">Carnisseria</ion-checkbox>
-                        <ion-checkbox v-model="filtres.fruiteria" label-placement="fixed">Fruiteria</ion-checkbox>
-                        <ion-checkbox v-model="filtres.verduleria" label-placement="fixed">Verduleria</ion-checkbox>
-
+                        <ion-checkbox v-model="filtres.fruiteria_verduleria" label-placement="fixed">Fruita
+                            Verdura</ion-checkbox>
                     </div>
-
                 </ion-col>
                 <ion-col></ion-col>
             </ion-row>
+            
         </ion-grid>
     </ion-content>
 </template>
@@ -56,9 +70,12 @@
 import { IonPage, IonHeader, IonToolbar, IonButton, IonLabel, IonButtons, IonTitle, IonContent, IonRange, IonCheckbox, IonGrid, IonRow, IonCol, modalController } from '@ionic/vue';
 import { reactive, ref } from 'vue';
 import { useFiltresStore } from '../../store/filtersStore'
+import { storeToRefs } from 'pinia';
 const labelPlacement = 'stacked';
 
-const { filtres, horari, preu,generarHores } = useFiltresStore()
+const { filtres, horari, preu, generarHores } = useFiltresStore()
+
+const { qualitatMinima, quantitatMinima } = storeToRefs(useFiltresStore())
 
 const horariChange = (event: any) => {
     let val = event.detail.value
@@ -72,14 +89,25 @@ const preuChange = (event: any) => {
     preu.upper = val.upper
 }
 
+const quantitatChange = (event: any) => {
+    let val = event.detail.value
+    console.log('event.detail.value :>> ', event.detail.value);
+    quantitatMinima.value = val
+}
+
+const qualitatChange = (event: any) => {
+    let val = event.detail.value
+    console.log('event.detail.value :>> ', event.detail.value);
+    qualitatMinima.value = val
+}
 
 const hores = generarHores()
 
-const pinFormatterHorari = (i:number) => {
+const pinFormatterHorari = (i: number) => {
     return hores[i]
 }
 
-const pinFormatterPreu = (i:number) => {
+const pinFormatterPreu = (i: number) => {
     return `${i} €`
 }
 
@@ -94,4 +122,5 @@ const confirm = () => {
     flex-flow: row wrap;
     gap: 20px;
 }
+
 </style>

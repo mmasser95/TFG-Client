@@ -1,18 +1,27 @@
 <template>
   <ion-app>
     <UseColorMode v-slot="{ mode }">
-      <ion-router-outlet :animated="false"/>
+      <ion-router-outlet :animated="false" />
     </UseColorMode>
   </ion-app>
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { useBackButton, useIonRouter } from '@ionic/vue';
+import { IonApp, IonRouterOutlet, useBackButton, useIonRouter } from '@ionic/vue';
+import { onBeforeMount, onMounted } from 'vue';
 import { App } from '@capacitor/app'
 import { UseColorMode } from '@vueuse/components'
 import { useColorMode } from '@vueuse/core';
-
+import { verificarToken } from './APIService'
+import { useLoginStore } from './store/loginStore';
+import { useAlimentStore } from './store/alimentStore';
+import { useFavStore } from './store/favStore';
+import { showLoading } from './composables/loader';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+const { setToken, setUserId, setUserType } = useLoginStore()
+const { setAliments } = useAlimentStore()
+const { setLoginFavs } = useFavStore()
 const mode = useColorMode({
   attribute: 'theme',
   modes: {
@@ -28,6 +37,36 @@ useBackButton(-1, () => {
     App.exitApp();
   }
 })
+
+
+let token = localStorage.getItem('token')
+if (token) {
+  setToken(token)
+  showLoading('Iniciant sessió').then((loader) => {
+    loader.present()
+    verificarToken().then((res) => {
+      setToken(res.data.token);
+      localStorage.setItem('token', res.data.token)
+      setUserId(res.data.userId)
+      setUserType(res.data.userType)
+      setAliments()
+      if (res.data.userType == 'client') {
+        setLoginFavs()
+        router.push('/tabs/tab1');
+      }
+      else
+        router.push('/tabs/tab5')
+
+    }).catch(() => {
+      router.push('/login')
+    }).finally(() => {
+      loader.dismiss()
+    });
+  });
+
+}
+
+
 </script>
 
 <style>
@@ -41,9 +80,9 @@ ion-fab {
 }
 
 .input-container {
-    display: flex;
-    flex-flow: column wrap;
-    gap:3px
+  display: flex;
+  flex-flow: column wrap;
+  gap: 3px
 }
 </style>
 popups.0

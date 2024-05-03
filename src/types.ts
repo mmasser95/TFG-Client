@@ -30,6 +30,8 @@ export interface Establiment {
   tipus: string;
   ofertes: Oferta[];
   direccio: Direccio;
+  quantitatMitjana?: number;
+  qualitatMitjana?: number;
 }
 
 export interface Establiment2 {
@@ -46,6 +48,8 @@ export interface Establiment2 {
   tipus: string;
   ofertes: Oferta[];
   direccio: Direccio;
+  quantitatMitjana?: number;
+  qualitatMitjana?: number;
 }
 
 export interface Rebost {
@@ -57,6 +61,8 @@ export interface Aliment {
   _id: string;
   nom: string;
   tipus: string;
+  temps_defecte_conservacio: number;
+  t_unitat: string;
 }
 
 export interface Element {
@@ -68,6 +74,14 @@ export interface Element {
   aliment?: Aliment;
 }
 
+export interface ElementToAdd {
+  aliment: string;
+  data_compra: string;
+  data_caducitat: string;
+  quantitat: number;
+  q_unitat: string;
+}
+
 export interface Horari {
   inici: Date;
   final: Date;
@@ -75,10 +89,11 @@ export interface Horari {
 }
 
 export interface Comanda {
+  _id: string;
   establimentId: Establiment;
   ofertaId: string;
   userId: string;
   total: string;
-  data:string
+  data: string;
   quantitat: number;
 }

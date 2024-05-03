@@ -86,7 +86,7 @@ import {
     modalController
 } from '@ionic/vue';
 import { arrowBack } from 'ionicons/icons'
-import { getAllElements, createElement, putElement } from '../../APIService/';
+import { getAllElements, createElement, putElement, getAlimentsByNoms } from '../../APIService/';
 import { ref, Ref, reactive, computed, onMounted, defineProps, watch } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { add, camera, pencil } from 'ionicons/icons';
@@ -94,9 +94,10 @@ import { usePhotoGallery } from '@/composables/usePhotoGallery';
 import { createWorker } from 'tesseract.js';
 import newElement from '@/views/Elements/newElement.vue'
 import cardElement from '../../components/cardElement.vue';
+import chooseAliments from './chooseAliments.vue'
 import { showAlert, showLoading } from '../../composables/loader';
 import { useAlimentStore } from '../../store/alimentStore';
-
+import { Element } from '../../types';
 import { stringSimilarity } from 'string-similarity-js'
 import { storeToRefs } from 'pinia';
 
@@ -109,14 +110,7 @@ interface Aliment {
     tipus: string
 }
 
-interface Element {
-    _id: string,
-    quantitat: number,
-    q_unitat: string,
-    data_compra: string,
-    data_caducitat: string,
-    aliment?: Aliment
-}
+
 
 const elements: Ref<Element[] | null> = ref(null)
 
@@ -178,10 +172,17 @@ const fillRebost = async () => {
 }
 watch(photos, async (v: any, oV: any) => {
     let textOfPhoto = await readImage(v[v.length - 1].webviewPath)
+    // let textOfPhoto = "Tiquet prova Rabaco 1 Lechuga Achijoria Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique earum sapiente voluptatibus praesentium molestias aut accusamus dolore suscipit esse optio impedit, quia, reprehenderit eum dolores velit, cumque vitae iusto pariatur! Lima Limona zabahoria Togurt Lehe"
     let alimentsEscanejats = searchAliment(textOfPhoto, 0.6)
-    let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.join(' ')}`)
+    let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.map((el) => el.val).join(' ')}`)
     alert.present()
+    getAlimentsByNoms(alimentsEscanejats?.map((el) => el.val)).then((res) => {
+        showChooseAlimentModal(res.data.aliments)
+    }).catch((err) => {
+        console.log('err :>> ', err);
+    });
 }, { deep: true })
+
 onMounted(() => {
     fillRebost()
 });
@@ -225,6 +226,20 @@ const showUpdateModal = async (event: { element: Element, rebostId: string }) =>
         });
     }
 
+}
+
+const showChooseAlimentModal = async (aliments: Aliment[]) => {
+    const modal = await modalController.create({
+        component: chooseAliments,
+        componentProps: {
+            aliments,
+            rebostId:props.rebostId
+        }
+    })
+    modal.present()
+    const { data, role } = await modal.onWillDismiss();
+    if (role == "confirm")
+        fillRebost()
 }
 
 console.log(searchAliment("Limon Cacahuetes Lechuga Iceberg Doca Nabana", 0.6))

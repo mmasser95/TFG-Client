@@ -26,20 +26,26 @@
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
                             <ion-item v-for="(label, k) in labels" :key="k">
-                                <div v-if="label == 'Horari'&&typeof establiment.horari!='string'">
+                                <div v-if="label == 'Horari' && typeof establiment.horari != 'string'">
                                     {{ label }}:
                                     <badgeHorari :horaris="establiment.horari" />
                                 </div>
                                 <div v-else-if="label == 'Telèfon'">
-                                    Telèfon: <ion-badge class="telfBadge">
+                                    Telèfon: <ion-chip class="telfBadge">
                                         <div class="myBadge">
                                             {{ establiment.telf }} <ion-icon :icon="call"></ion-icon>
                                         </div>
-                                    </ion-badge>
+                                    </ion-chip>
                                 </div>
                                 <div v-else>
                                     {{ label }}: {{ establiment[k] }}
                                 </div>
+                            </ion-item>
+                            <ion-item>
+                                Qualitat: <star-rating v-model="qualitat" :read-only="true"></star-rating> {{qualitat}}
+                            </ion-item>
+                            <ion-item>
+                                Quantitat: <star-rating v-model="quantitat" read-only="true"></star-rating> {{quantitat}}
                             </ion-item>
                             <ion-item>
                                 Direccio: {{ direccio }}
@@ -65,7 +71,10 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-                        <comentariComponent />
+                        <p class="ion-text-center">Últims comentaris</p>
+                        <ion-list>
+                            <ion-item></ion-item>
+                        </ion-list>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -74,10 +83,10 @@
     </ion-page>
 </template>
 <script setup lang="ts">
-import { IonPage, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, IonTextarea,IonBadge } from '@ionic/vue'
-import { arrowBack,call } from 'ionicons/icons'
+import { IonPage, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, IonTextarea, IonChip } from '@ionic/vue'
+import { arrowBack, call } from 'ionicons/icons'
 import { getEstabliment, getEstadistiques } from '../../APIService';
-import { computed, nextTick, onMounted, onBeforeUnmount, ref, Ref, defineComponent } from 'vue';
+import { computed, watch,nextTick, onMounted, onBeforeUnmount, ref, Ref, defineComponent } from 'vue';
 import { showLoading, showAlert } from '../../composables/loader';
 import { useRouter } from 'vue-router';
 import cardOferta from '../../components/cardOferta.vue';
@@ -91,9 +100,10 @@ import location from "leaflet/dist/images/marker-icon.png"
 import badgeHorari from '../../components/badgeHorari.vue';
 import comentariComponent from '../../components/comentariComponent.vue';
 
-
 const router = useRouter()
 
+const qualitat=ref(0)
+const quantitat=ref(0)
 
 const labels = {
     nom: "Nom",
@@ -124,6 +134,16 @@ const fillEstabliment = async () => {
     });
 }
 
+const fillEstadistiques = async () => {
+    getEstadistiques(props.idd).then((res) => {
+        console.log('res.data :>> ', res.data);
+        qualitat.value=res.data.estadistiques.qualitat
+        quantitat.value=res.data.estadistiques.quantitat
+    }).catch((err) => {
+
+    });
+}
+
 const loadMap = () => {
     if (establiment.value) {
         let map = L.map('map').invalidateSize().setView(establiment.value.coordenades, zoom.value)
@@ -148,7 +168,7 @@ const goBack = () => {
 onMounted(async () => {
     await fillEstabliment()
     await nextTick()
-
+    fillEstadistiques()
 })
 </script>
 <style scoped>

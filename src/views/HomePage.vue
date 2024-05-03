@@ -8,8 +8,8 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-title class="ion-text-center" id="negocisSection">Llista de negocis <ion-icon
-                :icon="informationCircle" @click="onboardingElement?.start"></ion-icon></ion-title>
+            <ion-title class="ion-text-center" id="negocisSection">Llista de negocis <ion-icon :icon="informationCircle"
+                @click="onboardingElement?.start"></ion-icon></ion-title>
 
           </ion-col>
           <ion-col></ion-col>
@@ -17,7 +17,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1">
+            <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :pagination="{ clickable: true }">
               <swiper-slide v-if="establiments" v-for="(i, k) in establiments" :key="i._id">
                 <myCard :establiment="i" />
               </swiper-slide>
@@ -57,6 +57,7 @@ import { informationCircle } from 'ionicons/icons';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/free-mode'
+import 'swiper/css/pagination'
 import myCard from '../components/myCard.vue';
 import { onMounted, ref, Ref, watch } from 'vue';
 import { showLoading } from '../composables/loader';
@@ -77,7 +78,6 @@ const radi = ref(25)
 const establiments: Ref<[Establiment] | null> = ref(null)
 const establimentsPreferits: Ref<[Establiment] | null> = ref(null)
 
-
 const onboardingHomeSteps = [{
   attachTo: {
     element: "#negocisSection"
@@ -92,7 +92,7 @@ const onboardingHomeSteps = [{
   },
   options: {
     popper: {
-      placement: 'top'
+      placement: 'top-start'
     }
   },
   content: {
@@ -103,7 +103,7 @@ const onboardingHomeSteps = [{
 
 const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
 
-const startOnboarding = (element:any) => {
+const startOnboarding = (element: any) => {
   console.log('element :>> ', element);
   onboardingElement.value = element
 }

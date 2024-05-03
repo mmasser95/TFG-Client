@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useLoginStore } from '../store/loginStore';
-// const base_url = 'http://192.168.1.129:5000/api/v1';
-const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
+const base_url = 'http://192.168.1.129:5000/api/v1';
+// const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
 
 const instance = axios.create({
   baseURL: base_url,
@@ -182,11 +182,18 @@ export function getAllAliments() {
   return instance.get(`/aliments`);
 }
 
+export function getAlimentsByNoms(noms: any) {
+  return instance.post(`/aliments/noms`, { noms }, getHeaders());
+}
+
 export function getAllElements(rebostId: any) {
   return instance.get(`/rebosts/${rebostId}/elements/`, getHeaders());
 }
 export function createElement(rebostId: any, data: any) {
   return instance.post(`/rebosts/${rebostId}/elements/`, data, getHeaders());
+}
+export function createElementScan(rebostId: any, data: any) {
+  return instance.post(`/rebosts/${rebostId}/elements/scan`, {elements:data}, getHeaders());
 }
 export function putElement(rebostId: any, elementId: any, data: any) {
   return instance.put(
@@ -250,4 +257,27 @@ export function createComanda(comandaInfo: any) {
 
 export function deleteComanda(comandaId: any) {
   return instance.delete(`/comandes/${comandaId}`, getHeaders());
+}
+
+export function verificarToken() {
+  return instance.get(`/verificar`, getHeaders());
+}
+
+export function getAvaluacio(comandaId: any) {
+  return instance.get(`/comandes/${comandaId}/avaluacions`, getHeaders());
+}
+
+export function createAvaluacio(comandaId: any, avaluacioInfo: any) {
+  return instance.post(
+    `/comandes/${comandaId}/avaluacions`,
+    avaluacioInfo,
+    getHeaders()
+  );
+}
+
+export function deleteAvaluacio(comandaId: any, avaluacioId: any) {
+  return instance.delete(
+    `/comandes/${comandaId}/avaluacions/${avaluacioId}`,
+    getHeaders()
+  );
 }

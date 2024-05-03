@@ -1,21 +1,26 @@
 <template>
     <ion-page>
         <ion-header>
-            <ion-title class="ion-text-center">Mapa</ion-title>
+            <ion-toolbar>
+                <ion-title class="ion-text-center ">Explorar
+                    <ion-icon :icon="informationCircle"></ion-icon>
+                </ion-title>
+                <ion-segment value="mapa" @ionChange="changePestanya">
+                    <ion-segment-button value="mapa">
+                        <ion-label>Mapa</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="llista">
+                        <ion-label>Llista</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
+            </ion-toolbar>
         </ion-header>
         <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="8">
-                        <ion-segment value="mapa" @ionChange="changePestanya">
-                            <ion-segment-button value="mapa">
-                                <ion-label>Mapa</ion-label>
-                            </ion-segment-button>
-                            <ion-segment-button value="llista">
-                                <ion-label>Llista</ion-label>
-                            </ion-segment-button>
-                        </ion-segment>
+
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -51,16 +56,17 @@
         </ion-content>
     </ion-page>
     <div class="ion-hide">
-        <ion-item v-for="(establiment,k) in establiments">
-            <router-link :ref="el=>{popups[k]=el}" :to="`/tabs/${establiment._id}`">Anar a l'establiment</router-link>
+        <ion-item v-for="(establiment, k) in establiments">
+            <router-link :ref="el => { popups[k] = el }" :to="`/tabs/${establiment._id}`">Anar a
+                l'establiment</router-link>
         </ion-item>
-        
+
     </div>
 
 </template>
 <script setup lang="ts">
-import { IonPage, IonTitle, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange, modalController } from '@ionic/vue'
-import { Ref, onMounted, getCurrentInstance,  ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount, onBeforeUpdate } from 'vue';
+import { IonPage, IonTitle, IonToolbar, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange, modalController } from '@ionic/vue'
+import { Ref, onMounted, getCurrentInstance, ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { useRouter } from 'vue-router';
 import { searchEstabliments, doIPLocation } from '../APIService';
 import { Geolocation } from '@capacitor/geolocation';
@@ -69,7 +75,7 @@ import L, { Map, LatLngExpression, Icon, Circle } from 'leaflet'
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
-import { filter } from 'ionicons/icons'
+import { filter,informationCircle } from 'ionicons/icons'
 import location from "leaflet/dist/images/marker-icon.png"
 import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
@@ -93,8 +99,8 @@ const cercleMapa: Ref<null | Circle> = ref(null)
 const cercleRadi = ref(15)
 
 const markersLayer: Ref<any> = ref(null)
-    
-const popups:Ref<any[]>=ref([])
+
+const popups: Ref<any[]> = ref([])
 
 const { filtres, horari, preu } = useFiltresStore()
 
@@ -157,7 +163,7 @@ const addMarkers = () => {
         map.value.removeLayer(markersLayer.value)
     var markers = L.markerClusterGroup()
     if (establiments.value != undefined) {
-        establiments.value.forEach((element,index) => {
+        establiments.value.forEach((element, index) => {
             if (map.value != null) {
                 var marker = L.marker(element.coordenades, {
                     icon: new Icon({ iconUrl: location, iconSize: [25, 41], iconAnchor: [12, 41] })
@@ -233,8 +239,8 @@ onBeforeUnmount(async () => {
     }
 })
 
-onBeforeUpdate(()=>{
-    popups.value=[]
+onBeforeUpdate(() => {
+    popups.value = []
 })
 
 watch(cercleRadi, async (newValue, oldValue) => {
@@ -245,8 +251,14 @@ watch(cercleRadi, async (newValue, oldValue) => {
 
 
 </script>
-<style>
+<style scoped>
 #map {
     height: 55vh;
+}
+ion-title{
+    margin:10px
+}
+ion-label{
+    margin:0px;
 }
 </style>

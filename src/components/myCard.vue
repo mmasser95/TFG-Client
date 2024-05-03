@@ -26,11 +26,11 @@
             <div class="content-item">
                 <div>
                     Telèfon:
-                    <ion-badge class="telfBadge">
+                    <ion-chip class="telfBadge">
                         <div class="myBadge">
                             {{ establiment.telf }} <ion-icon :icon="call"></ion-icon>
                         </div>
-                    </ion-badge>
+                    </ion-chip>
                 </div>
                 <div class="content-item">
                     <div v-if="typeof establiment.horari=='string'">
@@ -44,8 +44,8 @@
             </div>
             <div class="content-item">
                 Valoració:
-                <ion-icon :icon="star" class="star-icon"></ion-icon> 4.5 Quantitat
-                <ion-icon :icon="star" class="star-icon"></ion-icon> 4.5 Qualitat
+                <ion-icon :icon="star" class="star-icon"></ion-icon> {{establiment.quantitatMitjana}} Quantitat
+                <ion-icon :icon="star" class="star-icon"></ion-icon> {{establiment.qualitatMitjana}} Qualitat
                 Tipus: {{ establiment.tipus }}
             </div>
         </ion-card-content>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonCard, IonTitle, IonCardTitle, IonGrid, IonRow, IonCol, IonCardSubtitle, IonCardHeader, IonCardContent, IonThumbnail, IonImg, IonIcon, IonBadge } from '@ionic/vue'
+import { IonCard, IonTitle, IonCardTitle, IonGrid, IonRow, IonCol, IonCardSubtitle, IonCardHeader, IonCardContent, IonThumbnail, IonImg, IonIcon, IonChip } from '@ionic/vue'
 import { call, star } from 'ionicons/icons'
 import { defineProps, onMounted } from 'vue';
 import favButton from './favButton.vue';
@@ -67,7 +67,7 @@ const props = defineProps<{ establiment: Establiment2 }>()
 <style scoped>
 .container {
     position: relative;
-    width: 100%;
+    width: 98%;
     border-radius: 10px;
     margin: 10px;
     background-image: linear-gradient(to left bottom, #040404, #1e242e, #234355, #166678, #008b90, #00a199, #00b79c, #2ecd98, #43da9b, #57e69d, #6bf39f, #7effa0);

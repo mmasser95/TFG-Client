@@ -16,7 +16,7 @@
         </ion-row>
         <ion-row class="ion-align-items-center">
             <ion-col></ion-col>
-            <ion-col size="2">{{ oferta.preu }} €</ion-col>
+            <ion-col size="2">{{ total }} €</ion-col>
             <ion-col size="2" @click.stop="null">
                 <ion-input label="Quantitat" label-placement="floating" type="number" min="1"
                     v-model="quantitat"></ion-input>
@@ -31,14 +31,12 @@
 </template>
 <script setup lang="ts">
 import { IonGrid, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
-import { useRouter } from 'vue-router';
 import viewOferta from '../views/Explorar/viewOferta.vue';
 import { bag } from 'ionicons/icons';
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import { Oferta } from '../types'
 import { createComanda } from '../APIService'
 
-const router = useRouter();
 
 
 let props = defineProps<{
@@ -47,7 +45,7 @@ let props = defineProps<{
 }>()
 
 let quantitat = ref(1)
-
+let total=computed(()=>props.oferta.preu*quantitat.value)
 const showModalOferta = async () => {
     const modal = await modalController.create({
         component: viewOferta,

@@ -3,11 +3,19 @@
     <ion-header>
       <ion-toolbar>
         <div class="myContainer">
-          <p>Inventari</p>
+          <ion-grid>
+            <ion-row class="ion-justify-content-center ion-align-items-center">
+              <ion-col>
+                <ion-title class="ion-text-center">Rebost
+                  <ion-icon @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                </ion-title>
+                
+              </ion-col>
+            </ion-row>
+          </ion-grid>
 
-          <ion-button class="item" size="small" shape="round" @click="onboardingElement?.start()">
-            <ion-icon slot="icon-only" :icon="informationCircleOutline"></ion-icon>
-          </ion-button>
+
+
 
         </div>
 
@@ -50,7 +58,7 @@ import { IonPage, IonHeader, IonButton, IonToolbar, IonTitle, IonContent, IonGri
 import { onMounted, ref, reactive, onBeforeUpdate, computed } from 'vue';
 import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { add, informationCircleOutline } from 'ionicons/icons'
+import { add, informationCircle } from 'ionicons/icons'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import cardInventari from '../components/cardInventari.vue'
 import { getRebosts, crearRebost, updateRebost } from '../APIService'
@@ -64,7 +72,7 @@ import { StepEntity } from 'v-onboarding';
 const rebosts: Ref<Rebost[] | undefined> = ref([]);
 
 const addButton = ref(null)
-const onBoardingRebostSteps: Ref<StepEntity[]|any[]> = ref([])
+const onBoardingRebostSteps: Ref<StepEntity[] | any[]> = ref([])
 
 
 const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
@@ -162,11 +170,4 @@ onMounted(async () => {
 
 
 </script>
-<style scoped>
-.myContainer {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  width: 100%
-}
-</style>
+<style scoped></style>

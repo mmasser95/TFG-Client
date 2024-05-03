@@ -16,9 +16,12 @@ export const useFiltresStore = defineStore('filtres', () => {
     fleca: false,
     peixateria: false,
     carnisseria: false,
-    fruiteria: false,
-    verduleria: false,
+    fruiteria_verduleria: false,
   });
+
+  const quantitatMinima:Ref<number>=ref(0)
+  const qualitatMinima:Ref<number>=ref(0)
+
   const generarHores = () => {
     let result: [string] = [''];
     result.pop();
@@ -35,6 +38,8 @@ export const useFiltresStore = defineStore('filtres', () => {
     preu,
     horari,
     filtres,
+    quantitatMinima,
+    qualitatMinima,
     generarHores,
   };
 });

@@ -1,7 +1,7 @@
 <template>
     <div class="horari" v-if="horaris">
         <ion-badge v-for="horari in horaris" :key="horari._id" >
-            {{ horari.inici }}:{{ horari.final }}
+            {{ horari.inici }}-{{ horari.final }}
         </ion-badge>
     </div>
 </template>
@@ -16,13 +16,14 @@ const props=defineProps<{
 .horari{
     display: flex;
     flex-flow:column wrap;
-    gap:10px;
-    margin:5px
+    margin:2px;
+    gap:8px;
 }
 
-ion-badge{
+ion-chip{
     @media (prefers-color-scheme: dark) {
         --background:  linear-gradient(to right, #70995c,#a5b061,#dfc36f,#ffd489);
+        color:black;
     }
 }
 </style>
