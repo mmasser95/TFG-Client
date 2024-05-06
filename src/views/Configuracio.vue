@@ -44,14 +44,17 @@ import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
 import canviarDireccio from './Configuracio/canviarDireccio.vue';
 import canviarFotoPerfil from './Configuracio/canviarImatges.vue'
 import { useLoginStore } from '../store/loginStore';
+import { useFirebaseStore } from '../store/firebaseStore'
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { deleteEstabliment, deleteUser } from '../APIService';
+import { deleteEstabliment, deleteUser, deleteFirebaseToken } from '../APIService';
 import { onMounted } from 'vue';
 const store = useLoginStore()
 const router = useRouter()
 const { setToken, setUserId, setUserType } = store
 const { userType } = storeToRefs(store)
+
+const { myToken } = storeToRefs(useFirebaseStore())
 
 onMounted(() => {
     console.log('userType.value :>> ', userType);
@@ -117,7 +120,12 @@ const alertSortirSessio = async () => {
                     setUserId('')
                     setUserType('')
                     localStorage.setItem('token', '')
-                    router.push('/login')
+                    deleteFirebaseToken(myToken.value).then((res) => {
+
+                    }).catch((err) => {
+
+                    }).finally(() => router.push('/login'));
+
                 }
             },
             {

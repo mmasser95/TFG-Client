@@ -61,7 +61,7 @@ import myCard from '../components/myCard.vue';
 import { onMounted, ref, Ref, watch } from 'vue';
 import { showLoading } from '../composables/loader';
 import { LatLngTuple } from 'leaflet'
-import { searchEstabliments, getMyFavs } from '../APIService';
+import { searchEstabliments, getMyFavs, testFCM } from '../APIService';
 import { Establiment } from '../types';
 import { useFavStore } from '../store/favStore';
 import { storeToRefs } from 'pinia';
@@ -146,6 +146,11 @@ onMounted(async () => {
   console.log(establimentsPreferits.value)
   await fillEstabliments()
   await fillEstablimentsPreferits()
+  testFCM().then((res) => {
+    console.log('res :>> ', res);
+  }).catch((err) => {
+    console.log('err :>> ', err);
+  });
 
 })
 

@@ -22,12 +22,25 @@ import { useFirebaseStore } from './store/firebaseStore'
 import { showLoading, showAlert } from './composables/loader';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
+
+import { useFirebase } from './composables/useFirebase'
+import { useCapacitorNotifications } from './composables/useCapacitorNotifications'
+const { initialize } = useFirebase()
+const { registerNotifications, addListeners } = useCapacitorNotifications()
+
+
+registerNotifications().then((result) => {
+
+}).catch((err) => {
+  initialize()
+});
+
 const router = useRouter()
 const { setToken, setUserId, setUserType } = useLoginStore()
 const { setAliments } = useAlimentStore()
 const { setLoginFavs } = useFavStore()
 
-let {myToken}=storeToRefs(useFirebaseStore)
+let { myToken } = storeToRefs(useFirebaseStore())
 const mode = useColorMode({
   attribute: 'theme',
   modes: {
@@ -72,57 +85,7 @@ if (token) {
 
 }
 
-//Firebase
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_APIKEY,
-  authDomain: import.meta.env.VITE_AUTHDOMAIN,
-  projectId: import.meta.env.VITE_PROJECTID,
-  storageBucket: import.meta.env.VITE_STORAGEBUCKET,
-  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
-  appId: import.meta.env.VITE_APPID,
-  measurementId: import.meta.env.VITE_MEASUREMENTID
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// Get registration token. Initially this makes a network call, once retrieved
-// subsequent calls to getToken will return from cache.
-try {
-  let messaging = getMessaging(app)
-  getToken(messaging, { vapidKey: 'BC49ue7_lVKUlKDx1KHbb7takiKSGkA-cajRyMSQWFlxs8ly-pEMiI3JJpajX2E7Vlrs1usy7KBadc2NRs-N0Wg' }).then((currentToken) => {
-    if (currentToken) {
-      console.log(currentToken)
-    } else {
-      // Show permission request UI
-      console.log('No registration token available. Request permission to generate one.');
-      // ...
-    }
-  }).catch((err) => {
-    console.log('An error occurred while retrieving token. ', err);
-    // ...
-  });
-
-  onMessage(messaging, (payload) => {
-    console.log('Message received. ', payload);
-    // ...
-  });/*
-  onBackgroundMessage(messaging, (payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    // Customize notification here
-    const notificationTitle = 'Background Message Title';
-    const notificationOptions = {
-      body: 'Background Message body.',
-      icon: '/firebase-logo.png'
-    };
-
-    self.registration.showNotification(notificationTitle,
-      notificationOptions);
-  });*/
-} catch (err) {
-  console.log(err)
-}
 
 
 
@@ -145,4 +108,4 @@ ion-fab {
   gap: 3px
 }
 </style>
-popups.0
+popups.0./composables/useFirebase
