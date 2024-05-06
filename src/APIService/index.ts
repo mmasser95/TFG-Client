@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useLoginStore } from '../store/loginStore';
-const base_url = 'https://192.168.1.26:5000/api/v1';
-// const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
+// const base_url = 'https://192.168.1.26:5000/api/v1';
+const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
 
 const instance = axios.create({
   baseURL: base_url,
@@ -193,7 +193,11 @@ export function createElement(rebostId: any, data: any) {
   return instance.post(`/rebosts/${rebostId}/elements/`, data, getHeaders());
 }
 export function createElementScan(rebostId: any, data: any) {
-  return instance.post(`/rebosts/${rebostId}/elements/scan`, {elements:data}, getHeaders());
+  return instance.post(
+    `/rebosts/${rebostId}/elements/scan`,
+    { elements: data },
+    getHeaders()
+  );
 }
 export function putElement(rebostId: any, elementId: any, data: any) {
   return instance.put(
@@ -280,4 +284,8 @@ export function deleteAvaluacio(comandaId: any, avaluacioId: any) {
     `/comandes/${comandaId}/avaluacions/${avaluacioId}`,
     getHeaders()
   );
+}
+
+export function sendFirebaseToken(token: any) {
+  return instance.post(`/fcm`, { token }, getHeaders());
 }

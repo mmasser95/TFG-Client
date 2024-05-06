@@ -71,7 +71,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonLabel
 import { useLoginStore } from '../store/loginStore';
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, computed } from 'vue';
-import { doLogin, dosignIn, registreEstabliment } from '../APIService/index';
+import { doLogin, dosignIn, registreEstabliment,sendFirebaseToken } from '../APIService/index';
 
 import Registre from './Registre.vue'
 import RegistreEstabliment from './RegistreEstabliment.vue';
@@ -88,6 +88,7 @@ import ErrorMessage from '../components/ErrorMessage.vue';
 import { useFavStore } from '../store/favStore'
 
 import { useAlimentStore } from '../store/alimentStore'
+import { useFirebaseStore } from '../store/firebaseStore'
 
 const router = useRouter();
 //Store
@@ -98,6 +99,7 @@ const { setToken, setUserId, setUserType } = store;
 const { setLoginFavs } = useFavStore()
 
 const { setAliments } = useAlimentStore()
+const { myToken } = storeToRefs(useFirebaseStore());
 
 const loginError = ref('');
 
