@@ -2,7 +2,7 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="modalController.dismiss(null, 'back')">
+                <ion-button color="secondary" @click="modalController.dismiss(null, 'back')">
                     <ion-icon :icon="arrowBack"></ion-icon>
                 </ion-button>
             </ion-buttons>

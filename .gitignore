@@ -34,3 +34,5 @@ npm-debug.log*
 
 
 google-services.json
+firebase-messaging-sw.js
+*.env

@@ -1,5 +1,5 @@
 <template>
-    <ion-card :router-link="`/rebost/${idd}`">
+    <ion-card :router-link="`/tabs/rebost/${idd}`">
         <ion-card-header>
             <ion-card-title>{{ title }}</ion-card-title>
             <ion-card-subtitle>{{ subtitle }}</ion-card-subtitle>
@@ -96,7 +96,8 @@ const borrarInventari = () => {
 ion-card {
     height: 130px;
     position: relative;
-    background-image: linear-gradient(to right top, #5ec268, #57a25d, #508453, #476648, #3d4a3d);
+    /*background-image: linear-gradient(to right top, #5ec268, #57a25d, #508453, #476648, #3d4a3d);*/
+    background-image: linear-gradient(to left top, #ffe7be, #dcbe8d, #b9965f, #977032, #744c00);
     border-radius:10px;
 }
 

@@ -3,9 +3,9 @@
         <ion-header>
             <ion-toolbar>
                 <ion-title class="ion-text-center ">Explorar
-                    <ion-icon :icon="informationCircle"></ion-icon>
+                    <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
                 </ion-title>
-                <ion-segment value="mapa" @ionChange="changePestanya">
+                <ion-segment id="tabsExplorar" value="mapa" @ionChange="changePestanya">
                     <ion-segment-button value="mapa">
                         <ion-label>Mapa</ion-label>
                     </ion-segment-button>
@@ -27,7 +27,7 @@
                 <ion-row>
                     <ion-col size="10"></ion-col>
                     <ion-col>
-                        <ion-button @click="openFiltresModal">
+                        <ion-button id="filtres" @click="openFiltresModal">
                             <ion-icon :icon="filter"></ion-icon>
                         </ion-button>
                     </ion-col>
@@ -36,7 +36,7 @@
                     <ion-col></ion-col>
                     <ion-col v-show="pestanyaMapa" size="10" sizeXl="8">
                         {{ cercleRadi }}
-                        <ion-range :min="1" :max="25" v-model="cercleRadi"></ion-range>
+                        <ion-range id="rango" :min="1" :max="25" v-model="cercleRadi"></ion-range>
                         <div id="map"></div>
                     </ion-col>
                     <ion-col></ion-col>
@@ -55,6 +55,7 @@
             </ion-grid>
         </ion-content>
     </ion-page>
+    <onboarding :steps="onBoardingExplorarSteps" @start-onboarding="startOnboarding"></onboarding>
     <div class="ion-hide">
         <ion-item v-for="(establiment, k) in establiments">
             <router-link :ref="el => { popups[k] = el }" :to="`/tabs/${establiment._id}`">Anar a
@@ -75,7 +76,7 @@ import L, { Map, LatLngExpression, Icon, Circle } from 'leaflet'
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
-import { filter,informationCircle } from 'ionicons/icons'
+import { filter, informationCircle } from 'ionicons/icons'
 import location from "leaflet/dist/images/marker-icon.png"
 import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
@@ -84,6 +85,8 @@ import { LatLng } from 'leaflet';
 import { useDebounceFn } from '@vueuse/core'
 import Filtres from './Explorar/Filtres.vue';
 import { useFiltresStore } from '../store/filtersStore';
+import onboarding from '../components/onboarding.vue';
+import { StepEntity } from 'v-onboarding';
 const router = useRouter()
 
 const map: Ref<Map | null> = ref(null)
@@ -101,6 +104,13 @@ const cercleRadi = ref(15)
 const markersLayer: Ref<any> = ref(null)
 
 const popups: Ref<any[]> = ref([])
+
+const onBoardingExplorarSteps: Ref<StepEntity[] | any[]> = ref([])
+const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
+const startOnboarding = (element: any) => {
+    console.log('element :>> ', element);
+    onboardingElement.value = element
+}
 
 const { filtres, horari, preu } = useFiltresStore()
 
@@ -135,10 +145,6 @@ const printCurrentPosition = async () => {
                 });
         }
     }
-
-
-
-
 };
 
 const fillEstabliments = useDebounceFn(async () => {
@@ -155,8 +161,6 @@ const fillEstabliments = useDebounceFn(async () => {
             loader.dismiss(null, 'cancel')
         });
 }, 1000)
-
-
 
 const addMarkers = () => {
     if (markersLayer.value != null && map.value != null)
@@ -231,6 +235,60 @@ onMounted(async () => {
         console.log("Element: ")
         console.log(element)
     }
+
+    onBoardingExplorarSteps.value = [{
+        attachTo: {
+            element: "#map"
+        },
+        content: {
+            title: "Mapa",
+            description: "En el mapa interactiu podràs veure tots els establiments que es troben dins del cercle"
+        },
+        options: {
+            popper: {
+                placement: 'top'
+            }
+        }
+    }, {
+        attachTo: {
+            element: "#rango"
+        },
+        content: {
+            title: "Radi del cercle",
+            description: "Podràs augmentar o disminuir el radi del cercle mitjançant aquest slider."
+        },
+        options: {
+            popper: {
+                placement: 'bottom'
+            }
+        }
+    }, {
+        attachTo: {
+            element: "#filtres"
+        },
+        content: {
+            title: "Filtres",
+            description: "En prèmer aquest botó, podràs afegir filtres a la teva cerca"
+        },
+        options: {
+            popper: {
+                placement: 'bottom'
+            }
+        }
+    }, {
+        attachTo: {
+            element: "#tabsExplorar"
+        },
+        content: {
+            title: "Modes",
+            description: "Amb aquests dos botons podràs canviar el mode de visualització dels elements."
+        },
+        options: {
+            popper: {
+                placement: 'bottom'
+            }
+        }
+    }]
 })
 
 onBeforeUnmount(async () => {
@@ -255,10 +313,12 @@ watch(cercleRadi, async (newValue, oldValue) => {
 #map {
     height: 55vh;
 }
-ion-title{
-    margin:10px
+
+ion-title {
+    margin: 10px
 }
-ion-label{
-    margin:0px;
+
+ion-label {
+    margin: 0px;
 }
 </style>

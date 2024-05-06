@@ -38,6 +38,9 @@
                                 <ion-thumbnail><img :src="photo.webviewPath" /></ion-thumbnail>
                                 <ion-button @click="readImage(photo.webviewPath)">Read</ion-button>
                             </ion-item>
+                            <ion-item v-if="lastPhoto">
+                                <ion-thumbnail><img :src="lastPhoto.webviewPath" /></ion-thumbnail>
+                            </ion-item>
                         </ion-list>
                     </ion-col>
                 </ion-row>
@@ -101,7 +104,7 @@ import { Element } from '../../types';
 import { stringSimilarity } from 'string-similarity-js'
 import { storeToRefs } from 'pinia';
 
-const { takePhoto, photos } = usePhotoGallery();
+const { takePhoto, photos, lastPhoto } = usePhotoGallery();
 const { loggedIn } = useLoginStore();
 const { getAllNoms } = storeToRefs(useAlimentStore())
 interface Aliment {
@@ -131,17 +134,17 @@ const readImage = async (src: any) => {
     const loader = await showLoading("Llegint imatge")
     loader.present()
     let result = ""
-    try {
+    try{
         const worker = await createWorker('spa');
         const ret = await worker.recognize(src)
-        presentAlert(ret.data.text)
         result = ret.data.text
         await worker.terminate()
-    } catch (err) {
-        await presentAlert(`Error ${err}`)
+    }catch(err){
+        console.log('err :>> ', err);
     } finally {
         loader.dismiss()
     }
+    console.log('result :>> ', result);
     return result
 }
 
@@ -170,17 +173,19 @@ const fillRebost = async () => {
     }
     loader.dismiss(null, 'cancel')
 }
-watch(photos, async (v: any, oV: any) => {
-    let textOfPhoto = await readImage(v[v.length - 1].webviewPath)
-    // let textOfPhoto = "Tiquet prova Rabaco 1 Lechuga Achijoria Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique earum sapiente voluptatibus praesentium molestias aut accusamus dolore suscipit esse optio impedit, quia, reprehenderit eum dolores velit, cumque vitae iusto pariatur! Lima Limona zabahoria Togurt Lehe"
-    let alimentsEscanejats = searchAliment(textOfPhoto, 0.6)
-    let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.map((el) => el.val).join(' ')}`)
-    alert.present()
-    getAlimentsByNoms(alimentsEscanejats?.map((el) => el.val)).then((res) => {
-        showChooseAlimentModal(res.data.aliments)
-    }).catch((err) => {
-        console.log('err :>> ', err);
-    });
+watch(lastPhoto, async (v: any, oV: any) => {
+    let textOfPhoto = await readImage(v.webviewPath)
+    //let textOfPhoto = "Tiquet prova Rabaco 1 Lechuga Achijoria Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique earum sapiente voluptatibus praesentium molestias aut accusamus dolore suscipit esse optio impedit, quia, reprehenderit eum dolores velit, cumque vitae iusto pariatur! Lima Limona zabahoria Togurt Lehe"
+    if (textOfPhoto) {
+        let alimentsEscanejats = searchAliment(textOfPhoto, 0.6)
+        let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.map((el) => el.val).join(' ')}`)
+        alert.present()
+        getAlimentsByNoms(alimentsEscanejats?.map((el) => el.val)).then((res) => {
+            showChooseAlimentModal(res.data.aliments)
+        }).catch((err) => {
+            console.log('err :>> ', err);
+        });
+    }
 }, { deep: true })
 
 onMounted(() => {
@@ -233,7 +238,7 @@ const showChooseAlimentModal = async (aliments: Aliment[]) => {
         component: chooseAliments,
         componentProps: {
             aliments,
-            rebostId:props.rebostId
+            rebostId: props.rebostId
         }
     })
     modal.present()

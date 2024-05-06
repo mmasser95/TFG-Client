@@ -41,7 +41,6 @@
               </swiper-slide>
               <p v-else class="ion-text-center">No es troba cap establiment com a preferit</p>
             </swiper>
-
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
@@ -92,7 +91,7 @@ const onboardingHomeSteps = [{
   },
   options: {
     popper: {
-      placement: 'top-start'
+      placement: 'top'
     }
   },
   content: {

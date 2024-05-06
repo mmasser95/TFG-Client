@@ -28,6 +28,7 @@
             </VOnboardingStep>
         </template>
     </VOnboardingWrapper>
+    <div><button id="foo">Welcome</button></div>
 </template>
 <script setup lang="ts">
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonButtons } from '@ionic/vue';

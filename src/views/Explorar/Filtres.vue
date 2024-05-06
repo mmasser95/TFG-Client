@@ -15,36 +15,37 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <ion-row>
-                        <ion-col>
-                            <ion-range @ion-change="preuChange" :min="1" :max="50" :model-value="preu"
-                                :label-placement="labelPlacement" :label="`Preu ${preu.lower} € - ${preu.upper} €`"
-                                :dual-knobs="true" :pin="true" :pin-formatter="pinFormatterPreu"></ion-range></ion-col>
-                        <ion-col>
-                            <ion-range @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
-                                :label-placement="labelPlacement"
-                                :label="`Horari ${hores[horari.lower]}-${hores[horari.upper]}`" :dual-knobs="true"
-                                :pin="true" :pin-formatter="pinFormatterHorari"></ion-range>
-                        </ion-col>
-                    </ion-row>
-
+                    <ion-range @ion-change="preuChange" :min="1" :max="50" :model-value="preu"
+                        :label-placement="labelPlacement" :label="`Preu ${preu.lower} € - ${preu.upper} €`"
+                        :dual-knobs="true" :pin="true" :pin-formatter="pinFormatterPreu"></ion-range>
                 </ion-col>
                 <ion-col></ion-col>
             </ion-row>
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <ion-row>
-                        <ion-col>
-                            <ion-range v-model="qualitatMinima" @ion-change="qualitatChange" :label="`Valoració qualitat: ${qualitatMinima}`"
-                                :label-placement="labelPlacement" :max="4" :min="0" :pin="true"></ion-range>
-                        </ion-col>
-                        <ion-col>
+                    <ion-range @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
+                        :label-placement="labelPlacement"
+                        :label="`Horari ${hores[horari.lower]}-${hores[horari.upper]}`" :dual-knobs="true" :pin="true"
+                        :pin-formatter="pinFormatterHorari"></ion-range>
+                </ion-col>
+                <ion-col></ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col></ion-col>
+                <ion-col size="8">
+                            <ion-range v-model="qualitatMinima" @ion-change="qualitatChange"
+                                :label="`Valoració qualitat: ${qualitatMinima}`" :label-placement="labelPlacement"
+                                :max="4" :min="0" :pin="true"></ion-range>
+                </ion-col>
+                <ion-col></ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col></ion-col>
+                <ion-col size="8">
                             <ion-range v-model="quantitatMinima" :label="`Valoraciò quantitat:${quantitatMinima}`"
                                 :label-placement="labelPlacement" :max="4" :min="0" :pin="true"></ion-range>
                         </ion-col>
-                    </ion-row>
-                </ion-col>
                 <ion-col></ion-col>
             </ion-row>
             <ion-row>
@@ -62,7 +63,7 @@
                 </ion-col>
                 <ion-col></ion-col>
             </ion-row>
-            
+
         </ion-grid>
     </ion-content>
 </template>
@@ -122,5 +123,4 @@ const confirm = () => {
     flex-flow: row wrap;
     gap: 20px;
 }
-
 </style>

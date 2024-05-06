@@ -7,16 +7,11 @@
             <ion-row class="ion-justify-content-center ion-align-items-center">
               <ion-col>
                 <ion-title class="ion-text-center">Rebost
-                  <ion-icon @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                  <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
                 </ion-title>
-                
               </ion-col>
             </ion-row>
           </ion-grid>
-
-
-
-
         </div>
 
       </ion-toolbar>
@@ -150,6 +145,11 @@ onMounted(async () => {
     content: {
       title: "Els teus rebosts",
       description: "En aquest apartat trobaràs els teus rebosts"
+    },
+    options:{
+      popper:{
+        placement:'center'
+      }
     }
   }, {
     attachTo: {

@@ -39,6 +39,13 @@ const routes: Array<RouteRecordRaw> = [
         
       },
       {
+        
+          path: 'rebost/:rebostId',
+          props: true,
+          component: () => import('@/views/Rebost/viewRebost.vue'),
+        
+      },
+      {
         path: 'tab4',
         component: () => import('@/views/Configuracio.vue'),
         
@@ -76,11 +83,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Ofertes/viewOferta.vue')
   },*/
 
-  {
-    path: '/rebost/:rebostId',
-    props: true,
-    component: () => import('@/views/Rebost/viewRebost.vue'),
-  },
+  
   {
     path: '/rebost',
     component: () => import('@/views/Rebost/newRebost.vue'),
