@@ -57,5 +57,9 @@ const filterList = (searchQuery: string | undefined) => {
         filteredItems.value = props.items.filter(item => item.nom.toLowerCase().includes(normQuery))
     }
 }
+
+onMounted(() => {
+    filteredItems.value = [...props.items]
+})
 </script>
 <style></style>

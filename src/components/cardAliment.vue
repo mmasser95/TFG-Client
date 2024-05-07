@@ -73,7 +73,7 @@ const data_caducitat_calc = computed(() => {
             console.log('dies ', props.aliment.t_unitat);
             data = addDays(Date.now(), props.aliment.temps_defecte_conservacio)
         }
-        else if (props.aliment.t_unitat == "semanes")
+        else if (props.aliment.t_unitat == "setmanes")
             data = addWeeks(Date.now(), props.aliment.temps_defecte_conservacio)
         else if (props.aliment.t_unitat == "mesos")
             data = addMonths(Date.now(), props.aliment.temps_defecte_conservacio)

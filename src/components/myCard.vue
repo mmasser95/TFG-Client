@@ -70,11 +70,11 @@ const props = defineProps<{ establiment: Establiment2 }>()
     width: 98%;
     border-radius: 10px;
     margin: 10px;
-    background-image: linear-gradient(to left bottom, #040404, #1e242e, #234355, #166678, #008b90, #00a199, #00b79c, #2ecd98, #43da9b, #57e69d, #6bf39f, #7effa0);
+    /*background-image: linear-gradient(to left bottom, #040404, #1e242e, #234355, #166678, #008b90, #00a199, #00b79c, #2ecd98, #43da9b, #57e69d, #6bf39f, #7effa0);*/
 
     @media (prefers-color-scheme: dark) {
     /*    background-image: linear-gradient(to right top, #040404, #0c1219, #051d25, #00282a, #003225, #003a21, #004318, #064a07, #06540d, #065e13, #046819, #00731f);*/
-    background-image: linear-gradient(to left bottom, #a0e7e5, #7dc5c4, #5aa5a4, #358585, #006767);
+    /*background-image: linear-gradient(to left bottom, #a0e7e5, #7dc5c4, #5aa5a4, #358585, #006767);*/
     }
 }
 

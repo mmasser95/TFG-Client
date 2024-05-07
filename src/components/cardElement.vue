@@ -20,35 +20,36 @@
         </ion-row>
     </ion-grid>-->
     <div class="rootElement">
-        <div class="myRowContainer">
-            <div class="myColContainer">
-                <ion-title>
-                    {{ element.aliment?.nom }}
-                </ion-title>
-                <ion-text> {{ element.aliment?.tipus }}</ion-text>
-                <ion-text> Data compra: {{ dataCompraAgo }} </ion-text>
-                <ion-text> Data caducitat: {{ dataCaducitatRelative }} </ion-text>
-            </div>
-            <div class="myColContainer myCenter">
-                <ion-buttons class="myRowContainer myCenter">
-                    <ion-button @click="updateElement" expand="full">
-                        <ion-icon :icon="pencil"></ion-icon>
-                    </ion-button>
-                    <ion-button
-                        @click="createConfirmationAlert('Estas segur que vols eliminar-lo del rebost?', estasSegur)">
-                        <ion-icon :icon="trash"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
-                <div class="myRowContainer myCenter">
-                    <ion-input @ion-change="canviarQuantitat" type="number" v-model="quantitatElement"></ion-input>{{ element.q_unitat }}
+        <ion-card>
+            <div class="myRowContainer">
+                <div class="myColContainer">
+                    <ion-title>
+                        {{ element.aliment?.nom }}
+                    </ion-title>
+                    <ion-text> {{ element.aliment?.tipus }}</ion-text>
+                    <ion-text> Data compra: {{ dataCompraAgo }} </ion-text>
+                    <ion-text> Data caducitat: {{ dataCaducitatRelative }} </ion-text>
+                </div>
+                <div class="myColContainer myCenter">
+                    <ion-buttons class="myRowContainer myCenter">
+                        <ion-button @click="updateElement" expand="full">
+                            <ion-icon :icon="pencil"></ion-icon>
+                        </ion-button>
+                        <ion-button
+                            @click="createConfirmationAlert('Estas segur que vols eliminar-lo del rebost?', estasSegur)">
+                            <ion-icon :icon="trash"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                    <div class="myRowContainer myCenter">
+                        <ion-input @ion-change="canviarQuantitat" type="number" v-model="quantitatElement"></ion-input>{{ element.q_unitat }}
+                    </div>
                 </div>
             </div>
-
-        </div>
+        </ion-card>
     </div>
 </template>
 <script setup lang="ts">
-import { IonTitle, IonText, IonInput, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, alertController } from '@ionic/vue';
+import { IonTitle, IonText,IonCard, IonInput, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, alertController } from '@ionic/vue';
 import { computed, ref } from 'vue';
 import { showAlert, showLoading } from '../composables/loader';
 import { pencil, trash } from 'ionicons/icons';
