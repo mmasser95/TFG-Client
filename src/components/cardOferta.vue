@@ -87,11 +87,11 @@ const ferCompra = () => {
 }
 
 .container {
-    background-image: linear-gradient(to left bottom, #70995c, #3e9466, #008e78);
+    /*background-image: linear-gradient(to left bottom, #70995c, #3e9466, #008e78);*/
     border-radius: 10px
 }
 
 ion-button {
-    --background: linear-gradient(to right, #70995c, #a5b061, #dfc36f, #ffd489);
+    /*--background: linear-gradient(to right, #70995c, #a5b061, #dfc36f, #ffd489);*/
 }
 </style>

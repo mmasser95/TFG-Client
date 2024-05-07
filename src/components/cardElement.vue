@@ -155,7 +155,7 @@ const canviarQuantitat=useDebounceFn(()=>{
     margin: 10px;
     padding: 10px;
     /*background-image: linear-gradient(to left bottom, #70995c, #3e9466, #008e78);*/
-    background-image: linear-gradient(to left top, #ffaebc, #e68b9a, #cd6979, #b44759, #99203b);
+    /*background-image: linear-gradient(to left top, #ffaebc, #e68b9a, #cd6979, #b44759, #99203b);*/
     border-radius: 5px
 }
 

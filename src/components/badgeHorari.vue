@@ -20,7 +20,7 @@ const props=defineProps<{
     gap:8px;
 }
 
-ion-chip{
+ion-badge{
     @media (prefers-color-scheme: dark) {
         --background:  linear-gradient(to right, #70995c,#a5b061,#dfc36f,#ffd489);
         color:black;
