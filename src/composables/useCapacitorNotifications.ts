@@ -2,7 +2,6 @@ import { ref, reactive, Ref, computed } from 'vue';
 import { showAlert } from '@/composables/loader';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { sendFirebaseToken } from '@/APIService';
-import { showAlert } from '@/composables/loader';
 import { useFirebaseStore } from '../store/firebaseStore';
 import { storeToRefs } from 'pinia';
 

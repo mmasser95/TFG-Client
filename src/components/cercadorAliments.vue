@@ -25,7 +25,7 @@
 </template>
 <script lang="ts" setup>
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonSearchbar, IonContent, IonList, IonItem, IonRadio, IonRadioGroup, modalController, SearchbarCustomEvent } from '@ionic/vue';
-import { ref, Ref } from 'vue'
+import { ref, Ref,onMounted } from 'vue'
 import { Aliment } from '../types';
 
 const alimentSelected: Ref<Aliment | null> = ref(null)
