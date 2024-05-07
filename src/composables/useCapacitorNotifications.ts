@@ -12,7 +12,7 @@ export const useCapacitorNotifications = () => {
     await PushNotifications.addListener('registration', async (token) => {
       let alert = await showAlert(`Token: ${token.value}`);
       alert.present();
-      sendFirebaseToken(token)
+      sendFirebaseToken(token.value)
         .then((res) => {
           myToken.value = token.value;
         })
