@@ -1,4 +1,5 @@
 import { ref, reactive, Ref, computed } from 'vue';
+import { showAlert } from '@/composables/loader';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { sendFirebaseToken } from '@/APIService';
 import { showAlert } from '@/composables/loader';
@@ -44,17 +45,23 @@ export const useCapacitorNotifications = () => {
   };
 
   const registerNotifications = async () => {
-    let permStatus = await PushNotifications.checkPermissions();
+    try {
+      let permStatus = await PushNotifications.checkPermissions();
 
-    if (permStatus.receive === 'prompt') {
-      permStatus = await PushNotifications.requestPermissions();
+      if (permStatus.receive === 'prompt') {
+        permStatus = await PushNotifications.requestPermissions();
+      }
+
+      if (permStatus.receive !== 'granted') {
+        throw new Error('User denied permissions!');
+      }
+      let alert = await showAlert("S'esta registrant");
+      alert.present();
+      await PushNotifications.register();
+    } catch (err) {
+      let alert = await showAlert(`Error: ${err.message}`);
+      alert.present();
     }
-
-    if (permStatus.receive !== 'granted') {
-      throw new Error('User denied permissions!');
-    }
-
-    await PushNotifications.register();
   };
 
   const getDeliveredNotifications = computed(async () => {
