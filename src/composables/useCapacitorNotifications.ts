@@ -9,7 +9,9 @@ import { storeToRefs } from 'pinia';
 export const useCapacitorNotifications = () => {
   const { myToken } = storeToRefs(useFirebaseStore());
   const addListeners = async () => {
-    await PushNotifications.addListener('registration', (token) => {
+    await PushNotifications.addListener('registration', async (token) => {
+      let alert = await showAlert(`Token: ${token.value}`);
+      alert.present();
       sendFirebaseToken(token)
         .then((res) => {
           myToken.value = token.value;
@@ -27,8 +29,12 @@ export const useCapacitorNotifications = () => {
 
     await PushNotifications.addListener(
       'pushNotificationReceived',
-      (notification) => {
+      async (notification) => {
         console.log('Push notification received: ', notification);
+        let alert = await showAlert(
+          `Push notification received: ${notification.title}`
+        );
+        alert.present();
       }
     );
 
@@ -58,7 +64,7 @@ export const useCapacitorNotifications = () => {
       let alert = await showAlert("S'esta registrant");
       alert.present();
       await PushNotifications.register();
-    } catch (err) {
+    } catch (err: any) {
       let alert = await showAlert(`Error: ${err.message}`);
       alert.present();
     }
