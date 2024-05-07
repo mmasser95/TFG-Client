@@ -23,31 +23,43 @@
             <ion-card-subtitle>{{ establiment.descripcio }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content class="content">
-            <div class="content-item">
-                <div>
-                    Telèfon:
-                    <ion-chip class="telfBadge">
+            <div class="content2">
+                <div class="content3">
+                    <p class="ion-text-center">Telèfon</p>
+                    <ion-badge color="secondary">
                         <div class="myBadge">
-                            {{ establiment.telf }} <ion-icon :icon="call"></ion-icon>
+                            {{ establiment.telf }} 
+                            <ion-icon :icon="call"></ion-icon>
                         </div>
-                    </ion-chip>
+                    </ion-badge>
+                    <p class="ion-text-center"> Tipus</p>
+                    <ion-badge color="tertiary">{{establiment.tipus}}</ion-badge>
                 </div>
-                <div class="content-item">
-                    <div v-if="typeof establiment.horari=='string'">
+                <div>
+                    <div class="content3" v-if="typeof establiment.horari=='string'">
                         Horari: {{establiment.horari}}
                     </div>
                     <div v-else>
-                        Horari: <badgeHorari :horaris="establiment.horari"></badgeHorari>
+                        <p class="ion-text-center">Horari</p> <badgeHorari :horaris="establiment.horari"></badgeHorari>
                     </div>
                     
                 </div>
-            </div>
-            <div class="content-item">
+                <div class="content3">
+                    
+                </div>
+                <div class="content3">
                 Valoració:
-                <ion-icon :icon="star" class="star-icon"></ion-icon> {{establiment.quantitatMitjana}} Quantitat
-                <ion-icon :icon="star" class="star-icon"></ion-icon> {{establiment.qualitatMitjana}} Qualitat
-                Tipus: {{ establiment.tipus }}
+                <div class="content4">
+                    <ion-icon :icon="star" class="star-icon"></ion-icon> <p>{{establiment.quantitatMitjana}} Quantitat</p>
+                </div>
+
+                <div class="content4">
+                    <ion-icon :icon="star" class="star-icon"></ion-icon> <p>{{establiment.qualitatMitjana}} Qualitat</p>
+                </div>
+                
             </div>
+            </div>
+            
         </ion-card-content>
     </ion-card>
 </template>
@@ -99,9 +111,7 @@ const props = defineProps<{ establiment: Establiment2 }>()
     border-radius: 10px;
 }
 
-.telfBadge {
-    background: #008b90;
-}
+
 
 .star-icon {
     color: #ff9800
@@ -115,10 +125,23 @@ const props = defineProps<{ establiment: Establiment2 }>()
     gap: 25px;
 }
 
-.content-item {
+.content2 {
+    width:100%;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     align-items: center;
-    gap: 5px;
+    justify-content: space-evenly;
+}
+.content3{
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    gap:10px;
+}
+.content4{
+    display:flex;
+    flex-flow:row wrap;
+    align-items:center;
+    gap:5px;
 }
 </style>

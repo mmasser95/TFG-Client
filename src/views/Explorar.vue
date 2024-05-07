@@ -57,9 +57,9 @@
     </ion-page>
     <onboarding :steps="onBoardingExplorarSteps" @start-onboarding="startOnboarding"></onboarding>
     <div class="ion-hide">
-        <ion-item v-for="(establiment, k) in establiments">
-            <router-link :ref="el => { popups[k] = el }" :to="`/tabs/${establiment._id}`">Anar a
-                l'establiment</router-link>
+        <ion-item v-for="(establiment, k) in establiments" :key="establiment._id" :ref="refers.set">
+            <router-link :to="`/establiment/${establiment._id}`">Anar a
+                l'establiment {{ establiment.nom }}</router-link>
         </ion-item>
 
     </div>
@@ -68,8 +68,10 @@
 <script setup lang="ts">
 import { IonPage, IonTitle, IonToolbar, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange, modalController } from '@ionic/vue'
 import { Ref, onMounted, getCurrentInstance, ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount, onBeforeUpdate } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import { searchEstabliments, doIPLocation } from '../APIService';
+import { doIPLocation } from '../APIService';
+import { searchEstabliments } from '../APIService/Establiment'
 import { Geolocation } from '@capacitor/geolocation';
 import "leaflet/dist/leaflet.css";
 import L, { Map, LatLngExpression, Icon, Circle } from 'leaflet'
@@ -82,13 +84,14 @@ import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
 import { Establiment } from '../types';
 import { LatLng } from 'leaflet';
-import { useDebounceFn } from '@vueuse/core'
+import { useDebounceFn, useTemplateRefsList } from '@vueuse/core'
 import Filtres from './Explorar/Filtres.vue';
 import { useFiltresStore } from '../store/filtersStore';
 import onboarding from '../components/onboarding.vue';
 import { StepEntity } from 'v-onboarding';
 const router = useRouter()
-
+let refers = useTemplateRefsList()
+const myPopups = ref([])
 const map: Ref<Map | null> = ref(null)
 const mapCoordinates = ref([41.0408888, 0.7479283])
 const myLocation: Ref<[number, number]> = ref([0, 0])
@@ -102,7 +105,7 @@ const cercleMapa: Ref<null | Circle> = ref(null)
 const cercleRadi = ref(15)
 
 const markersLayer: Ref<any> = ref(null)
-
+const myPopup = ref(null)
 const popups: Ref<any[]> = ref([])
 
 const onBoardingExplorarSteps: Ref<StepEntity[] | any[]> = ref([])
@@ -113,6 +116,7 @@ const startOnboarding = (element: any) => {
 }
 
 const { filtres, horari, preu } = useFiltresStore()
+const { qualitatMinima, quantitatMinima } = storeToRefs(useFiltresStore())
 
 const changePestanya = (event: any) => {
     console.log('event.detail.value :>>', event.detail.value);
@@ -150,12 +154,12 @@ const printCurrentPosition = async () => {
 const fillEstabliments = useDebounceFn(async () => {
     const loader = await showLoading('Carregant establiments')
     loader.present()
-    searchEstabliments(mapCoordinates.value[0], mapCoordinates.value[1], cercleRadi.value)
-        .then((res) => {
+    searchEstabliments(mapCoordinates.value[0], mapCoordinates.value[1], cercleRadi.value, preu.lower, preu.upper, qualitatMinima.value, quantitatMinima.value)
+        .then((res: any) => {
             establiments.value = res.data.establiments;
             addMarkers()
         })
-        .catch((err) => {
+        .catch((err: any) => {
             console.log(err)
         }).finally(() => {
             loader.dismiss(null, 'cancel')
@@ -173,11 +177,14 @@ const addMarkers = () => {
                     icon: new Icon({ iconUrl: location, iconSize: [25, 41], iconAnchor: [12, 41] })
                 })
                 var ruta = `/establiment/${element._id}`
-                var link = ` <a href="${ruta}"> Link</buttoo>`
+                var link = ` <a href="${ruta}"> ${element.nom}</a>`
                 var popup = L.popup()
-                // popup.setContent(element.nom + link)
-                console.log('popupEl :>> ', popups.value[index]);
                 console.log('index :>> ', index);
+                console.log('myPopups.value', myPopups.value)
+                popup.setContent(link)
+
+                // console.log('popupEl :>> ', popups.value[index]);
+                // console.log('index :>> ', index);
                 //popup.setContent(popups.value)
                 marker.bindPopup(popup)
                 markers.addLayer(marker)
@@ -189,7 +196,9 @@ const addMarkers = () => {
         }
     }
 }
-
+const linkMapClick = (event: any) => {
+    console.log('event :>> ', event);
+}
 const loadMap = () => {
     var map = L.map('map').invalidateSize().setView([mapCoordinates.value[0], mapCoordinates.value[1]], zoom.value);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -224,6 +233,9 @@ const openFiltresModal = async () => {
         breakpoints: [0, 0.5, 0.75, 1]
     })
     modal.present()
+
+    const { role, data } = await modal.onWillDismiss()
+    if (role == "confirm") fillEstabliments()
 }
 
 onMounted(async () => {
@@ -306,7 +318,13 @@ watch(cercleRadi, async (newValue, oldValue) => {
     await fillEstabliments()
 })
 
-
+watch(refers, async () => {
+    await nextTick()
+    myPopups.value = [...refers.value]
+}, {
+    deep: true,
+    flush: 'post',
+})
 
 </script>
 <style scoped>

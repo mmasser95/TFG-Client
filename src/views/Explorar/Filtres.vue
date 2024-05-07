@@ -2,12 +2,14 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button color="secondary" @click="cancel">Cancel</ion-button>
+                <ion-button color="secondary" @click="confirm">
+                    <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
+                </ion-button>
             </ion-buttons>
             <ion-title class="ion-text-center">Filtres</ion-title>
-            <ion-buttons slot="end">
+            <!--<ion-buttons slot="end">
                 <ion-button color="primary" @click="confirm">Confirmar</ion-button>
-            </ion-buttons>
+            </ion-buttons>-->
         </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -68,7 +70,8 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonButton, IonLabel, IonButtons, IonTitle, IonContent, IonRange, IonCheckbox, IonGrid, IonRow, IonCol, modalController } from '@ionic/vue';
+import {IonIcon, IonPage, IonHeader, IonToolbar, IonButton, IonLabel, IonButtons, IonTitle, IonContent, IonRange, IonCheckbox, IonGrid, IonRow, IonCol, modalController } from '@ionic/vue';
+import { checkmark } from 'ionicons/icons';
 import { reactive, ref } from 'vue';
 import { useFiltresStore } from '../../store/filtersStore'
 import { storeToRefs } from 'pinia';

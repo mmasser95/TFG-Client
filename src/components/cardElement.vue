@@ -19,37 +19,54 @@
             </ion-col>
         </ion-row>
     </ion-grid>-->
-    <div class="rootElement">
         <ion-card>
-            <div class="myRowContainer">
-                <div class="myColContainer">
-                    <ion-title>
-                        {{ element.aliment?.nom }}
-                    </ion-title>
-                    <ion-text> {{ element.aliment?.tipus }}</ion-text>
-                    <ion-text> Data compra: {{ dataCompraAgo }} </ion-text>
-                    <ion-text> Data caducitat: {{ dataCaducitatRelative }} </ion-text>
+            <ion-card-header>
+                <ion-card-title>{{ element.aliment?.nom }}</ion-card-title>
+                <ion-card-subtitle> {{ element.aliment?.tipus }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+
+                <div class="container1">
+                    <div class="container2">
+                        <ion-text> Data compra: {{ dataCompraAgo }} </ion-text>
+                        <ion-text> Data caducitat: {{ dataCaducitatRelative }} </ion-text>
+                    </div>
+                    <div class="container3">
+                        <div>
+                            <div class="item">{{ quantitatElement }} {{ element.q_unitat }}</div>
+                        </div>
+                        <div>
+                            <ion-buttons class="myRowContainer myCenter">
+                                <ion-button @click="updateElement" expand="full">
+                                    <ion-icon :icon="pencil"></ion-icon>
+                                </ion-button>
+                                <ion-button
+                                    @click="createConfirmationAlert('Estas segur que vols eliminar-lo del rebost?', estasSegur)">
+                                    <ion-icon :icon="trash"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                        </div>
+                        
+                    </div>
                 </div>
+
+            </ion-card-content>
+            <div class="myRowContainer">
                 <div class="myColContainer myCenter">
-                    <ion-buttons class="myRowContainer myCenter">
-                        <ion-button @click="updateElement" expand="full">
-                            <ion-icon :icon="pencil"></ion-icon>
-                        </ion-button>
-                        <ion-button
-                            @click="createConfirmationAlert('Estas segur que vols eliminar-lo del rebost?', estasSegur)">
-                            <ion-icon :icon="trash"></ion-icon>
-                        </ion-button>
-                    </ion-buttons>
+
                     <div class="myRowContainer myCenter">
-                        <ion-input @ion-change="canviarQuantitat" type="number" v-model="quantitatElement"></ion-input>{{ element.q_unitat }}
+                        <div class="item">
+                            <!--<ion-input @ion-change="canviarQuantitat" type="number" v-model="quantitatElement"></ion-input>-->
+
+                        </div>
+
                     </div>
                 </div>
             </div>
         </ion-card>
-    </div>
 </template>
 <script setup lang="ts">
-import { IonTitle, IonText,IonCard, IonInput, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, alertController } from '@ionic/vue';
+import { IonTitle, IonText, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonInput, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, alertController } from '@ionic/vue';
 import { computed, ref } from 'vue';
 import { showAlert, showLoading } from '../composables/loader';
 import { pencil, trash } from 'ionicons/icons';
@@ -116,7 +133,7 @@ const dataCompraAgo = computed(() => {
 
 })
 const dataCaducitatRelative = computed(() => {
-    if (props.element){
+    if (props.element) {
         if (Math.abs(differenceInHours(Date.now(), props.element.data_caducitat)) < 24)
             return "Avui"
         return formatDistanceToNow(props.element.data_caducitat, { addSuffix: true, locale: ca })
@@ -127,34 +144,34 @@ const updateElement = () => {
     emit('updateElement', { ...props })
 }
 
-const canviarQuantitat=useDebounceFn(()=>{
+const canviarQuantitat = useDebounceFn(() => {
 
-},1000)
+}, 1000)
 
 </script>
 <style scoped>
-.myRowContainer {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
-    -webkit-justify-content: space-evenly;
+ion-card {
+    padding: 10px;
 }
 
-.myColContainer {
-    display: flex;
-    flex-flow: column wrap;
-    justify-content: space-evenly;
-    -webkit-justify-content: space-evenly;
+.container1{
+    display:flex;
+    flex-flow:row wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap:10px;
 }
-
-.myCenter {
-    justify-content: center;
-    -webkit-justify-content: center;
+.container2{
+    display:flex;
+    flex-flow:column wrap;
 }
-
+.container3{
+    display:flex;
+    flex-flow:column wrap;
+    align-items: center;
+}
 .rootElement {
     margin: 10px;
-    padding: 10px;
     /*background-image: linear-gradient(to left bottom, #70995c, #3e9466, #008e78);*/
     /*background-image: linear-gradient(to left top, #ffaebc, #e68b9a, #cd6979, #b44759, #99203b);*/
     border-radius: 5px

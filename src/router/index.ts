@@ -60,6 +60,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Comandes/viewComandes.vue'),
         
       },
+      {
+        path:'aliments',
+        component:()=>import('@/views/Aliments/viewAliments.vue')
+      }
     ],
   },
   {
@@ -67,27 +71,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Explorar/viewEstabliment.vue'),
     props: true,
   },
-  // {
-  //   path: '/establiments',
-  //   component: () => import('@/views/Establiments/gestionarEstabliments.vue'),
-  // },
-  // {
-  //   path: '/registre',
-  //   component: () => import('@/views/Registre.vue'),
-  //   meta:{
-  //     requiresAuth:'NoAuth'
-  //   }
-  // },
-  /*{
-    path: '/oferta/:ofertaId',
-    component: () => import('@/views/Ofertes/viewOferta.vue')
-  },*/
+  
 
   
-  {
-    path: '/rebost',
-    component: () => import('@/views/Rebost/newRebost.vue'),
-  },
+ 
 ];
 
 const router = createRouter({

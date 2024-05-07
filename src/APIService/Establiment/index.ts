@@ -1,3 +1,5 @@
+import {instance,getHeaders} from '../'
+
 //Establiments
 export function getEstabliments(instance: any) {
   return instance.get('/establiments');
@@ -8,13 +10,15 @@ export function getEstabliment(instance: any, id_establiment: any) {
 }
 
 export function searchEstabliments(
-  instance: any,
-  headers: any,
   latitude: any,
   longitude: any,
-  radi: any
+  radi: any,
+  preuMin?:any,
+  preuMax?:any,
+  quantitatMin?:any,
+  quantitatMax?:any
 ) {
-  return instance.post(`/search`, { latitude, longitude, radi }, headers());
+  return instance.post(`/search`, { latitude, longitude, radi, preuMin,preuMax,quantitatMin,quantitatMax }, getHeaders());
 }
 
 export function registreEstabliment(instance: any, data: any) {

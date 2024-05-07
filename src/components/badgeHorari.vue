@@ -17,7 +17,7 @@ const props=defineProps<{
     display: flex;
     flex-flow:column wrap;
     margin:2px;
-    gap:8px;
+    gap:15px;
 }
 
 ion-badge{

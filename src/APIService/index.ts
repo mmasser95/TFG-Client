@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { useLoginStore } from '../store/loginStore';
 
-// const base_url = 'https://192.168.1.26:5000/api/v1';
-const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
+const base_url = 'http://192.168.1.26:5000/api/v1';
+// const base_url = 'https://pro-grouse-unified.ngrok-free.app/api/v1';
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: base_url,
   timeout: 10000,
   headers: {
@@ -12,7 +12,7 @@ const instance = axios.create({
   },
 });
 
-const getHeaders = () => {
+export const getHeaders = () => {
   return {
     headers: {
       Authorization: 'Bearer ' + useLoginStore().token,
@@ -187,6 +187,18 @@ export function getAlimentsByNoms(noms: any) {
   return instance.post(`/aliments/noms`, { noms }, getHeaders());
 }
 
+export function createAliment(alimentInfo: any) {
+  return instance.post(`/aliments`, alimentInfo, getHeaders());
+}
+
+export function updateAliment(alimentId:any,alimentInfo:any){
+  return instance.put(`/aliments/${alimentId}`,alimentInfo,getHeaders())
+}
+
+export function deleteAliment(alimentId:any){
+  return instance.delete(`/aliments/${alimentId}`,getHeaders())
+}
+
 export function getAllElements(rebostId: any) {
   return instance.get(`/rebosts/${rebostId}/elements/`, getHeaders());
 }
@@ -296,6 +308,6 @@ export function deleteFirebaseToken(token: any) {
 export function testFCM() {
   return instance.get(`/fcm`, getHeaders());
 }
-export function googleLogin(credential:any) {
+export function googleLogin(credential: any) {
   return instance.post(`/google`, { credential });
 }

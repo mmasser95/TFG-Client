@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonRow, IonGrid, IonCol, createAnimation } from '@ionic/vue';
-import { home, map, documentText, storefront, cog, cube } from 'ionicons/icons';
+import { home, map, documentText, storefront, cog, cube,fastFood} from 'ionicons/icons';
 import "animate.css"
 import { ref, reactive } from 'vue';
 import { useLoginStore } from '@/store/loginStore'
@@ -72,6 +72,11 @@ const tabsUser = ref([{
   hrf: '/tabs/tab4',
   icon: cog,
   label: 'Config.'
+},{
+  tabName:'tab7',
+  hrf:"/tabs/aliments",
+  icon:fastFood,
+  label:"Afegir aliments"
 }])
 
 </script>

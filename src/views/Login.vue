@@ -50,7 +50,9 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeMd="6">
-            <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
+            <div class="googleContainer">
+              <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
+            </div>
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
@@ -256,4 +258,10 @@ const handleLoginError = () => {
 
 </script>
 
-<style></style>
+<style scoped>
+.googleContainer{
+  display:flex;
+  flex-flow:row wrap;
+  justify-content:center;
+}
+</style>

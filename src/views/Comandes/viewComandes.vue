@@ -9,11 +9,10 @@
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
-                    <ion-col>
+                    <ion-col size="12" sizeXl="8" sizeLg="10">
                         <div class="container" v-if="comandes">
-                            <ion-item v-for="i in comandes">
-                                <cardComanda :comanda="i"></cardComanda>
-                            </ion-item>
+                            <cardComanda v-for="i in comandes" class="item" :comanda="i"></cardComanda>
+
                         </div>
                     </ion-col>
                     <ion-col></ion-col>
@@ -56,5 +55,12 @@ onMounted(() => {
 .container {
     display: flex;
     flex-flow: row wrap;
+    justify-content: center
+}
+
+.item {
+    /*flex-grow:1*/
+    flex-grow: 1;
+    max-width:200px
 }
 </style>

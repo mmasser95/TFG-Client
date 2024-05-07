@@ -22,7 +22,7 @@
                     v-model="quantitat"></ion-input>
             </ion-col>
             <ion-col size="3">
-                <ion-button @click.stop="ferCompra" expand="block">
+                <ion-button color="secondary" @click.stop="alertComprar" expand="block">
                     <ion-icon :icon="bag"></ion-icon>
                 </ion-button>
             </ion-col>
@@ -30,14 +30,30 @@
     </ion-grid>
 </template>
 <script setup lang="ts">
-import { IonGrid, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
+import { IonGrid, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
 import viewOferta from '../views/Explorar/viewOferta.vue';
 import { bag } from 'ionicons/icons';
-import { ref,computed } from 'vue';
+import { ref, computed,watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { Oferta } from '../types'
 import { createComanda } from '../APIService'
-
-
+const router =useIonRouter()
+const alertComprar = async () => {
+    let alert = await alertController.create({
+        header: `Vols comprar x${quantitat.value} aquesta oferta per ${props.oferta.preu*quantitat.value}€?`,
+        message: "Seras redireccionat a la pasarela de pagament.",
+        buttons: [{
+            text: "Si",
+            handler: () => {
+                ferCompra()
+            }
+        },
+        {
+            text: "No",
+        }]
+    })
+    alert.present()
+}
 
 let props = defineProps<{
     oferta: Oferta,
@@ -45,7 +61,11 @@ let props = defineProps<{
 }>()
 
 let quantitat = ref(1)
-let total=computed(()=>props.oferta.preu*quantitat.value)
+watch(quantitat, (n: number, o: number) => {
+    if (n < 1 || n > 50)
+        quantitat.value = o
+})
+let total = computed(() => props.oferta.preu * quantitat.value)
 const showModalOferta = async () => {
     const modal = await modalController.create({
         component: viewOferta,
@@ -64,9 +84,21 @@ const ferCompra = () => {
         establimentId: props.establimentId,
         ofertaId: props.oferta._id,
         quantitat: quantitat.value,
-        total: props.oferta.preu*quantitat.value
-    }).then((res) => {
-        console.log('res.data.comandaSaved :>> ', res.data.comandaSaved);
+        total: props.oferta.preu * quantitat.value
+    }).then(async (res) => {
+        let alert = await alertController.create({
+            header: "Compra feta",
+            message: "S'ha realitzat correctament la compra",
+            buttons: [{
+                text: "Veure Comanda",
+                handler: async () => {
+                    await router.push('/tabs/tab6')
+                }
+            },
+            { text: "Ok" }
+            ]
+        })
+        alert.present()
     }).catch((err) => {
         console.log('err :>> ', err);
     });
