@@ -65,7 +65,7 @@ export const useCapacitorNotifications = () => {
       alert.present();
       await addListeners()
       
-      let alert = await showAlert("S'esta registrant");
+      alert = await showAlert("S'esta registrant");
       alert.present();
 
       await PushNotifications.register();
