@@ -61,8 +61,13 @@ export const useCapacitorNotifications = () => {
       if (permStatus.receive !== 'granted') {
         throw new Error('User denied permissions!');
       }
+      let alert = await showAlert("Afegint listeners");
+      alert.present();
+      await addListeners()
+      
       let alert = await showAlert("S'esta registrant");
       alert.present();
+
       await PushNotifications.register();
     } catch (err: any) {
       let alert = await showAlert(`Error: ${err.message}`);
