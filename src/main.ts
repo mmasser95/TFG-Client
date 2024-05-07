@@ -1,8 +1,11 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
+
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+defineCustomElements(window);
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -20,18 +23,32 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
+
 /* Theme variables */
 import './theme/variables.css';
 
-/* Store Library */
-import {createPinia} from 'pinia';
-const pinia=createPinia();
+/* Store Pinia*/
+import { createPinia } from 'pinia';
+
+/*Star-Ratings*/
+import vue3starRatings from "vue3-star-ratings";
+
+
+
+/* Google-Login-Button */
+import GoogleSignInPlugin from "vue3-google-signin"
+const pinia = createPinia();
 
 const app = createApp(App)
-  .use(IonicVue)
-  .use(router)
-  .use(pinia);
-  
+.use(IonicVue)
+.use(router)
+.use(pinia)
+.use(GoogleSignInPlugin, {
+  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+})
+.component('star-rating',vue3starRatings)
+
+
 router.isReady().then(() => {
   app.mount('#app');
 });

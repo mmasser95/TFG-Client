@@ -1,12 +1,12 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'TFG-Client',
+  appId: 'com.mmasser95.flyfood',
+  appName: 'FlyFood',
   webDir: 'dist',
   server: {
     androidScheme: 'https'
-  }
+  },
 };
 
 export default config;

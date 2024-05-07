@@ -1,0 +1,158 @@
+<template>
+    <ion-header>
+        <ion-toolbar>
+            <ion-buttons slot="start">
+                <ion-button color="secondary" @click="cancel">Cancel</ion-button>
+            </ion-buttons>
+            <ion-title v-if="!element" class="ion-text-center">Crear element</ion-title>
+            <ion-title v-if="element" class="ion-text-center">Editar element</ion-title>
+            <ion-buttons slot="end">
+                <ion-button v-if="!element" color="primary" @click="confirm">Crear</ion-button>
+                <ion-button v-if="element" color="primary" @click="confirm">Guardar</ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content >
+        <form @submit.prevent="confirm">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="12" sizeXl="6">
+                        <ion-select label="Categoria" :label-placement="labelPlacement" @ion-change="fillAliments"
+                            v-model="info.categoria">
+                            <ion-select-option v-for="(i, k) in categories" :key='k' :value="i">{{ i
+                                }}</ion-select-option>
+                        </ion-select>
+                    </ion-col>
+                    <ion-col size="12" sizeXl="6">
+                        <ion-select label="Aliment" v-if="false" :label-placement="labelPlacement"
+                            v-model="info.aliment">
+                            <ion-select-option v-for="(i, k) in aliments" :key="k" :value="i._id">{{ i.nom
+                                }}</ion-select-option>
+                        </ion-select>
+                        <ion-item :button="true" :detail="false" @click="openCercadorAliments">
+                            <ion-label v-if="!info.aliment">Aliment</ion-label>
+                            <ion-label v-if="info.aliment">{{ getNomOfIdAliment(info.aliment) }}</ion-label>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="12" sizeXl="6">
+                        <ion-input type="date" label="Data de compra" :label-placement="labelPlacement"
+                            v-model="info.data_compra"></ion-input>
+                    </ion-col>
+                    <ion-col size="12" sizeXl="6">
+                        <ion-input type="date" label="Data de caducitat" :label-placement="labelPlacement"
+                            v-model="info.data_caducitat"></ion-input>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="12" sizeXl="6">
+                        <ion-input label="Quantitat" type="number" v-model="info.quantitat"
+                            :label-placement="labelPlacement"></ion-input>
+                    </ion-col>
+                    <ion-col size="12" sizeXl="6">
+                        <ion-select label="Unitat" :label-placement="labelPlacement" v-model="info.q_unitat">
+                            <ion-select-option v-for="(i, k) in unitats_quantitat" :value="i" :key="k">{{ i
+                                }}</ion-select-option>
+                        </ion-select>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+            <ion-button class="ion-hide" type="submit"></ion-button>
+        </form>
+    </ion-content>
+</template>
+<script setup lang="ts">
+import { IonLabel, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonItem, IonIcon, IonToolbar, IonButtons, IonButton, IonTitle, IonInput, modalController, IonSelect, IonSelectOption } from '@ionic/vue';
+import { Ref, ref, reactive, defineProps, onMounted, } from 'vue';
+import { parseISO } from 'date-fns'
+import { getArticleCategories, getAllAlimentsByTipus } from '@/APIService';
+
+import cercadorAliments from '../../components/cercadorAliments.vue';
+
+import { Aliment, Element } from '../../types';
+
+const openCercadorAliments = async () => {
+    const modal = await modalController.create({
+        component: cercadorAliments,
+        componentProps: {
+            title: 'Cercar aliments',
+            items: aliments.value
+        }
+    })
+    modal.present()
+    const { data, role } = await modal.onWillDismiss();
+    if (role == 'confirm')
+        info.aliment = data
+
+}
+
+const props = defineProps<{
+    element?: Element,
+    rebostId?: string
+}>()
+
+const labelPlacement = 'floating'
+
+const info = reactive({
+    categoria: '',
+    aliment: '',
+    data_compra: '',
+    data_caducitat: '',
+    quantitat: 0,
+    q_unitat: ''
+})
+
+const aliments: Ref<Aliment[] | undefined> = ref([]);
+
+const getNomOfIdAliment = (alimentId:any) => {
+    if (aliments.value) {
+        if (aliments.value.length > 0)
+            return aliments.value?.filter((element) => element._id == alimentId)[0].nom
+    }
+    return ""
+}
+
+const categories = ref([])
+const unitats_quantitat = ref(['kg', 'g', 'l', 'unitats'])
+
+const getCategories = () => {
+    getArticleCategories()
+        .then((result) => {
+            categories.value = result.data.tipus
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+const fillAliments = () => {
+    getAllAlimentsByTipus(info.categoria).then((result) => {
+        aliments.value = result.data.aliments
+    }).catch((err) => {
+        console.log('err :>> ', err);
+    });
+}
+
+const fillElementOnUpdate = () => {
+    if (props.element) {
+        console.log('props.element.aliment :>> ', props.element.aliment?._id);
+        info.categoria = props.element.aliment ? props.element.aliment.tipus : ''
+        info.aliment = props.element.aliment != undefined ? props.element.aliment._id : ''
+        info.data_compra = props.element.data_compra.split('T')[0]
+        info.data_caducitat = props.element.data_caducitat.split('T')[0]
+        info.q_unitat = props.element.q_unitat
+        info.quantitat = props.element.quantitat
+    } fillAliments()
+}
+
+const cancel = () => modalController.dismiss(null, 'cancel')
+const confirm = () => modalController.dismiss(info, 'confirm')
+
+onMounted(() => {
+    getCategories()
+    fillElementOnUpdate()
+})
+
+</script>
+<style></style>

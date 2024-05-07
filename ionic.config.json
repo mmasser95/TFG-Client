@@ -1,5 +1,5 @@
 {
-  "name": "TFG-Client",
+  "name": "myApp",
   "integrations": {
     "capacitor": {}
   },

@@ -1,92 +1,157 @@
 <template>
-  <ion-page> 
-    <ion-content>
+  <ion-page>
+    <ion-content :fullscreen="true" class="ion-padding">
+      <ion-refresher slot="fixed" @ion-refresh.stop="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <ion-grid>
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <h1 class="ion-text-center">Too Good To Go</h1>
+            <ion-title class="ion-text-center" id="negocisSection">Llista de negocis <ion-icon :icon="informationCircle"
+                @click="onboardingElement?.start"></ion-icon></ion-title>
+
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col size="12" sizeMd="6"><p>Aquesta serà una app per al reaprofitament d'aliments i begudes</p>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique cupiditate, consequatur consequuntur in corrupti reiciendis sunt ipsa adipisci cum totam, ducimus deleniti minus ab explicabo molestiae laborum praesentium quas quis.</p>
+          <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+            <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :pagination="{ clickable: true }">
+              <swiper-slide v-if="establiments" v-for="(i, k) in establiments" :key="i._id">
+                <myCard :establiment="i" />
+              </swiper-slide>
+            </swiper>
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col size="12" sizeMd="6">
-            <swiper
-            :slides-per-view="1"
-            :freemode="true"
-            :space-between="5">
-              <swiper-slide><MyCard imageURL="https://ionicframework.com/docs/img/demos/card-media.png" title="Hola Carta1" subtitle="Prova" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus excepturi enim voluptatum provident minima cumque laboriosam ducimus. Tempore labore delectus ratione, distinctio vel blanditiis sint temporibus amet culpa nulla quis."/></swiper-slide>
-              <swiper-slide><MyCard imageURL="https://ionicframework.com/docs/img/demos/card-media.png" title="Hola Carta2" subtitle="Prova" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus excepturi enim voluptatum provident minima cumque laboriosam ducimus. Tempore labore delectus ratione, distinctio vel blanditiis sint temporibus amet culpa nulla quis."/></swiper-slide>
-              <swiper-slide><MyCard imageURL="https://ionicframework.com/docs/img/demos/card-media.png" title="Hola Carta3" subtitle="Prova" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus excepturi enim voluptatum provident minima cumque laboriosam ducimus. Tempore labore delectus ratione, distinctio vel blanditiis sint temporibus amet culpa nulla quis."/></swiper-slide>
-              <swiper-slide><MyCard imageURL="https://ionicframework.com/docs/img/demos/card-media.png" title="Hola Carta4" subtitle="Prova" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus excepturi enim voluptatum provident minima cumque laboriosam ducimus. Tempore labore delectus ratione, distinctio vel blanditiis sint temporibus amet culpa nulla quis."/></swiper-slide>
-              <swiper-slide><MyCard imageURL="https://ionicframework.com/docs/img/demos/card-media.png" title="Hola Carta5" subtitle="Prova" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus excepturi enim voluptatum provident minima cumque laboriosam ducimus. Tempore labore delectus ratione, distinctio vel blanditiis sint temporibus amet culpa nulla quis."/></swiper-slide>
+          <ion-col>
+            <ion-title class="ion-text-center" id="preferitsSection">Negocis preferits</ion-title>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+            <swiper :slides-per-view="1" v-if="establimentsPreferits != null">
+              <swiper-slide v-for="d in establimentsPreferits" :key="d._id" v-if="establimentsPreferits.length > 0">
+                <myCard :establiment="d"></myCard>
+              </swiper-slide>
+              <p v-else class="ion-text-center">No es troba cap establiment com a preferit</p>
             </swiper>
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
       </ion-grid>
+      <onboarding :steps="onboardingHomeSteps" @start-onboarding="startOnboarding"></onboarding>
     </ion-content>
-      
   </ion-page>
 </template>
 
-<script lang="js">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCol, IonRow, IonGrid } from '@ionic/vue';
-import MyCard from '../components/MyCard.vue';
-import {Swiper, SwiperSlide} from 'swiper/vue';
-import 'swiper/css'
+<script setup lang="ts">
+import { IonPage, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
+import { informationCircle } from 'ionicons/icons';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/free-mode'
+import 'swiper/css/pagination'
+import myCard from '../components/myCard.vue';
+import { onMounted, ref, Ref, watch } from 'vue';
+import { showLoading } from '../composables/loader';
+import { LatLngTuple } from 'leaflet'
+import { searchEstabliments, getMyFavs, testFCM } from '../APIService';
+import { Establiment } from '../types';
+import { useFavStore } from '../store/favStore';
+import { storeToRefs } from 'pinia';
+import { useDebounceFn } from '@vueuse/core'
+import onboarding from '../components/onboarding.vue';
+const favStore = useFavStore()
+const { favorites } = storeToRefs(favStore)
+const latitude = ref(41.0408888)
+const longitude = ref(0.7479283)
+const radi = ref(25)
 
-export default{
-  components:{
-    MyCard,
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    IonCol,
-    IonRow,
-    IonGrid,
-    Swiper,
-    SwiperSlide
+
+const establiments: Ref<[Establiment] | null> = ref(null)
+const establimentsPreferits: Ref<[Establiment] | null> = ref(null)
+
+const onboardingHomeSteps = [{
+  attachTo: {
+    element: "#negocisSection"
+  },
+  content: {
+    title: "Establiments propers",
+    description: "En aquest apartat podràs trobar els millors establiments aprop teu"
   }
+}, {
+  attachTo: {
+    element: "#preferitsSection"
+  },
+  options: {
+    popper: {
+      placement: 'top'
+    }
+  },
+  content: {
+    title: "Establiments preferits",
+    description: "En aquest apartat podràs trobar els establiments que has marcat com a preferits"
+  }
+}]
+
+const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
+
+const startOnboarding = (element: any) => {
+  console.log('element :>> ', element);
+  onboardingElement.value = element
 }
+
+watch(favStore.favorites, async (before, after) => {
+  await fillEstablimentsPreferits()
+  console.log(before, after)
+}, { deep: true })
+
+const fillEstabliments = async () => {
+  const loader = await showLoading("Carregant establiments")
+  loader.present()
+  searchEstabliments(latitude.value, longitude.value, radi.value).then((result) => {
+    establiments.value = result.data.establiments
+  }).catch((err) => {
+
+  }).finally(() => {
+    loader.dismiss(null, 'cancel')
+  });
+}
+
+const fillEstablimentsPreferits = useDebounceFn(async () => {
+  const loader = await showLoading("Carregant establiments preferits")
+  loader.present()
+  getMyFavs().then((result) => {
+    establimentsPreferits.value = result.data.preferits.establiments_fav
+  }).catch((err) => {
+
+  }).finally(() => {
+    loader.dismiss(null, 'cancel')
+  });
+}, 250)
+
+const handleRefresh = (event: RefresherCustomEvent) => {
+  fillEstabliments().then((res) => {
+    event.target.complete()
+  })
+}
+
+onMounted(async () => {
+  console.log(establimentsPreferits.value)
+  await fillEstabliments()
+  await fillEstablimentsPreferits()
+  testFCM().then((res) => {
+    console.log('res :>> ', res);
+  }).catch((err) => {
+    console.log('err :>> ', err);
+  });
+
+})
+
 </script>
-
-<style scoped>
-#container {
-  text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-</style>

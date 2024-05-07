@@ -1,57 +1,111 @@
 <template>
   <ion-app>
-    <ion-page>
-      <ion-tabs>
-        <ion-router-outlet />
-	      <ion-tab-bar slot="bottom">
-          <ion-tab-button tab="home" href="/home">
-            <ion-icon :icon="home" />
-            <ion-label>Home</ion-label>
-          </ion-tab-button>
-          <ion-tab-button tab="mapa" href="/mapa">
-            <ion-icon :icon="map" />
-            <ion-label>Map</ion-label>
-          </ion-tab-button>
-          <ion-tab-button tab="search" href="/search">
-            <ion-icon :icon="search" />
-	          <ion-label>Cercar</ion-label>
-	        </ion-tab-button>
-          <ion-tab-button v-if="loginStore.logged" tab="settings" href="/settings">
-            <ion-icon :icon="person" />
-            <ion-label>Jo</ion-label>
-          </ion-tab-button>
-          <ion-tab-button v-if="!loginStore.logged" tab="login" href="/login">
-            <ion-icon :icon="logIn" />
-            <ion-label>Login</ion-label>
-          </ion-tab-button>
-        </ion-tab-bar>
-      </ion-tabs>
-    </ion-page>
+    <UseColorMode v-slot="{ mode }">
+      <ion-router-outlet :animated="false" />
+    </UseColorMode>
   </ion-app>
 </template>
 
-<script lang="js">
-import { IonApp, IonRouterOutlet, IonPage, IonTabs, IonTabBar, IonTabButton, IonLabel, IonIcon } from '@ionic/vue';
-import { home, map,person, search, logIn } from 'ionicons/icons';
-import {mapStores, mapState,mapActions} from 'pinia';
-import {useStore} from './stores';
-export default{
-	components:{IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon,IonApp},
-  computed:{
-        ...mapStores(useStore),
-    },
-	data(){
-		return {
-      logged:false,
-      logIn,
-			home,
-			person,
-			map,
-			search
-		}
-	},
-  methods:{
-    ...mapActions(useStore,['set_user_id','set_token']),
+<script setup lang="ts">
+import { IonApp, IonRouterOutlet, useBackButton, useIonRouter } from '@ionic/vue';
+import { onBeforeMount, onMounted } from 'vue';
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { App } from '@capacitor/app'
+import { UseColorMode } from '@vueuse/components'
+import { useColorMode } from '@vueuse/core';
+import { verificarToken } from './APIService'
+import { useLoginStore } from './store/loginStore';
+import { useAlimentStore } from './store/alimentStore';
+import { useFavStore } from './store/favStore';
+import { useFirebaseStore } from './store/firebaseStore'
+import { showLoading, showAlert } from './composables/loader';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+
+import { useFirebase } from './composables/useFirebase'
+import { useCapacitorNotifications } from './composables/useCapacitorNotifications'
+const { initialize } = useFirebase()
+const { registerNotifications, addListeners } = useCapacitorNotifications()
+
+
+registerNotifications().then((result) => {
+
+}).catch((err) => {
+  initialize()
+});
+
+const router = useRouter()
+const { setToken, setUserId, setUserType } = useLoginStore()
+const { setAliments } = useAlimentStore()
+const { setLoginFavs } = useFavStore()
+
+let { myToken } = storeToRefs(useFirebaseStore())
+const mode = useColorMode({
+  attribute: 'theme',
+  modes: {
+    light: 'light',
+    dark: 'dark',
+    contrast: 'contrast'
   }
+})
+
+const ionRouter = useIonRouter();
+useBackButton(-1, () => {
+  if (!ionRouter.canGoBack()) {
+    App.exitApp();
+  }
+})
+
+
+let token = localStorage.getItem('token')
+if (token) {
+  setToken(token)
+  showLoading('Iniciant sessió').then((loader) => {
+    loader.present()
+    verificarToken().then((res) => {
+      setToken(res.data.token);
+      localStorage.setItem('token', res.data.token)
+      setUserId(res.data.userId)
+      setUserType(res.data.userType)
+      setAliments()
+      if (res.data.userType == 'client') {
+        setLoginFavs()
+        router.push('/tabs/tab1');
+      }
+      else
+        router.push('/tabs/tab5')
+
+    }).catch(() => {
+      router.push('/login')
+    }).finally(() => {
+      loader.dismiss()
+    });
+  });
+
 }
+
+
+
+
+
+
 </script>
+
+<style>
+* {
+  font-family: 'Exo 2';
+}
+
+ion-fab {
+  bottom: 7px;
+  right: 15px;
+}
+
+.input-container {
+  display: flex;
+  flex-flow: column wrap;
+  gap: 3px
+}
+</style>
+popups.0./composables/useFirebase
