@@ -48,6 +48,13 @@
           <ion-col></ion-col>
         </ion-row>
         <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12" sizeMd="6">
+            <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row>
           <ion-col>
             <p class="ion-text-center">
               Si no tens compte, segueix <a @click="operModalRegistre">link</a>
@@ -71,7 +78,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonLabel
 import { useLoginStore } from '../store/loginStore';
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, computed } from 'vue';
-import { doLogin, dosignIn, registreEstabliment,sendFirebaseToken } from '../APIService/index';
+import { doLogin, dosignIn, registreEstabliment, sendFirebaseToken, googleLogin } from '../APIService/index';
 
 import Registre from './Registre.vue'
 import RegistreEstabliment from './RegistreEstabliment.vue';
@@ -89,6 +96,10 @@ import { useFavStore } from '../store/favStore'
 
 import { useAlimentStore } from '../store/alimentStore'
 import { useFirebaseStore } from '../store/firebaseStore'
+import {
+  GoogleSignInButton,
+  type CredentialResponse,
+} from "vue3-google-signin";
 
 const router = useRouter();
 //Store
@@ -147,7 +158,7 @@ const login = async () => {
     doLogin(state.correu, state.contrasenya).then(res => {
       if (res.status == 200) {
         setToken(res.data.token);
-        localStorage.setItem('token',res.data.token)
+        localStorage.setItem('token', res.data.token)
         setUserId(res.data.userId)
         setUserType(res.data.userType)
         setAliments()
@@ -218,6 +229,31 @@ const operModalRegistreEstabliment = async () => {
   }
 
 }
+
+const handleLoginSuccess = (response: CredentialResponse) => {
+  const { credential } = response;
+  googleLogin(credential).then((res) => {
+    setToken(res.data.token);
+    localStorage.setItem('token', res.data.token)
+    setUserId(res.data.userId)
+    setUserType(res.data.userType)
+    setAliments()
+    loginError.value = '';
+    if (res.data.userType == 'client') {
+      setLoginFavs()
+      router.push('/tabs/tab1');
+    }
+  }).catch((err) => {
+    console.log('err :>> ', err.message);
+  });
+};
+
+// handle an error event
+const handleLoginError = () => {
+  console.error("Login failed");
+};
+
+
 </script>
 
 <style></style>

@@ -116,15 +116,18 @@ const alertSortirSessio = async () => {
                     'aria-label': 'Si',
                 },
                 handler: () => {
-                    setToken('')
-                    setUserId('')
-                    setUserType('')
-                    localStorage.setItem('token', '')
                     deleteFirebaseToken(myToken.value).then((res) => {
 
                     }).catch((err) => {
 
-                    }).finally(() => router.push('/login'));
+                    }).finally(() => {
+
+                        setToken('')
+                        setUserId('')
+                        setUserType('')
+                        localStorage.setItem('token', '')
+                        router.push('/login')
+                    });
 
                 }
             },

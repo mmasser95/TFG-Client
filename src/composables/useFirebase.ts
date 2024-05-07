@@ -2,7 +2,11 @@ import { ref, reactive, Ref, computed } from 'vue';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import {sendFirebaseToken} from '@/APIService'
+import { useFirebaseStore } from '@/store/firebaseStore';
+import { storeToRefs } from 'pinia';
+
 export const useFirebase = () => {
+  const {myToken}=storeToRefs(useFirebaseStore())
   const firebaseConfig = reactive({
     apiKey: import.meta.env.VITE_APIKEY,
     authDomain: import.meta.env.VITE_AUTHDOMAIN,
@@ -22,6 +26,7 @@ export const useFirebase = () => {
       })
         .then((currentToken) => {
           if (currentToken) {
+            myToken.value=currentToken
             sendFirebaseToken(currentToken).then((res) => {
               console.log('res.data :>> ', res.data);
             }).catch((err) => {

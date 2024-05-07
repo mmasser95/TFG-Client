@@ -29,14 +29,23 @@ import './theme/variables.css';
 
 /* Store Pinia*/
 import { createPinia } from 'pinia';
+
+/*Star-Ratings*/
 import vue3starRatings from "vue3-star-ratings";
 
+
+
+/* Google-Login-Button */
+import GoogleSignInPlugin from "vue3-google-signin"
 const pinia = createPinia();
 
 const app = createApp(App)
 .use(IonicVue)
 .use(router)
 .use(pinia)
+.use(GoogleSignInPlugin, {
+  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+})
 .component('star-rating',vue3starRatings)
 
 

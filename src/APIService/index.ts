@@ -287,12 +287,14 @@ export function deleteAvaluacio(comandaId: any, avaluacioId: any) {
 }
 
 export function sendFirebaseToken(token: any) {
-  return instance.post(`/fcm`, { mode:'add', token }, getHeaders());
+  return instance.post(`/fcm`, { mode: 'add', token }, getHeaders());
 }
-export function deleteFirebaseToken(token:any){
-  return instance.post(`/fcm`,{mode:'delete',token},getHeaders())
+export function deleteFirebaseToken(token: any) {
+  return instance.post(`/fcm`, { mode: 'delete', token }, getHeaders());
 }
-export function testFCM(){
+export function testFCM() {
   return instance.get(`/fcm`, getHeaders());
 }
-
+export function googleLogin(credential:any) {
+  return instance.post(`/google`, { credential });
+}
