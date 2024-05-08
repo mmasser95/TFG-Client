@@ -19,13 +19,14 @@
             </ion-col>
         </ion-row>
     </ion-grid>-->
-        <ion-card>
+        <ion-card class="ion-activatable ">
+            <ion-ripple-effect></ion-ripple-effect>
             <ion-card-header>
                 <ion-card-title>{{ element.aliment?.nom }}</ion-card-title>
                 <ion-card-subtitle> {{ element.aliment?.tipus }}</ion-card-subtitle>
             </ion-card-header>
-            <ion-card-content>
-
+            <ion-card-content >
+                
                 <div class="container1">
                     <div class="container2">
                         <ion-text> Data compra: {{ dataCompraAgo }} </ion-text>
@@ -66,7 +67,7 @@
         </ion-card>
 </template>
 <script setup lang="ts">
-import { IonTitle, IonText, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonInput, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, alertController } from '@ionic/vue';
+import { IonTitle, IonRippleEffect, IonText, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonInput, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, alertController } from '@ionic/vue';
 import { computed, ref } from 'vue';
 import { showAlert, showLoading } from '../composables/loader';
 import { pencil, trash } from 'ionicons/icons';

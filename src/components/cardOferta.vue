@@ -18,8 +18,13 @@
             <ion-col></ion-col>
             <ion-col size="2">{{ total }} €</ion-col>
             <ion-col size="2" @click.stop="null">
-                <ion-input label="Quantitat" label-placement="floating" type="number" min="1"
-                    v-model="quantitat"></ion-input>
+                <!--<ion-input label="Quantitat" label-placement="floating" type="number" min="1"
+                    v-model="quantitat"></ion-input>-->
+                    <ion-picker>
+                        <ion-picker-column value="quantitat">
+                            <ion-picker-column-option v-for="i in 10" :key="i" :value="i+1"></ion-picker-column-option>
+                        </ion-picker-column>
+                    </ion-picker>
             </ion-col>
             <ion-col size="3">
                 <ion-button color="secondary" @click.stop="alertComprar" expand="block">
@@ -30,7 +35,7 @@
     </ion-grid>
 </template>
 <script setup lang="ts">
-import { IonGrid, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
+import { IonGrid, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController,IonPicker,IonPickerColumn,IonPickerColumnOption  } from '@ionic/vue';
 import viewOferta from '../views/Explorar/viewOferta.vue';
 import { bag } from 'ionicons/icons';
 import { ref, computed,watch } from 'vue';
