@@ -1,5 +1,6 @@
 <template>
-    <ion-card>
+    <ion-card class="ion-activatable">
+        <ion-ripple-effect></ion-ripple-effect>
         <ion-card-header>
             <ion-card-title>{{ aliment.nom }}</ion-card-title>
             <ion-card-subtitle>{{ aliment.tipus }} </ion-card-subtitle>
@@ -40,7 +41,7 @@
             :value="data_caducitat_calc" :show-default-buttons="true"></ion-datetime></ion-modal>
 </template>
 <script setup lang="ts">
-import { IonItem, IonCard, IonCardContent, IonInput, IonCardHeader, IonCardTitle, IonModal,IonDatetime,IonCardSubtitle, modalController, IonDatetimeButton, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption } from '@ionic/vue';
+import { IonItem, IonCard, IonCardContent, IonInput, IonCardHeader, IonCardTitle, IonModal,IonDatetime,IonCardSubtitle,IonRippleEffect, modalController, IonDatetimeButton, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption } from '@ionic/vue';
 import { computed, onMounted, ref } from 'vue';
 import { pencil, trash } from 'ionicons/icons';
 import { Aliment } from '../types'

@@ -191,12 +191,12 @@ export function createAliment(alimentInfo: any) {
   return instance.post(`/aliments`, alimentInfo, getHeaders());
 }
 
-export function updateAliment(alimentId:any,alimentInfo:any){
-  return instance.put(`/aliments/${alimentId}`,alimentInfo,getHeaders())
+export function updateAliment(alimentId: any, alimentInfo: any) {
+  return instance.put(`/aliments/${alimentId}`, alimentInfo, getHeaders());
 }
 
-export function deleteAliment(alimentId:any){
-  return instance.delete(`/aliments/${alimentId}`,getHeaders())
+export function deleteAliment(alimentId: any) {
+  return instance.delete(`/aliments/${alimentId}`, getHeaders());
 }
 
 export function getAllElements(rebostId: any) {
@@ -310,4 +310,11 @@ export function testFCM() {
 }
 export function googleLogin(credential: any) {
   return instance.post(`/google`, { credential });
+}
+
+export function getPerfil() {
+  return instance.get(`/perfil`, getHeaders());
+}
+export function updatePerfil(userInfo: any) {
+  return instance.put(`/perfil`, { ...userInfo }, getHeaders());
 }

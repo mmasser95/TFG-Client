@@ -88,7 +88,6 @@ onMounted(() => {
     flex-grow: 1;
 }
 
-.item3 {}
 
 .container3 {
     display: flex;

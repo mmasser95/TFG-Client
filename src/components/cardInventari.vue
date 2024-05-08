@@ -1,5 +1,6 @@
 <template>
-    <ion-card :router-link="`/tabs/rebost/${idd}`">
+    <ion-card :router-link="`/tabs/rebost/${idd}`" class="ion-activatable">
+        <ion-ripple-effect></ion-ripple-effect>
         <ion-card-header>
             <ion-card-title>{{ title }}</ion-card-title>
             <ion-card-subtitle>{{ subtitle }}</ion-card-subtitle>
@@ -22,7 +23,7 @@
     </ion-card>
 </template>
 <script setup lang="ts">
-import { IonText, IonCard, IonIcon, IonCardHeader, IonCardTitle, IonCardContent, IonButton, alertController, IonCol, IonRow, IonGrid, IonCardSubtitle } from '@ionic/vue'
+import { IonText, IonCard, IonIcon, IonCardHeader, IonCardTitle, IonCardContent, IonButton, alertController, IonCol, IonRow, IonGrid, IonCardSubtitle,IonRippleEffect } from '@ionic/vue'
 import { boat, pencilSharp, pencil, trashBinSharp } from 'ionicons/icons'
 import { defineProps } from 'vue';
 import { deleteRebost } from '@/APIService';
