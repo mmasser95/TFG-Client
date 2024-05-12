@@ -4,6 +4,33 @@ import { useLoginStore } from '../store/loginStore';
 // const base_url = 'http://192.168.1.26:5000/api/v1';
 const base_url = 'https://app.flyfood.online/api/v1';
 
+const axiosWrapper = (fn, ...args, cb) => {
+  fn(...args)
+    .then(response => {
+      cb(null,response.data)
+    }).catch(error=>{
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        cb({status:error.response.status,message:error.response.data})
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+        cb({status:"No response",message:"No response received",request:error.request})
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+        cb({status:"General error",message:"No response received"})
+      }
+      console.log(error.config);
+    })
+}
+
 export const instance = axios.create({
   baseURL: base_url,
   timeout: 10000,
@@ -170,7 +197,7 @@ export function updateOferta(id_oferta: any, data: any) {
 export function deleteOferta(id_oferta: any) {
   return instance.delete(`/ofertes/${id_oferta}`, getHeaders());
 }
-
+//Aliments
 export function getArticleCategories() {
   return instance.get(`/aliments/tipus`);
 }
@@ -198,7 +225,7 @@ export function updateAliment(alimentId: any, alimentInfo: any) {
 export function deleteAliment(alimentId: any) {
   return instance.delete(`/aliments/${alimentId}`, getHeaders());
 }
-
+//Elements
 export function getAllElements(rebostId: any) {
   return instance.get(`/rebosts/${rebostId}/elements/`, getHeaders());
 }
@@ -226,6 +253,7 @@ export function deleteElement(rebostId: any, elementId: any) {
   );
 }
 
+//Favs
 export function getFavs() {
   return instance.get(`/fav`, getHeaders());
 }
@@ -241,7 +269,7 @@ export function createFav(establimentId: string) {
 export function deleteFav(establimentId: string) {
   return instance.delete(`/fav/${establimentId}`, getHeaders());
 }
-
+//Establiment
 export function putImatgePerfil(formData: any) {
   return instance.put(
     `/establiments/img_perfil`,
@@ -260,6 +288,7 @@ export function getEstadistiques(establimentId: any) {
   return instance.get(`/estadistiques/${establimentId}`, getHeaders());
 }
 
+//Comandes
 export function getAllComandes() {
   return instance.get(`/comandes`, getHeaders());
 }
@@ -275,11 +304,12 @@ export function createComanda(comandaInfo: any) {
 export function deleteComanda(comandaId: any) {
   return instance.delete(`/comandes/${comandaId}`, getHeaders());
 }
-
+//Utils
 export function verificarToken() {
   return instance.get(`/verificar`, getHeaders());
 }
 
+//Avaluacions
 export function getAvaluacio(comandaId: any) {
   return instance.get(`/comandes/${comandaId}/avaluacions`, getHeaders());
 }
@@ -298,7 +328,7 @@ export function deleteAvaluacio(comandaId: any, avaluacioId: any) {
     getHeaders()
   );
 }
-
+//Firebase
 export function sendFirebaseToken(token: any) {
   return instance.post(`/fcm`, { mode: 'add', token }, getHeaders());
 }
@@ -308,10 +338,11 @@ export function deleteFirebaseToken(token: any) {
 export function testFCM() {
   return instance.get(`/fcm`, getHeaders());
 }
+//Utils
 export function googleLogin(credential: any) {
   return instance.post(`/google`, { credential });
 }
-
+//Configuracio
 export function getPerfil() {
   return instance.get(`/perfil`, getHeaders());
 }
