@@ -50,6 +50,7 @@ export interface Establiment2 {
   tipus: string;
   ofertes: Oferta[];
   direccio: Direccio;
+  distance?:number;
   quantitatMitjana?: number;
   qualitatMitjana?: number;
 }

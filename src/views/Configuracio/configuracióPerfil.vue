@@ -157,12 +157,12 @@
                                         <ion-item>
                                             <ion-select label="Tipus d'establiment" :label-placement="labelPlacement"
                                                 @ion-blur="" v-model="stateEstabliment.tipus">
-                                                <ion-select-option value="Restaurant">Restaurant</ion-select-option>
-                                                <ion-select-option></ion-select-option>
-                                                <ion-select-option></ion-select-option>
-                                                <ion-select-option></ion-select-option>
-                                                <ion-select-option></ion-select-option>
-                                                <ion-select-option></ion-select-option>
+                                                <ion-select-option value="restaurant">Restaurant</ion-select-option>
+                                                <ion-select-option value="supermercat">Supermercat</ion-select-option>
+                                                <ion-select-option value="fleca">Fleca</ion-select-option>
+                                                <ion-select-option value="peixateria">Peixateria</ion-select-option>
+                                                <ion-select-option value="carnisseria">Carnisseria</ion-select-option>
+                                                <ion-select-option valuie="fruiteria_verduleria">Fruita/Verdura</ion-select-option>
                                             </ion-select>
                                         </ion-item>
                                     </div>

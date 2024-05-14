@@ -304,9 +304,10 @@ const confirm = async () => {
     let valid = await v$.value.$validate()
     try {
         let coords = await getCoordinates(state.direccio.carrer, state.direccio.numero, state.direccio.poblacio, state.direccio.provincia, state.direccio.CP)
+        state.direccio=JSON.stringify(state.direccio)
         if (!coords) presentAlert("L'adreça podria tenir algun error ja que el sistema no en detecta les coordenades")
         if (valid && coords) {
-            modalController.dismiss({ ...state, ...coords, horari: parseHorari(state.horariString) }, 'confirm')
+            modalController.dismiss({ ...state, ...coords, horari: JSON.stringify(parseHorari(state.horariString)) }, 'confirm')
         }
     } catch (err) {
         presentAlert(`Hi ha algun error en la comprovació de les coordenades. Comprova la teva conexió i torna-ho a provar.`)

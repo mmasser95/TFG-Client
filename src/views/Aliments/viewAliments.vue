@@ -87,7 +87,7 @@ const fillAliments = async () => {
     let loading = await showLoading("Carregant aliments")
     loading.present()
     getAllAliments((err: any, data: any) => {
-        loading.dismiss
+        loading.dismiss()
         if (err) return true
         aliments.value = data.aliments
     })

@@ -47,11 +47,7 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10" v-show="!pestanyaMapa">
-                        <ion-list>
-                            <ion-item v-for="establiment in establiments" :key="establiment._id">
-                                <myCard :establiment="establiment" />
-                            </ion-item>
-                        </ion-list>
+                        <myCard v-for="establiment in establiments" :key="establiment._id" :establiment="establiment" />
                     </ion-col>
                     <ion-col> {{ myLocation }}</ion-col>
                 </ion-row>

@@ -3,7 +3,7 @@
         <ion-ripple-effect></ion-ripple-effect>
         <div class="img_fons">
             <img v-if="img_fons" :src="img_fons" :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
-            <img v-else-if="oferta.url_imatge" :src="oferta.url_imatge"
+            <img v-else-if="oferta.url_imatge" :src="`https://app.flyfood.online/${oferta.url_imatge}`"
                 :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
             <img v-else
                 src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg"
@@ -16,26 +16,32 @@
             <ion-card-subtitle class="ion-padding">{{ oferta.descripcio }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content class="container1">
-            <div class="container2">{{ total }}</div>
-            <div class="container2" @click.stop="null">
-                <ion-input id="quantitat" label="Quantitat" label-placement="floating" type="number" min="1"
-                    v-model="quantitat"></ion-input>
+            <div class="container2">
+                <div class="container3">{{ total }}</div>
+                <div class="container3" @click.stop="null">
+                    <ion-input id="quantitat" label="Quantitat" label-placement="floating" type="number" min="1"
+                    :max="oferta.quantitatDisponible"  v-model="quantitat"></ion-input>
+                </div>
+                <div class="container3">
+                    <ion-button color="secondary" @click.stop="alertComprar" expand="block">
+                        <ion-icon :icon="bag"></ion-icon>
+                    </ion-button>
+                </div>
             </div>
             <div class="container2">
-                <ion-button color="secondary" @click.stop="alertComprar" expand="block">
-                    <ion-icon :icon="bag"></ion-icon>
-                </ion-button>
+                {{ oferta.quantitatDisponible }} packs restants
             </div>
         </ion-card-content>
     </ion-card>
 </template>
 <script setup lang="ts">
-import { IonCard,IonCardContent,IonCardSubtitle,IonCardTitle, IonRippleEffect, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
+import { IonCard,IonCardContent,IonCardHeader,IonCardSubtitle,IonCardTitle, IonRippleEffect, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
 import viewOferta from '../views/Explorar/viewOferta.vue';
 import { bag } from 'ionicons/icons';
 import { ref, computed, watch } from 'vue';
 import { Oferta } from '../types'
 import { createComanda } from '../APIService/comandes'
+import round from "lodash/round"
 const router = useIonRouter()
 
 const alertComprar = async () => {
@@ -63,7 +69,7 @@ let props = defineProps<{
 
 let quantitat = ref(1)
 
-let total = computed(() => props.oferta.preu * quantitat.value)
+let total = computed(() => round(props.oferta.preu * quantitat.value,2))
 const showModalOferta = async () => {
     const modal = await modalController.create({
         component: viewOferta,
@@ -80,11 +86,11 @@ const showModalOferta = async () => {
 const ferCompra = () => {
     createComanda({
         establimentId: props.establimentId,
-        oferta: props.oferta,
+        oferta: JSON.stringify(props.oferta),
         quantitat: quantitat.value,
         total: props.oferta.preu * quantitat.value
     }, async (err: any, data: any) => {
-        if (err) return
+        if (err) return true
         let alert = await alertController.create({
             header: "Compra feta",
             message: "S'ha realitzat correctament la compra",
@@ -105,12 +111,19 @@ const ferCompra = () => {
 <style scoped>
 .container1 {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: column wrap;
     align-items: center;
     justify-content: flex-end;
     gap: 40px;
 }
-
+.container2{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 40px;
+    width:100%
+}
 /*ion-button {
     --background: linear-gradient(to right, #70995c, #a5b061, #dfc36f, #ffd489);
 }*/

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <ion-button class="favButton" size="small" v-if="isFav(establimentId)" @click.stop="removeFav(establimentId)" shape="round">
+        <ion-button class="favButton" size="default" v-if="isFav(establimentId)" @click.stop="removeFav(establimentId)" shape="round">
             <ion-icon slot="icon-only" color="danger" :icon="heart"></ion-icon>
         </ion-button>
-        <ion-button class="favButton" size="small" v-if="!isFav(establimentId)" @click.stop="addFav(establimentId)" shape="round">
+        <ion-button class="favButton" size="default" v-if="!isFav(establimentId)" @click.stop="addFav(establimentId)" shape="round">
             <ion-icon slot="icon-only" color="danger" :icon="heartOutline"></ion-icon>
         </ion-button>
     </div>

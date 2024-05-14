@@ -11,6 +11,9 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
@@ -51,13 +54,12 @@
                                 </div>
                             </ion-item>
                             <ion-item>
-                                Qualitat: <star-rating v-model="qualitat" :disableClick="true"></star-rating> {{
-        qualitat
-    }}
+                                Qualitat: <star-rating v-model="qualitat" :disableClick="true"></star-rating>
+                                {{ round(qualitat, 1) }}
                             </ion-item>
                             <ion-item>
                                 Quantitat: <star-rating v-model="quantitat" :disableClick="true"></star-rating>
-                                {{ quantitat }}
+                                {{ round(quantitat, 1) }}
                             </ion-item>
                             <ion-item>
                                 Direccio: {{ direccio }}
@@ -83,8 +85,11 @@
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <p class="ion-text-center">Últims comentaris</p>
 
-                        <div class="comentaris-box">
+                        <div class="comentaris-box" v-if="ultimsComentaris">
                             <cardComentari v-for="comentari in ultimsComentaris" :avaluacio="comentari" />
+                        </div>
+                        <div v-else>
+                            <p class="ion-text-center">Encara no hi ha comentaris sobre aquest establiment...</p>
                         </div>
 
                     </ion-col>
@@ -95,7 +100,7 @@
     </ion-page>
 </template>
 <script setup lang="ts">
-import { IonPage, IonThumbnail, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, IonTextarea, IonChip } from '@ionic/vue'
+import { IonPage, IonThumbnail, IonRefresher, IonRefresherContent, IonHeader, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, IonTextarea, IonChip } from '@ionic/vue'
 import { arrowBack, call } from 'ionicons/icons'
 import { getEstabliment, getEstadistiques } from '../../APIService/establiments';
 import { getComentaris } from '../../APIService/avaluacions';
@@ -112,7 +117,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import location from "leaflet/dist/images/marker-icon.png"
 import badgeHorari from '../../components/badgeHorari.vue';
 import cardComentari from '../../components/cardComentari.vue';
-
+import round from 'lodash/round'
 import takeRight from 'lodash/takeRight';
 const router = useRouter()
 
@@ -176,6 +181,13 @@ const fillComentaris = () => {
         if (err) return
         comentaris.value = data.avaluacions.filter((el: any) => el.avaluacio)
     })
+}
+
+const handleRefresh = async (event: any) => {
+    await fillEstabliment()
+    fillEstadistiques()
+    fillComentaris()
+    event.target.complete()
 }
 
 const goBack = () => {

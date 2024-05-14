@@ -13,7 +13,7 @@
                 <ion-button expand="block" color="secondary" @click.stop="updateInventari" class="editBtn">
                     <ion-icon :icon="pencilSharp"></ion-icon>
                 </ion-button>
-                <ion-button expand="block" class="deleteBtn" color="secondary"
+                <ion-button expand="block" class="deleteBtn" color="danger"
                     @click.stop="createConfirmationAlert('Estas segur que vols eliminar aquest rebost i el seu contingut?', estasSegur)">
                     <ion-icon :icon="trashBinSharp"></ion-icon>
                 </ion-button>

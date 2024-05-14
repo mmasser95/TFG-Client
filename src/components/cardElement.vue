@@ -190,5 +190,6 @@ ion-input {
     position:absolute;
     right:18px;
     top:30px;
+    z-index:1;
 }
 </style>

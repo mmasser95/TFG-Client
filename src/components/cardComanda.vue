@@ -11,11 +11,11 @@
         <ion-card-content>
             <div class="container" v-if="userType == 'client'">
                 Has comprat una quantitat de {{ comanda.quantitat }} unitat/s per un preu total de
-                {{ comanda.total }}€
+                {{ round(comanda.total,2) }}€
             </div>
             <div class="container" v-else>
                 El client ha comprat una quantitat de {{ comanda.quantitat }} unitat/s per un preu total de
-                {{ comanda.total }}€ <div v-if="comanda.oferta">de l'oferta {{ comanda.oferta.nom }}</div>
+                {{ round(comanda.total,2) }}€ <div v-if="comanda.oferta">de l'oferta {{ comanda.oferta.nom }}</div>
             </div>
         </ion-card-content>
     </ion-card>
@@ -30,6 +30,7 @@ import { ca } from 'date-fns/locale'
 import { useLoginStore } from '../store/loginStore';
 import viewComanda from '../views/Comandes/viewComanda.vue';
 import { storeToRefs } from 'pinia'
+import round from 'lodash/round'
 const { userType } = storeToRefs(useLoginStore())
 
 const props = defineProps<{ comanda: Comanda }>()
