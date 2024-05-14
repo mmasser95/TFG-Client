@@ -73,7 +73,8 @@ import { showAlert, showLoading } from '../composables/loader';
 import { pencil, trash } from 'ionicons/icons';
 import { deleteElement } from '../APIService/elements';
 import { ca } from 'date-fns/locale'
-import { formatDistanceToNow, differenceInHours } from 'date-fns'
+import { differenceInHours } from 'date-fns/differenceInHours'
+import { formatDistanceToNow} from 'date-fns/formatDistanceToNow'
 import { Element } from '../types'
 import { useDebounceFn } from '@vueuse/core';
 

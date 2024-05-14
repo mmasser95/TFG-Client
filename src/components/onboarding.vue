@@ -48,11 +48,11 @@ emit('startOnboarding', { start, goToStep, finish })
 <style scoped>
 .myContainer{
     width:100%;
-    max-width:250px;
+    max-width:200px;
     display: flex;
 
 }
 ion-card{
-    max-width:150px;
+    max-width:200px;
 }
 </style>
