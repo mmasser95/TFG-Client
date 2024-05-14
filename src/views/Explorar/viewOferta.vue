@@ -41,7 +41,7 @@ import { Ref, ref, onMounted, watch } from 'vue'
 import { bag } from 'ionicons/icons';
 import { showLoading, showAlert } from '../../composables/loader';
 import { Oferta } from '../../types';
-import { getOfertaUser } from '../../APIService';
+//import { getOfertaUser } from '../../APIService/ofertes';
 
 const cancel = () => modalController.dismiss(null, 'cancel')
 

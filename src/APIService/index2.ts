@@ -318,3 +318,6 @@ export function getPerfil() {
 export function updatePerfil(userInfo: any) {
   return instance.put(`/perfil`, { ...userInfo }, getHeaders());
 }
+export function canviarContrasenya(oldC: any, newC: any) {
+  return instance.post(`/contrasenya`, { oldC, newC }, getHeaders());
+}

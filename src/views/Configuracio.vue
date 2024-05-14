@@ -38,16 +38,17 @@
 </template>
 <script lang="ts" setup>
 import { IonPage, IonToolbar, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
-import { personCircle, map, eye, lockClosed, helpBuoy, exit, ban, documentText } from 'ionicons/icons'
+import { personCircle, image, eye, key, lockClosed, helpBuoy, exit, ban, documentText } from 'ionicons/icons'
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
-import canviarDireccio from './Configuracio/canviarDireccio.vue';
 import canviarFotoPerfil from './Configuracio/canviarImatges.vue'
+import canviarContrasenya from './Configuracio/canviarContrasenya.vue'
 import { useLoginStore } from '../store/loginStore';
 import { useFirebaseStore } from '../store/firebaseStore'
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { deleteEstabliment, deleteUser, deleteFirebaseToken } from '../APIService';
+import { deleteUser, deleteFirebaseToken } from '../APIService/utils';
+import { deleteEstabliment } from '../APIService/establiments';
 import { onMounted } from 'vue';
 const store = useLoginStore()
 const router = useRouter()
@@ -86,9 +87,9 @@ const modalConfiguracioVista = async () => {
     }
 }
 
-const modalConfiguracioDireccio = async () => {
+const modalCanviarContrasenya = async () => {
     const modal = await modalController.create({
-        component: canviarDireccio,
+        component: canviarContrasenya,
         initialBreakpoint: 0.66,
         breakpoints: [0, 0.33, 0.66, 1]
     })
@@ -116,7 +117,15 @@ const alertSortirSessio = async () => {
                     'aria-label': 'Si',
                 },
                 handler: () => {
-                    deleteFirebaseToken(myToken.value).then((res) => {
+                    deleteFirebaseToken(myToken.value, (err: any) => {
+                        if (err) return
+                        setToken('')
+                        setUserId('')
+                        setUserType('')
+                        localStorage.setItem('token', '')
+                        router.push('/login')
+                    })
+                    /*deleteFirebaseToken(myToken.value).then((res) => {
 
                     }).catch((err) => {
 
@@ -127,7 +136,7 @@ const alertSortirSessio = async () => {
                         setUserType('')
                         localStorage.setItem('token', '')
                         router.push('/login')
-                    });
+                    });*/
 
                 }
             },
@@ -178,7 +187,15 @@ const alertEliminarCompte2 = async () => {
                 },
                 handler: () => {
                     if (userType.value == 'user') {
-                        deleteUser().then((result) => {
+                        deleteUser((err: any) => {
+                            if (err) return
+                            setToken('')
+                            setUserId('')
+                            setUserType('')
+                            router.push('/login')
+
+                        })
+                        /*deleteUser().then((result) => {
                             if (result.data) {
                                 setToken('')
                                 setUserId('')
@@ -187,18 +204,25 @@ const alertEliminarCompte2 = async () => {
                             }
                         }).catch((err) => {
 
-                        });
+                        });*/
                     } else {
-                        deleteEstabliment().then((result) => {
+                        deleteEstabliment((err: any) => {
+                            if (err) return
+                            setToken('')
+                            setUserId('')
+                            setUserType('')
+                            router.push('/login')
+                        })
+                        /*deleteEstabliment().then((result) => {
                             if (result.data) {
                                 setToken('')
                                 setUserId('')
                                 setUserType('')
                                 router.push('/login')
-                            }
-                        }).catch((err) => {
 
-                        });
+                            }).catch((err) => {
+
+                            });*/
                     }
                 }
             },
@@ -218,6 +242,11 @@ const opcionsUser = [
         label: "Configuració del perfil",
         icon: personCircle,
         modalToShow: modalConfiguracioPerfil,
+    },
+    {
+        label: "Canviar contrasenya",
+        icon: key,
+        modalToShow: modalCanviarContrasenya
     },
     {
         label: "Configuració de la vista",
@@ -256,17 +285,18 @@ const opcionsEstabliment = [
         modalToShow: modalConfiguracioPerfil,
     },
     {
+        label: "Canviar contrasenya",
+        icon: key,
+        modalToShow: modalCanviarContrasenya
+    },
+    {
         label: "Configuració de la vista",
         icon: eye,
         modalToShow: modalConfiguracioVista,
     },
     {
-        label: "Canviar direcció",
-        icon: map,
-        modalToShow: modalConfiguracioDireccio
-    },
-    {
         label: "Canviar foto perfil",
+        icon: image,
         modalToShow: modalCanviarFotoPerfil
     },
     {

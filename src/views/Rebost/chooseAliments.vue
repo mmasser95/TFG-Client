@@ -55,19 +55,22 @@ import { showAlert } from '../../composables/loader';
 import { Ref,ref } from 'vue';
 import {useScanStore} from '../../store/scanStore'
 import { storeToRefs } from 'pinia';
-import { createElementScan } from '../../APIService';
+import { createElementScan } from '../../APIService/elements';
 const {clearStore}=useScanStore()
 const {elementsAfegir}=storeToRefs(useScanStore())
 clearStore()
 const cancel=()=>modalController.dismiss(null,'cancel')
 const confirm=()=>{
-    createElementScan(props.rebostId,elementsAfegir.value).then((res) => {
-        console.log(res.data)
-        
-    }).catch((err) => {
-        
-    });
-    modalController.dismiss(null,'confirm')
+    createElementScan(props.rebostId,elementsAfegir.value,async (err:any,data:any)=>{
+        if(err){
+            modalController.dismiss(null,'cancel')
+            return
+        }
+        modalController.dismiss(null,'confirm')
+        let alert =await showAlert("S'han creat els elements al rebost")
+        alert.present()
+    })
+    
 }
 const props=defineProps<{
     aliments:Aliment[],

@@ -6,13 +6,11 @@
       </ion-refresher>
       <ion-grid>
         <ion-row>
-          <ion-col></ion-col>
-          <ion-col>
-            <ion-title class="ion-text-center" id="negocisSection">Llista de negocis <ion-icon :icon="informationCircle"
-                @click="onboardingElement?.start"></ion-icon></ion-title>
+          <ion-col class="ion-activatable" id="negocisSection">
+            <ion-title class="ion-text-center ion-activatable" >Llista de negocis <ion-icon
+                :icon="informationCircle" @click="onboardingElement?.start"></ion-icon></ion-title>
 
           </ion-col>
-          <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
@@ -26,11 +24,9 @@
           <ion-col></ion-col>
         </ion-row>
         <ion-row>
-          <ion-col></ion-col>
-          <ion-col>
-            <ion-title class="ion-text-center" id="preferitsSection">Negocis preferits</ion-title>
+          <ion-col class="ion-activatable" id="preferitsSection">
+            <ion-title class="ion-text-center ion-activatable" >Negocis preferits</ion-title>
           </ion-col>
-          <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
@@ -45,7 +41,7 @@
           <ion-col></ion-col>
         </ion-row>
       </ion-grid>
-      <onboarding :steps="onboardingHomeSteps" @start-onboarding="startOnboarding"></onboarding>
+      <onboarding v-if="started" :steps="onboardingHomeSteps" @start-onboarding="startOnboarding"></onboarding>
     </ion-content>
   </ion-page>
 </template>
@@ -61,7 +57,9 @@ import myCard from '../components/myCard.vue';
 import { onMounted, ref, Ref, watch } from 'vue';
 import { showLoading } from '../composables/loader';
 import { LatLngTuple } from 'leaflet'
-import { searchEstabliments, getMyFavs, testFCM } from '../APIService';
+import { testFCM } from '../APIService/utils';
+import { getMyFavs } from '../APIService/favs'
+import { searchEstabliments } from '../APIService/establiments';
 import { Establiment } from '../types';
 import { useFavStore } from '../store/favStore';
 import { storeToRefs } from 'pinia';
@@ -73,13 +71,18 @@ const latitude = ref(41.0408888)
 const longitude = ref(0.7479283)
 const radi = ref(25)
 
-
+const started = ref(false)
 const establiments: Ref<[Establiment] | null> = ref(null)
 const establimentsPreferits: Ref<[Establiment] | null> = ref(null)
 
 const onboardingHomeSteps = [{
   attachTo: {
     element: "#negocisSection"
+  },
+  options: {
+    popper: {
+      placement: 'bottom-start'
+    }
   },
   content: {
     title: "Establiments propers",
@@ -104,6 +107,7 @@ const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Fun
 
 const startOnboarding = (element: any) => {
   console.log('element :>> ', element);
+  
   onboardingElement.value = element
 }
 
@@ -115,25 +119,35 @@ watch(favStore.favorites, async (before, after) => {
 const fillEstabliments = async () => {
   const loader = await showLoading("Carregant establiments")
   loader.present()
-  searchEstabliments(latitude.value, longitude.value, radi.value).then((result) => {
+  searchEstabliments(latitude.value, longitude.value, radi.value, 0, 100, 0, 0, (err: any, data: any) => {
+    loader.dismiss()
+    if (err) return
+    establiments.value = data.establiments
+  })
+  /*searchEstabliments(latitude.value, longitude.value, radi.value).then((result) => {
     establiments.value = result.data.establiments
   }).catch((err) => {
 
   }).finally(() => {
     loader.dismiss(null, 'cancel')
-  });
+  });*/
 }
 
 const fillEstablimentsPreferits = useDebounceFn(async () => {
   const loader = await showLoading("Carregant establiments preferits")
   loader.present()
-  getMyFavs().then((result) => {
-    establimentsPreferits.value = result.data.preferits.establiments_fav
-  }).catch((err) => {
+  getMyFavs((err: any, data: any) => {
+    loader.dismiss()
+    if (err) return
+    establimentsPreferits.value = data.preferits.establiments_fav
+  })
+  // getMyFavs().then((result) => {
+  //   establimentsPreferits.value = result.data.preferits.establiments_fav
+  // }).catch((err) => {
 
-  }).finally(() => {
-    loader.dismiss(null, 'cancel')
-  });
+  // }).finally(() => {
+  //   loader.dismiss(null, 'cancel')
+  // });
 }, 250)
 
 const handleRefresh = (event: RefresherCustomEvent) => {
@@ -146,11 +160,16 @@ onMounted(async () => {
   console.log(establimentsPreferits.value)
   await fillEstabliments()
   await fillEstablimentsPreferits()
-  testFCM().then((res) => {
-    console.log('res :>> ', res);
-  }).catch((err) => {
-    console.log('err :>> ', err);
-  });
+  testFCM((err: any, data: any) => {
+    if (err) return
+    console.log('data :>> ', data);
+  })
+  started.value=true
+  // testFCM().then((res) => {
+  //   console.log('res :>> ', res);
+  // }).catch((err) => {
+  //   console.log('err :>> ', err);
+  // });
 
 })
 

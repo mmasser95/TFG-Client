@@ -1,44 +1,43 @@
 <template>
-    <ion-grid @click="showModalOferta" class="container ion-activatable">
+    <ion-card @click="showModalOferta" class="ion-activatable myCard">
         <ion-ripple-effect></ion-ripple-effect>
-        <ion-row>
-            <ion-col>
-                <ion-text class="card-title">{{ oferta.nom }}</ion-text>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col>
-                <ion-text color="tertiary">
-                    <p class="card-subtitle">
-                        {{ oferta.descripcio }}
-                    </p>
-                </ion-text>
-            </ion-col>
-        </ion-row>
-        <ion-row class="ion-align-items-center">
-            <ion-col></ion-col>
-            <ion-col size="2">{{ total }} €</ion-col>
-            <ion-col size="2" @click.stop="null">
-                <ion-input label="Quantitat" label-placement="floating" type="number" min="1"
+        <div class="img_fons">
+            <img v-if="img_fons" :src="img_fons" :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
+            <img v-else-if="oferta.url_imatge" :src="oferta.url_imatge"
+                :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
+            <img v-else
+                src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg"
+                :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
+        </div>
+        <ion-card-header>
+            <ion-card-title>
+                <ion-title>{{ oferta.nom }}</ion-title>
+            </ion-card-title>
+            <ion-card-subtitle class="ion-padding">{{ oferta.descripcio }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content class="container1">
+            <div class="container2">{{ total }}</div>
+            <div class="container2" @click.stop="null">
+                <ion-input id="quantitat" label="Quantitat" label-placement="floating" type="number" min="1"
                     v-model="quantitat"></ion-input>
-            </ion-col>
-            <ion-col size="3">
+            </div>
+            <div class="container2">
                 <ion-button color="secondary" @click.stop="alertComprar" expand="block">
                     <ion-icon :icon="bag"></ion-icon>
                 </ion-button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+            </div>
+        </ion-card-content>
+    </ion-card>
 </template>
 <script setup lang="ts">
-import { IonGrid,IonRippleEffect, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController} from '@ionic/vue';
+import { IonCard,IonCardContent,IonCardSubtitle,IonCardTitle, IonRippleEffect, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
 import viewOferta from '../views/Explorar/viewOferta.vue';
 import { bag } from 'ionicons/icons';
 import { ref, computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
 import { Oferta } from '../types'
-import { createComanda } from '../APIService'
+import { createComanda } from '../APIService/comandes'
 const router = useIonRouter()
+
 const alertComprar = async () => {
     let alert = await alertController.create({
         header: `Vols comprar x${quantitat.value} aquesta oferta per ${props.oferta.preu * quantitat.value}€?`,
@@ -58,13 +57,11 @@ const alertComprar = async () => {
 
 let props = defineProps<{
     oferta: Oferta,
-    establimentId: string
+    establimentId: string,
+    img_fons?:string
 }>()
 
 let quantitat = ref(1)
-let changeQuantitat=(event:any)=>{
-    quantitat.value=event.detail.value
-}
 
 let total = computed(() => props.oferta.preu * quantitat.value)
 const showModalOferta = async () => {
@@ -83,10 +80,11 @@ const showModalOferta = async () => {
 const ferCompra = () => {
     createComanda({
         establimentId: props.establimentId,
-        ofertaId: props.oferta._id,
+        oferta: props.oferta,
         quantitat: quantitat.value,
         total: props.oferta.preu * quantitat.value
-    }).then(async (res) => {
+    }, async (err: any, data: any) => {
+        if (err) return
         let alert = await alertController.create({
             header: "Compra feta",
             message: "S'ha realitzat correctament la compra",
@@ -100,41 +98,45 @@ const ferCompra = () => {
             ]
         })
         alert.present()
-    }).catch((err) => {
-        console.log('err :>> ', err);
-    });
+    })
 }
 
 </script>
 <style scoped>
-.card-title {
-    font-size: large;
+.container1 {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 40px;
 }
 
-.card-subtitle {
-    font-size: small;
+/*ion-button {
+    --background: linear-gradient(to right, #70995c, #a5b061, #dfc36f, #ffd489);
+}*/
+#quantitat {
+    max-width: 75px;
 }
 
-.text-button {
-    font-size: small;
-}
-
-.container {
-    /*background-image: linear-gradient(to left bottom, #70995c, #3e9466, #008e78);*/
-    border-radius: 10px
-}
-
-ion-button {
-    /*--background: linear-gradient(to right, #70995c, #a5b061, #dfc36f, #ffd489);*/
-}
-
-ion-picker{
-    max-height:100px;
+ion-picker {
+    max-height: 100px;
     --highlight-background: var(--ion-color-dark);
     --highlight-border-radius: 50px;
-  
+
 }
-ion-picker-column{
+
+ion-picker-column {
     max-height: 100px;
+}
+
+.img_fons {
+    height: 100px;
+    overflow: hidden;
+}
+
+.myCard {
+    position: relative;
+    border-radius: 10px;
+    margin: 10px
 }
 </style>

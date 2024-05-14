@@ -52,4 +52,7 @@ emit('startOnboarding', { start, goToStep, finish })
     display: flex;
 
 }
+ion-card{
+    max-width:150px;
+}
 </style>

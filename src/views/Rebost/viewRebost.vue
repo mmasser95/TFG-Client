@@ -4,10 +4,10 @@
             <ion-toolbar>
                 <ion-buttons slot="start">
                     <ion-button @click="$router.go(-1)">
-                        <ion-icon :icon="arrowBack"></ion-icon>Endarrere
+                        <ion-icon :icon="arrowBack" slot="icon-only"></ion-icon>
                     </ion-button>
                 </ion-buttons>
-                <ion-title class="ion-text-center"></ion-title>
+                <ion-title class="ion-text-center">Inventari</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
@@ -15,35 +15,23 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col>
-                        <ion-title class="ion-text-center">Inventari {{ rebostId }}</ion-title>
+
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeSm="10" sizeMd="8" sizeLg="6">
-                        <ion-list v-if="rebostId">
+                        <div class="element-container" v-if="rebostId">
                             <div v-for="element in elements" :key="element._id">
                                 <cardElement :rebostId="rebostId" :element="element" @deleteElement="fillRebost"
                                     @updateElement="showUpdateModal"></cardElement>
                             </div>
-                        </ion-list>
+                        </div>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
-                <ion-row>
-                    <ion-col>
-                        <ion-list>
-                            <ion-item v-for="(photo, pk) in photos">
-                                <ion-thumbnail><img :src="photo.webviewPath" /></ion-thumbnail>
-                                <ion-button @click="readImage(photo.webviewPath)">Read</ion-button>
-                            </ion-item>
-                            <ion-item v-if="lastPhoto">
-                                <ion-thumbnail><img :src="lastPhoto.webviewPath" /></ion-thumbnail>
-                            </ion-item>
-                        </ion-list>
-                    </ion-col>
-                </ion-row>
+
             </ion-grid>
 
             <ion-fab slot="fixed" vertical="bottom" horitzontal="center">
@@ -89,7 +77,8 @@ import {
     modalController
 } from '@ionic/vue';
 import { arrowBack } from 'ionicons/icons'
-import { getAllElements, createElement, putElement, getAlimentsByNoms } from '../../APIService/';
+import { getAllElements, createElement, putElement } from '../../APIService/elements';
+import { getAlimentsByNoms } from '../../APIService/aliments';
 import { ref, Ref, reactive, computed, onMounted, defineProps, watch } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { add, camera, pencil } from 'ionicons/icons';
@@ -134,12 +123,12 @@ const readImage = async (src: any) => {
     const loader = await showLoading("Llegint imatge")
     loader.present()
     let result = ""
-    try{
+    try {
         const worker = await createWorker('spa');
         const ret = await worker.recognize(src)
         result = ret.data.text
         await worker.terminate()
-    }catch(err){
+    } catch (err) {
         console.log('err :>> ', err);
     } finally {
         loader.dismiss()
@@ -165,26 +154,24 @@ const fillRebost = async () => {
     const loader = await showLoading("Carregant els elements del rebost")
     loader.present()
     if (props.rebostId) {
-        getAllElements(props.rebostId).then((res) => {
-            elements.value = res.data.elements
-        }).catch((err) => {
-
+        getAllElements(props.rebostId, (err: any, data: any) => {
+            if (err) return
+            elements.value = data.elements
         });
     }
     loader.dismiss(null, 'cancel')
 }
 watch(lastPhoto, async (v: any, oV: any) => {
     let textOfPhoto = await readImage(v.webviewPath)
-    //let textOfPhoto = "Tiquet prova Rabaco 1 Lechuga Achijoria Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique earum sapiente voluptatibus praesentium molestias aut accusamus dolore suscipit esse optio impedit, quia, reprehenderit eum dolores velit, cumque vitae iusto pariatur! Lima Limona zabahoria Togurt Lehe"
+
     if (textOfPhoto) {
         let alimentsEscanejats = searchAliment(textOfPhoto, 0.6)
         let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.map((el) => el.val).join(' ')}`)
         alert.present()
-        getAlimentsByNoms(alimentsEscanejats?.map((el) => el.val)).then((res) => {
-            showChooseAlimentModal(res.data.aliments)
-        }).catch((err) => {
-            console.log('err :>> ', err);
-        });
+        getAlimentsByNoms(alimentsEscanejats?.map((el) => el.val), (err: any, data: any) => {
+            if (err) return
+            showChooseAlimentModal(data.aliments)
+        })
     }
 }, { deep: true })
 
@@ -201,12 +188,11 @@ const openModalCreate = async () => {
 
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
-        createElement(props.rebostId, data).then((res) => {
+        createElement(props.rebostId, data, (err: any, data: any) => {
+            if (err) return
             presentAlert('Element creat correctament')
             fillRebost()
-        }).catch((err) => {
-            presentAlert(`Error ${err}`)
-        });
+        })
     }
 }
 
@@ -223,12 +209,11 @@ const showUpdateModal = async (event: { element: Element, rebostId: string }) =>
     modal.present();
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
-        putElement(event.rebostId, event.element._id, data).then(async (res) => {
+        putElement(event.rebostId, event.element._id, data, (err: any, data: any) => {
+            if (err) return
             presentAlert('Element editat correctament')
             fillRebost()
-        }).catch((err) => {
-            presentAlert(`Error ${err}`)
-        });
+        })
     }
 
 }
@@ -260,5 +245,11 @@ ion-list {
 
 cardElement {
     flex-grow: 1
+}
+
+.element-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
 }
 </style>

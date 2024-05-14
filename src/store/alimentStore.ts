@@ -2,19 +2,16 @@ import { Ref, computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import { Aliment } from '@/types';
 
-import { getAllAliments } from '@/APIService';
+import { getAllAliments } from '@/APIService/aliments';
 
 export const useAlimentStore = defineStore('Aliments', () => {
   const aliments: Ref<Aliment[] | null> = ref(null);
 
   const setAliments = () => {
-    getAllAliments()
-      .then((res) => {
-        aliments.value = res.data.aliments;
-      })
-      .catch((err) => {
-        console.log('err :>> ', err);
-      });
+    getAllAliments((err:any,data:any)=>{
+      if(err)return
+      aliments.value = data.aliments;
+    })
   };
 
   const getAllNoms = computed(() => {

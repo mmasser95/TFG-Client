@@ -1,7 +1,8 @@
+import { toastController } from '@ionic/vue';
 import { ref, reactive, Ref, computed } from 'vue';
 import { showAlert } from '@/composables/loader';
 import { PushNotifications } from '@capacitor/push-notifications';
-import { sendFirebaseToken } from '@/APIService';
+import { sendFirebaseToken } from '@/APIService/utils';
 import { useFirebaseStore } from '../store/firebaseStore';
 import { storeToRefs } from 'pinia';
 
@@ -11,14 +12,10 @@ export const useCapacitorNotifications = () => {
     await PushNotifications.addListener('registration', async (token) => {
       let alert = await showAlert(`Token: ${token.value}`);
       alert.present();
-      sendFirebaseToken(token.value)
-        .then((res) => {
-          myToken.value = token.value;
-        })
-        .catch(async (err) => {
-          let alert = await showAlert(`Error: ${err}`);
-          alert.present();
-        });
+      sendFirebaseToken(token.value,(err:any,data:any)=>{
+        if(err)return
+        myToken.value = token.value;
+      })
     });
 
     await PushNotifications.addListener('registrationError', async (err) => {
@@ -29,11 +26,12 @@ export const useCapacitorNotifications = () => {
     await PushNotifications.addListener(
       'pushNotificationReceived',
       async (notification) => {
-        console.log('Push notification received: ', notification);
-        let alert = await showAlert(
-          `Push notification received: ${notification.title}`
-        );
-        alert.present();
+        let toast = await toastController.create({
+          message: notification.title + ' ' + notification.body,
+          duration: 5000,
+          position: 'bottom',
+        });
+        toast.present();
       }
     );
 
@@ -50,7 +48,6 @@ export const useCapacitorNotifications = () => {
   };
 
   const registerNotifications = async () => {
-    try {
       let permStatus = await PushNotifications.checkPermissions();
 
       if (permStatus.receive === 'prompt') {
@@ -60,18 +57,10 @@ export const useCapacitorNotifications = () => {
       if (permStatus.receive !== 'granted') {
         throw new Error('User denied permissions!');
       }
-      let alert = await showAlert("Afegint listeners");
-      alert.present();
-      await addListeners()
-      
-      alert = await showAlert("S'esta registrant");
-      alert.present();
+      await addListeners();
 
       await PushNotifications.register();
-    } catch (err: any) {
-      let alert = await showAlert(`Error: ${err.message}`);
-      alert.present();
-    }
+    
   };
 
   const getDeliveredNotifications = computed(async () => {

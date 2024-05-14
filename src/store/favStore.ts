@@ -1,6 +1,6 @@
 import { ref, Ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import { createFav, deleteFav, getFavs } from '@/APIService';
+import { createFav, deleteFav, getFavs } from '@/APIService/favs';
 
 export const useFavStore = defineStore('fav', () => {
   const favorites: Ref<string[]> = ref([]);
@@ -10,23 +10,17 @@ export const useFavStore = defineStore('fav', () => {
   };
 
   const setLoginFavs = () => {
-    getFavs()
-      .then((res) => {
-        if (res.data.preferits) setFavs(res.data.preferits);
-      })
-      .catch((err) => {
-        console.log('err :>> ', err);
-      });
+    getFavs((err: any, data: any) => {
+      if (err) return;
+      if (data.preferits) setFavs(data.preferits);
+    });
   };
 
   const addFav = (fav: string) => {
-    createFav(fav)
-      .then((res) => {
-        favorites.value.push(fav);
-      })
-      .catch((err) => {
-        console.log('err :>> ', err);
-      });
+    createFav(fav, (err: any, data: any) => {
+      if (err) return;
+      favorites.value.push(fav);
+    });
   };
 
   const isFav = (fav: string) => {
@@ -34,14 +28,11 @@ export const useFavStore = defineStore('fav', () => {
   };
 
   const removeFav = (fav: string) => {
-    deleteFav(fav)
-      .then((res) => {
-        let indexEliminar = favorites.value.indexOf(fav);
-        favorites.value.splice(indexEliminar, 1);
-      })
-      .catch((err) => {
-        console.log('err :>> ', err);
-      });
+    deleteFav(fav, (err: any, data: any) => {
+      if (err) return;
+      let indexEliminar = favorites.value.indexOf(fav);
+      favorites.value.splice(indexEliminar, 1);
+    });
   };
 
   return {

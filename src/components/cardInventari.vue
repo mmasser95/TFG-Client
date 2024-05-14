@@ -23,10 +23,10 @@
     </ion-card>
 </template>
 <script setup lang="ts">
-import { IonText, IonCard, IonIcon, IonCardHeader, IonCardTitle, IonCardContent, IonButton, alertController, IonCol, IonRow, IonGrid, IonCardSubtitle,IonRippleEffect } from '@ionic/vue'
+import { IonText, IonCard, IonIcon, IonCardHeader, IonCardTitle, IonCardContent, IonButton, alertController, IonCol, IonRow, IonGrid, IonCardSubtitle, IonRippleEffect } from '@ionic/vue'
 import { boat, pencilSharp, pencil, trashBinSharp } from 'ionicons/icons'
 import { defineProps } from 'vue';
-import { deleteRebost } from '@/APIService';
+import { deleteRebost } from '../APIService/rebosts';
 import { useRouter } from 'vue-router';
 const router = useRouter()
 const emit = defineEmits(['updateRebost', 'deleteRebost'])
@@ -83,14 +83,11 @@ const updateInventari = () => {
 
 const borrarInventari = () => {
     let inventariId = props.idd
-    deleteRebost(inventariId)
-        .then((result) => {
-            mostrarAlerta(`L'inventari s'ha esborrat correctament`)
-            emit('deleteRebost', null)
-        })
-        .catch((err) => {
-            mostrarAlerta(`Hi hagut un error esborrant l'inventari amb id ${inventariId}`)
-        });
+    deleteRebost(inventariId, (err: any, data: any) => {
+        if (err) return
+        mostrarAlerta(`L'inventari s'ha esborrat correctament`)
+        emit('deleteRebost', null)
+    })
 }
 </script>
 <style scoped>
@@ -98,8 +95,8 @@ ion-card {
     height: 130px;
     position: relative;
     /*background-image: linear-gradient(to right top, #5ec268, #57a25d, #508453, #476648, #3d4a3d);*/
-   /* background-image: linear-gradient(to left top, #ffe7be, #dcbe8d, #b9965f, #977032, #744c00);*/
-    border-radius:10px;
+    /* background-image: linear-gradient(to left top, #ffe7be, #dcbe8d, #b9965f, #977032, #744c00);*/
+    border-radius: 10px;
 }
 
 

@@ -53,6 +53,11 @@
             <div class="googleContainer">
               <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
             </div>
+            <div class="googleContainer">
+              <ion-button :disabled="!isReady" @click="() => loginOneTap()">
+                Trigger One Tap Login Manually
+              </ion-button>
+            </div>
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
@@ -80,8 +85,8 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonLabel
 import { useLoginStore } from '../store/loginStore';
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, computed } from 'vue';
-import { doLogin, dosignIn, registreEstabliment, sendFirebaseToken, googleLogin } from '../APIService/index';
-
+import { doLogin, dosignIn, sendFirebaseToken, googleLogin } from '../APIService/utils';
+import { registreEstabliment } from '../APIService/establiments';
 import Registre from './Registre.vue'
 import RegistreEstabliment from './RegistreEstabliment.vue';
 
@@ -99,7 +104,7 @@ import { useFavStore } from '../store/favStore'
 import { useAlimentStore } from '../store/alimentStore'
 import { useFirebaseStore } from '../store/firebaseStore'
 import {
-  GoogleSignInButton,
+  GoogleSignInButton, useOneTap,
   type CredentialResponse,
 } from "vue3-google-signin";
 
@@ -157,29 +162,20 @@ const login = async () => {
   if (valid) {
     const loader = await showLoading("Iniciant sessió")
     loader.present()
-    doLogin(state.correu, state.contrasenya).then(res => {
-      if (res.status == 200) {
-        setToken(res.data.token);
-        localStorage.setItem('token', res.data.token)
-        setUserId(res.data.userId)
-        setUserType(res.data.userType)
-        setAliments()
-        loginError.value = '';
-        if (res.data.userType == 'client') {
-          setLoginFavs()
-          router.push('/tabs/tab1');
-        }
-        else
-          router.push('/tabs/tab5')
-      } else {
-        loginError.value = res.data.message
-        presentAlert(res.data.message)
+    doLogin(state.correu, state.contrasenya, (err: any, data: any) => {
+      loader.dismiss()
+      if (err) return true
+      setToken(data.token);
+      localStorage.setItem('token', data.token)
+      setUserId(data.userId)
+      setUserType(data.userType)
+      setAliments()
+      if (data.userType == 'client') {
+        setLoginFavs()
+        router.push('/tabs/tab1');
       }
-    }).catch((err) => {
-      loginError.value = err.response.data.message
-      presentAlert(err.response.data.message)
-    }).finally(() => {
-      loader.dismiss(null, 'cancel')
+      else
+        router.push('/tabs/tab5')
     })
   }
 }
@@ -197,14 +193,11 @@ const operModalRegistre = async () => {
     let myForm = data
     const loader = await showLoading('Enviant informació de registre')
     loader.present()
-    dosignIn(myForm)
-      .then((res) => {
-        presentAlert("T'has registrat al sistema correctament")
-      }).catch((err) => {
-        presentAlert(err);
-      }).finally(() => {
-        loader.dismiss(null, 'cancel')
-      });
+    dosignIn(myForm, (err: any, data: any) => {
+      loader.dismiss(null, 'cancel')
+      if (err) return
+      presentAlert("T'has registrat al sistema correctament")
+    })
   }
 
 }
@@ -220,34 +213,30 @@ const operModalRegistreEstabliment = async () => {
   if (role == 'confirm') {
     const loader = await showLoading("Enviant informació de registre de l'establiment")
     loader.present()
-    registreEstabliment(data)
-      .then((res) => {
-        presentAlert("T'has registrat al sistema correctament")
-      }).catch((err) => {
-        presentAlert(err);
-      }).finally(() => {
-        loader.dismiss(null, 'cancel')
-      });
+    registreEstabliment(data, (err: any, data: any) => {
+      loader.dismiss()
+      if (err) return
+      presentAlert("T'has registrat al sistema correctament")
+    })
   }
 
 }
 
 const handleLoginSuccess = (response: CredentialResponse) => {
   const { credential } = response;
-  googleLogin(credential).then((res) => {
-    setToken(res.data.token);
-    localStorage.setItem('token', res.data.token)
-    setUserId(res.data.userId)
-    setUserType(res.data.userType)
+  googleLogin(credential, (err: any, data: any) => {
+    if (err) return true
+    setToken(data.token);
+    localStorage.setItem('token', data.token)
+    setUserId(data.userId)
+    setUserType(data.userType)
     setAliments()
     loginError.value = '';
-    if (res.data.userType == 'client') {
+    if (data.userType == 'client') {
       setLoginFavs()
       router.push('/tabs/tab1');
     }
-  }).catch((err) => {
-    console.log('err :>> ', err.message);
-  });
+  })
 };
 
 // handle an error event
@@ -255,13 +244,18 @@ const handleLoginError = () => {
   console.error("Login failed");
 };
 
+const { isReady, login: loginOneTap } = useOneTap({
+  disableAutomaticPrompt: false,
+  onSuccess: handleLoginSuccess,
+  onError: handleLoginError
+})
 
 </script>
 
 <style scoped>
-.googleContainer{
-  display:flex;
-  flex-flow:row wrap;
-  justify-content:center;
+.googleContainer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
 }
 </style>

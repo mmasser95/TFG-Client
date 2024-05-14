@@ -56,7 +56,7 @@ import { storeToRefs } from 'pinia'
 import { add, informationCircle } from 'ionicons/icons'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import cardInventari from '../components/cardInventari.vue'
-import { getRebosts, crearRebost, updateRebost } from '../APIService'
+import { getRebosts, crearRebost, updateRebost } from '../APIService/rebosts'
 import 'swiper/css'
 import newRebost from './Rebost/newRebost.vue';
 import { showLoading } from '../composables/loader';
@@ -80,11 +80,11 @@ const startOnboarding = (element: any) => {
 const fillRebosts = async () => {
   let loader = await showLoading("Carregant rebosts")
   loader.present()
-  getRebosts().then((res) => {
-    rebosts.value = res.data.rebosts;
-  }).catch((err) => {
-    console.log(err.response.data.message);
-  }).finally(() => loader.dismiss(null, 'cancel'))
+  getRebosts((err: any, data: any) => {
+    loader.dismiss()
+    if (err) return
+    rebosts.value = data.rebosts;
+  })
 }
 
 const openModalUpdate = async (rebostId: any) => {
@@ -100,13 +100,11 @@ const openModalUpdate = async (rebostId: any) => {
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
     console.log(data)
-    updateRebost(rebostId, { nom: data })
-      .then((result) => {
-        fillRebosts()
-      })
-      .catch((err) => {
-        console.log(err)
-      });
+    updateRebost(rebostId, { nom: data }, (err: any, data: any) => {
+      if (err) return
+      fillRebosts()
+    })
+
   }
 }
 
@@ -120,13 +118,10 @@ const openModalCreate = async () => {
 
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
-    crearRebost({ nom: data })
-      .then((res) => {
-        fillRebosts();
-      })
-      .catch((err) => {
-        console.log(err)
-      });
+    crearRebost({ nom: data }, (err, data) => {
+      if (err) return
+      fillRebosts();
+    })
   }
 }
 
@@ -146,9 +141,9 @@ onMounted(async () => {
       title: "Els teus rebosts",
       description: "En aquest apartat trobaràs els teus rebosts"
     },
-    options:{
-      popper:{
-        placement:'center'
+    options: {
+      popper: {
+        placement: 'center'
       }
     }
   }, {
@@ -166,7 +161,6 @@ onMounted(async () => {
     }
   }]
 })
-
 
 
 </script>

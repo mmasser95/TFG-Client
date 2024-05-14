@@ -32,9 +32,10 @@
 </template>
 <script setup lang="ts">
 import { IonTextarea, IonLabel, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonItem } from '@ionic/vue';
+
 import { pencil } from 'ionicons/icons';
 import { Ref, ref, onMounted } from 'vue';
-import { getAvaluacio, createAvaluacio } from '../APIService'
+import { getAvaluacio, createAvaluacio } from '../APIService/avaluacions'
 import { showAlert } from '../composables/loader';
 
 const inactiveColorStars = () => {
@@ -56,25 +57,23 @@ const comentariState: Ref<{
 })
 
 const confirm = () => {
-    createAvaluacio(props.comandaId, { ...comentariState.value }).then(async (res) => {
+    createAvaluacio(props.comandaId, { ...comentariState.value }, async (err, data) => {
+        if (err) return
         let alert = await showAlert("S'ha guardat el vostre comentari")
         alert.present()
-    }).catch((err) => {
-        console.log('err :>> ', err);
-    });
+    })
 }
 
 onMounted(() => {
-    getAvaluacio(props.comandaId).then((res) => {
-        if (res.data.avaluacio) {
-            comentariState.value.quantitat = res.data.avaluacio.avaluacio.quantitat
-            comentariState.value.qualitat = res.data.avaluacio.avaluacio.qualitat
-            comentariState.value.comentari = res.data.avaluacio.avaluacio.comentari
+    getAvaluacio(props.comandaId, (err: any, data: any) => {
+        if (err) return
+        console.log(data)
+        if (data.avaluacio.avaluacio) {
+            comentariState.value.quantitat = data.avaluacio.avaluacio.quantitat
+            comentariState.value.qualitat = data.avaluacio.avaluacio.qualitat
+            comentariState.value.comentari = data.avaluacio.avaluacio.comentari
         }
-
-    }).catch((err) => {
-
-    });
+    })
 })
 
 </script>

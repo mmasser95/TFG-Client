@@ -1,9 +1,10 @@
 import { ref, reactive, Ref, computed } from 'vue';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import {sendFirebaseToken} from '@/APIService'
+import {sendFirebaseToken} from '@/APIService/utils'
 import { useFirebaseStore } from '@/store/firebaseStore';
 import { storeToRefs } from 'pinia';
+import { toastController } from '@ionic/vue';
 
 export const useFirebase = () => {
   const {myToken}=storeToRefs(useFirebaseStore())
@@ -27,11 +28,9 @@ export const useFirebase = () => {
         .then((currentToken) => {
           if (currentToken) {
             myToken.value=currentToken
-            sendFirebaseToken(currentToken).then((res) => {
-              console.log('res.data :>> ', res.data);
-            }).catch((err) => {
-              console.log('err :>> ', err);
-            });
+            sendFirebaseToken(currentToken,(err:any)=>{
+              return
+            })
           } else {
             // Show permission request UI
             console.log(
@@ -45,8 +44,14 @@ export const useFirebase = () => {
           // ...
         });
 
-      onMessage(messaging, (payload) => {
-        console.log('Message received. ', payload);
+      onMessage(messaging,async (payload) => {
+        console.log('payload :>> ', payload);
+        let toast=await toastController.create({
+          message:payload.notification?.title+" "+payload.notification?.body,
+          duration:5000,
+          position:'bottom'
+        })
+        toast.present()
         // ...
       }); /*
     onBackgroundMessage(messaging, (payload) => {

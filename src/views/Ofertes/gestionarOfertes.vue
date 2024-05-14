@@ -12,24 +12,36 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-                        <ion-card v-for="(oferta, k) in ofertes" :key="k">
+                        <ion-card class="ion-activatable myCard" v-for="(oferta, k) in ofertes" :key="k">
+                            <ion-ripple-effect></ion-ripple-effect>
+                            <div class="img_fons">
+                                <img v-if="oferta.url_imatge" :src="oferta.url_imatge" :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
+                                <img v-else src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg" :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
+                            </div>
                             <ion-card-header>
                                 <ion-card-title>{{ oferta.nom }}</ion-card-title>
+                                <ion-card-subtitle>{{ oferta.descripcio }}</ion-card-subtitle>
                             </ion-card-header>
-                            <ion-card-content>
-                                {{ oferta.descripcio }}
+                            <ion-card-content class="container">
+                                <div class="container-1">
+                                    <ion-text></ion-text>
+                                    <ion-text>{{ oferta.quantitatDisponible }} lots </ion-text>
+                                    <ion-text>{{ oferta.preu }}€</ion-text>
+                                    <ion-text>{{ oferta.categoria }}</ion-text>
+                                </div>
+                                <div class="container-2">
+                                    <ion-button expand="block" color="secondary"
+                                        @click="openModalUpdate(oferta._id)">
+                                        <ion-icon :icon="pencil" slot="icon-only"></ion-icon>
+                                        
+                                    </ion-button>
+                                        <ion-button expand="block" color="danger"
+                                            @click="eliminarOferta(oferta._id)">
+                                            <ion-icon :icon="trash" slot="icon-only"></ion-icon>
+                                        </ion-button>
+                                </div>
+                                
                             </ion-card-content>
-                            <ion-grid>
-                                <ion-row>
-                                    <ion-col></ion-col>
-                                    <ion-col size="3" >
-                                        <ion-button expand="block" color="secondary" @click="openModalUpdate(oferta._id)">Editar</ion-button>
-                                    </ion-col>
-                                    <ion-col size="3" >
-                                        <ion-button expand="block"  color="danger" @click="eliminarOferta(oferta._id)">Eliminar</ion-button>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
                         </ion-card>
                     </ion-col>
                     <ion-col></ion-col>
@@ -54,26 +66,29 @@ import {
     IonItem,
     IonIcon,
     IonGrid,
+    IonText,
     IonCol,
     IonRow,
     IonCard,
+    IonCardSubtitle,
     IonCardContent,
     IonCardHeader,
     IonCardTitle,
     modalController,
     alertController,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    IonRippleEffect
 } from '@ionic/vue'
 
-import { add } from 'ionicons/icons'
+import { add,pencil,trash } from 'ionicons/icons'
 
-import { crearOferta, deleteOferta, getOfertes, updateOferta } from '../../APIService';
+import { crearOferta, deleteOferta, getOfertes, updateOferta } from '../../APIService/ofertes';
 import { Ref, ref } from 'vue';
 import newOferta from './newOferta.vue';
 import { useLoginStore } from '../../store/loginStore';
 import { storeToRefs } from 'pinia';
-
+import { Oferta } from '../../types'
 const store = useLoginStore()
 const { userId } = storeToRefs(store)
 
@@ -86,41 +101,28 @@ const presentAlert = async (prompt: string) => {
     await alert.present()
 }
 
-interface Oferta {
-    _id: string,
-    nom: string
-    descripcio: string,
-    preu: string,
-    divisa: string
-}
+
 
 const ofertes: Ref<Oferta[] | undefined> = ref([]);
 
 const fillOfertes = () => {
-    getOfertes()
-        .then((res) => {
-            ofertes.value = res.data.ofertes;
-        }).catch((err) => {
-            console.log(err.response.data.message);
-        });
+    getOfertes((err: any, data: any) => {
+        if (err) return
+        ofertes.value = data.ofertes;
+    })
 }
-
 const openModalCreate = async () => {
     const modal = await modalController.create({
         component: newOferta,
         componentProps: { update: '' }
     })
-
     modal.present();
-
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
-        crearOferta(data)
-            .then((res) => {
-                fillOfertes();
-            }).catch((err) => {
-                console.log(err)
-            });
+        crearOferta(data, (err: any, data: any) => {
+            if (err) return
+            fillOfertes()
+        })
     }
 }
 
@@ -129,29 +131,53 @@ const openModalUpdate = async (ofertaId: any) => {
         component: newOferta,
         componentProps: { update: ofertaId }
     })
-
     modal.present();
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
-        updateOferta(ofertaId, data)
-            .then((res) => {
-                fillOfertes()
-            }).catch((err) => {
-                presentAlert(err)
-            });
+        updateOferta(ofertaId, data, (err: any, data: any) => {
+            if (err) return
+            fillOfertes()
+        })
     }
 }
 
 const eliminarOferta = (ofertaId: any) => {
-    deleteOferta(ofertaId)
-        .then((result) => {
-            fillOfertes()
-            presentAlert("L'oferta s'ha eliminat correctament.")
-        }).catch((err) => {
-            presentAlert(err)
-        });
+    deleteOferta(ofertaId, (err: any, data: any) => {
+        if (err) return
+        fillOfertes()
+    })
 }
 
 fillOfertes();
 </script>
-<style></style>
+<style scoped>
+.container{
+    display:flex;
+    flex-flow:row wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap:20px
+}
+.container-1{
+    display:flex;
+    justify-content: flex-start;
+    flex-flow:row wrap;
+    gap:20px;
+}
+
+.container-2{
+    display:flex;
+    flex-flow:row wrap;
+    justify-content: flex-end;
+    gap:20px
+}
+.img_fons{
+    height:100px;
+    overflow:hidden;
+}
+.myCard{
+    position:relative;
+    border-radius:10px;
+    margin:10px
+}
+</style>

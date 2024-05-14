@@ -66,11 +66,13 @@
 import { IonLabel, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonItem, IonIcon, IonToolbar, IonButtons, IonButton, IonTitle, IonInput, modalController, IonSelect, IonSelectOption } from '@ionic/vue';
 import { Ref, ref, reactive, defineProps, onMounted, } from 'vue';
 import { parseISO } from 'date-fns'
-import { getArticleCategories, getAllAlimentsByTipus } from '@/APIService';
+import { getArticleCategories, getAllAlimentsByTipus } from '../../APIService/aliments';
 
 import cercadorAliments from '../../components/cercadorAliments.vue';
 
 import { Aliment, Element } from '../../types';
+import { numeric, required,minValue } from '@vuelidate/validators';
+import useVuelidate from '@vuelidate/core';
 
 const openCercadorAliments = async () => {
     const modal = await modalController.create({
@@ -103,6 +105,17 @@ const info = reactive({
     q_unitat: ''
 })
 
+const rules={
+    categoria:{required},
+    aliment:{required},
+    data_compra:{required},
+    data_caducitat:{required},
+    quantitat:{required,numeric,minValue:minValue(1)},
+    q_unitat:{required}
+}
+
+const v$=useVuelidate(rules,info)
+
 const aliments: Ref<Aliment[] | undefined> = ref([]);
 
 const getNomOfIdAliment = (alimentId:any) => {
@@ -117,20 +130,17 @@ const categories = ref([])
 const unitats_quantitat = ref(['kg', 'g', 'l', 'unitats'])
 
 const getCategories = () => {
-    getArticleCategories()
-        .then((result) => {
-            categories.value = result.data.tipus
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    getArticleCategories((err:any,data:any)=>{
+        if(err)return
+        categories.value = data.tipus
+    })
+        
 }
 
 const fillAliments = () => {
-    getAllAlimentsByTipus(info.categoria).then((result) => {
-        aliments.value = result.data.aliments
-    }).catch((err) => {
-        console.log('err :>> ', err);
+    getAllAlimentsByTipus(info.categoria,(err:any,data:any)=>{
+        if(err)return
+        aliments.value = data.aliments
     });
 }
 

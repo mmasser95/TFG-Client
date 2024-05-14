@@ -48,18 +48,21 @@
                             <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.required.$invalid"
                                 message="Aquest camp és obligatori" />
                             <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.minLength.$invalid"
-                                message="Aquest ha de tenir minim 20 caràcters" />
+                                message="Aquest ha de tenir minim 10 caràcters" />
                         </ion-col>
                     </ion-row>
                     <ion-row>
                         <ion-col size="12" sizeXl="6">
                             <ion-item>
                                 <ion-input type="number" label-Placement="floating" label="Quantitat disponible"
-                                    v-model="state.quantitatDisponible" @ion-blur="v$.quantitatDisponible.$touch"></ion-input>
+                                    v-model="state.quantitatDisponible"
+                                    @ion-blur="v$.quantitatDisponible.$touch"></ion-input>
                             </ion-item>
-                            <ErrorMessage v-if="v$.quantitatDisponible.$error && v$.quantitatDisponible.required.$invalid"
+                            <ErrorMessage
+                                v-if="v$.quantitatDisponible.$error && v$.quantitatDisponible.required.$invalid"
                                 message="Aquest camp és obligatori" />
-                            <ErrorMessage v-if="v$.quantitatDisponible.$error && v$.quantitatDisponible.minValue.$invalid"
+                            <ErrorMessage
+                                v-if="v$.quantitatDisponible.$error && v$.quantitatDisponible.minValue.$invalid"
                                 message="Aquest camp ha de ser com mínim 1 " />
                         </ion-col>
                         <ion-col size="12" sizeXl="6">
@@ -77,7 +80,8 @@
                         </ion-col>
                         <ion-col size="12" sizeXl="6">
                             <ion-item>
-                                <ion-select v-model="state.categoria" @ion-blur="v$.categoria.$touch" labelPlacement="floating" label="Tipus">
+                                <ion-select v-model="state.categoria" @ion-blur="v$.categoria.$touch"
+                                    labelPlacement="floating" label="Tipus">
                                     <ion-select-option>Fruiteria</ion-select-option>
                                     <ion-select-option>Supermercat</ion-select-option>
                                     <ion-select-option>Restaurant</ion-select-option>
@@ -102,7 +106,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, minValue, numeric } from '@vuelidate/validators'
 import { modalController } from '@ionic/core'
 
-import { getOferta } from '../../APIService'
+import { getOferta } from '../../APIService/ofertes'
 import ErrorMessage from '../../components/ErrorMessage.vue'
 
 const props = defineProps({
@@ -120,7 +124,7 @@ const state = reactive({
 
 const rules = {
     nom: { required, minLength: minLength(3) },
-    descripcio: { required, minLength: minLength(20) },
+    descripcio: { required, minLength: minLength(10) },
     preu: { required, minValue: minValue(1), },
     quantitatDisponible: { required, minValue: minValue(1), },
     categoria: { required }
@@ -139,17 +143,15 @@ const confirm = async () => {
 onMounted(() => {
     if (props.update != undefined) {
         if (props.update !== '') {
-            getOferta(props.update)
-                .then((res) => {
-                    state.nom=res.data.oferta.nom
-                    state.descripcio = res.data.oferta.descripcio;
-                    state.preu = res.data.oferta.preu;
-                    state.quantitatDisponible=res.data.oferta.quantitatDisponible
-                    state.active=res.data.oferta.active
-                    state.categoria=res.data.oferta.categoria
-                }).catch((err) => {
-                    console.log(err);
-                });
+            getOferta(props.update, (err: any, data: any) => {
+                if (err) return
+                state.nom = data.oferta.nom
+                state.descripcio = data.oferta.descripcio;
+                state.preu = data.oferta.preu;
+                state.quantitatDisponible = data.oferta.quantitatDisponible
+                state.active = data.oferta.active
+                state.categoria = data.oferta.categoria
+            })
         }
     }
 })

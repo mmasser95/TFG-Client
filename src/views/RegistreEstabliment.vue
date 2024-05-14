@@ -226,7 +226,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { minLength, required, email, sameAs, minValue, numeric, maxLength } from '@vuelidate/validators';
 import { reactive, computed } from 'vue';
 import ErrorMessage from '../components/ErrorMessage.vue';
-import { getCoordinates } from '../APIService';
+import { getCoordinates } from '../APIService/utils';
 import { parse } from 'date-fns/parse'
 const presentAlert = async (prompt: string) => {
     const alert = await alertController.create({

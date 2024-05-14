@@ -1,7 +1,8 @@
 <template>
   <ion-page>
-    <ion-tabs>
-      <ion-router-outlet :key="$route.fullPath" />
+    <ion-tabs >
+      <ion-router-outlet  :key="$route.fullPath" />
+      
       <ion-tab-bar slot="bottom">
         <ion-tab-button v-if="userType == 'client'" v-for="(tab, k) in tabsUser" :tab="tab.tabName" :href="tab.hrf"
           :key="k">
@@ -20,13 +21,12 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonRow, IonGrid, IonCol, createAnimation } from '@ionic/vue';
-import { home, map, documentText, storefront, cog, cube,fastFood} from 'ionicons/icons';
+import { home, map, documentText, storefront, cog, cube, fastFood } from 'ionicons/icons';
 import "animate.css"
-import { ref, reactive } from 'vue';
+import { ref, reactive, Ref } from 'vue';
 import { useLoginStore } from '@/store/loginStore'
 import { storeToRefs } from 'pinia';
 
-const myBuilder=(el:Element,opts?:any)=>{return createAnimation().addElement(el).duration(5000).fromTo('opacity',0,100)}
 
 //Store
 const store = useLoginStore();
@@ -72,11 +72,11 @@ const tabsUser = ref([{
   hrf: '/tabs/tab4',
   icon: cog,
   label: 'Config.'
-},{
-  tabName:'tab7',
-  hrf:"/tabs/aliments",
-  icon:fastFood,
-  label:"Afegir aliments"
+}, {
+  tabName: 'tab7',
+  hrf: "/tabs/aliments",
+  icon: fastFood,
+  label: "Afegir aliments"
 }])
 
 </script>

@@ -1,20 +1,20 @@
 <template>
   <ion-app>
     <UseColorMode v-slot="{ mode }">
-      <ion-router-outlet :animated="false" />
+      <ion-router-outlet :animated="true" :animation="animateRouter" />
     </UseColorMode>
   </ion-app>
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet, useBackButton, useIonRouter } from '@ionic/vue';
+import { IonApp, createAnimation, IonRouterOutlet, useBackButton, useIonRouter } from '@ionic/vue';
 import { onBeforeMount, onMounted } from 'vue';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { App } from '@capacitor/app'
 import { UseColorMode } from '@vueuse/components'
 import { useColorMode } from '@vueuse/core';
-import { verificarToken } from './APIService'
+import { verificarToken } from "./APIService/utils"
 import { useLoginStore } from './store/loginStore';
 import { useAlimentStore } from './store/alimentStore';
 import { useFavStore } from './store/favStore';
@@ -28,7 +28,12 @@ import { useCapacitorNotifications } from './composables/useCapacitorNotificatio
 const { initialize } = useFirebase()
 const { registerNotifications, addListeners } = useCapacitorNotifications()
 
-
+const animateRouter = (baseEl: HTMLElement) => {
+  return createAnimation()
+    .addElement(baseEl)
+    .duration(1250)
+    .fromTo('opacity', '1', '0');
+}
 registerNotifications().then((result) => {
 
 }).catch((err) => {
@@ -63,24 +68,22 @@ if (token) {
   setToken(token)
   showLoading('Iniciant sessió').then((loader) => {
     loader.present()
-    verificarToken().then((res) => {
-      setToken(res.data.token);
-      localStorage.setItem('token', res.data.token)
-      setUserId(res.data.userId)
-      setUserType(res.data.userType)
+    verificarToken((err: any, data: any) => {
+      loader.dismiss()
+      router.push("/login")
+      if (err) return false
+      setToken(data.token)
+      localStorage.setItem('token', data.token)
+      setUserId(data.userId)
+      setUserType(data.userType)
       setAliments()
-      if (res.data.userType == 'client') {
+      if (data.userType == 'client') {
         setLoginFavs()
         router.push('/tabs/tab1');
       }
       else
         router.push('/tabs/tab5')
-
-    }).catch(() => {
-      router.push('/login')
-    }).finally(() => {
-      loader.dismiss()
-    });
+    })
   });
 
 }

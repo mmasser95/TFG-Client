@@ -2,14 +2,18 @@
     <ion-card :router-link="`/establiment/${establiment._id}`" class="container ion-activatable">
         <ion-ripple-effect></ion-ripple-effect>
         <div class="img_fons">
-            <img v-if="false" :alt="`Imatge de fons del negoci ${establiment.nom}`"
-                :src="`https://pro-grouse-unified.ngrok-free.app/${establiment.url_fondo}`" />
-            <img :alt="`Imatge del logotip del negoci ${establiment.nom}`"
+            <img v-if="img_fondo" :alt="`Imatge de fons del negoci ${establiment.nom}`" :src="`${img_fondo}`" />
+            <img v-else-if="establiment.url_fondo" :alt="`Imatge del negoci ${establiment.nom}`"
+                :src="establiment.url_fondo">
+            <img v-else :alt="`Imatge del logotip del negoci ${establiment.nom}`"
                 src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg" />
         </div>
         <div class="img_perfil">
             <ion-thumbnail>
-                <img class="miniatura" :alt="`Imatge del logotip del negoci ${establiment.nom}`"
+                <img :src="img_perfil" v-if="img_perfil" :alt="`Imatge del logotip del negoci ${establiment.nom}`"
+                    class="miniatura">
+                <img v-else-if="establiment.url_imatge" :src="establiment.url_imatge" :alt="`Imatge del logotip del negoci ${establiment.nom}`">
+                <img v-else class="miniatura" :alt="`Imatge del logotip del negoci ${establiment.nom}`"
                     src="https://ionicframework.com/docs/img/demos/card-media.png" />
             </ion-thumbnail>
         </div>
@@ -46,19 +50,16 @@
                     </div>
 
                 </div>
-                <div class="content3">
-
-                </div>
-                <div class="content3">
+                <div class="content3" v-if="establiment.quantitatMitjana !=undefined && establiment.qualitatMitjana !=undefined " >
                     Valoració:
-                    <div class="content4">
+                    <div class="content4" v-if="establiment.quantitatMitjana !=undefined ">
                         <ion-icon :icon="star" class="star-icon"></ion-icon>
-                        <p>{{ establiment.quantitatMitjana }} Quantitat</p>
+                        <p>{{ _.round(establiment.quantitatMitjana,2) }} Quantitat</p>
                     </div>
 
-                    <div class="content4">
+                    <div class="content4"  v-if="establiment.qualitatMitjana !=undefined ">
                         <ion-icon :icon="star" class="star-icon"></ion-icon>
-                        <p>{{ establiment.qualitatMitjana }} Qualitat</p>
+                        <p>{{ _.round(establiment.qualitatMitjana,2) }} Qualitat</p>
                     </div>
 
                 </div>
@@ -76,7 +77,8 @@ import { defineProps, onMounted } from 'vue';
 import favButton from './favButton.vue';
 import badgeHorari from './badgeHorari.vue';
 import { Establiment2 } from '../types';
-const props = defineProps<{ establiment: Establiment2 }>()
+import * as _ from 'lodash'
+const props = defineProps<{ establiment: Establiment2, img_perfil?: any, img_fondo?: any }>()
 
 
 </script>
@@ -84,15 +86,10 @@ const props = defineProps<{ establiment: Establiment2 }>()
 <style scoped>
 .container {
     position: relative;
-    width: 98%;
+    width: 95%;
     border-radius: 10px;
     margin: 10px;
-    /*background-image: linear-gradient(to left bottom, #040404, #1e242e, #234355, #166678, #008b90, #00a199, #00b79c, #2ecd98, #43da9b, #57e69d, #6bf39f, #7effa0);*/
-
-    @media (prefers-color-scheme: dark) {
-        /*    background-image: linear-gradient(to right top, #040404, #0c1219, #051d25, #00282a, #003225, #003a21, #004318, #064a07, #06540d, #065e13, #046819, #00731f);*/
-        /*background-image: linear-gradient(to left bottom, #a0e7e5, #7dc5c4, #5aa5a4, #358585, #006767);*/
-    }
+    
 }
 
 .fav {
@@ -112,8 +109,8 @@ const props = defineProps<{ establiment: Establiment2 }>()
     top: 60px;
 }
 
-.miniatura {
-    border-radius: 10px;
+ion-thumbnail {
+    --border-radius: 10px;
 }
 
 

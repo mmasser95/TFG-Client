@@ -41,7 +41,8 @@
                 <ion-row>
                     <ion-col>
                         <ion-item>
-                            <ion-input type="number" :label-placement="labelPlacement" label="Quantitat" v-model="state.temps_defecte_conservacio"></ion-input>
+                            <ion-input type="number" :label-placement="labelPlacement" label="Quantitat"
+                                v-model="state.temps_defecte_conservacio"></ion-input>
                         </ion-item>
                     </ion-col>
                     <ion-col>
@@ -59,12 +60,12 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonSelect, IonSelectOption, IonInput,IonPage, modalController, IonHeader, IonFab, IonFabButton, IonRefresher, IonRefresherContent, IonCard, IonCardSubtitle, IonCardContent, IonCardHeader, IonCardTitle, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, IonTextarea, IonChip } from '@ionic/vue'
+import { IonSelect, IonSelectOption, IonInput, IonPage, modalController, IonHeader, IonFab, IonFabButton, IonRefresher, IonRefresherContent, IonCard, IonCardSubtitle, IonCardContent, IonCardHeader, IonCardTitle, IonList, IonItem, IonText, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton, IonButtons, IonIcon, IonTextarea, IonChip } from '@ionic/vue'
 import { checkmark, trash, add, arrowBack } from 'ionicons/icons'
 import { ref, Ref, reactive, computed, onMounted, watch } from 'vue'
 import { Aliment } from '../../types';
 import { showAlert } from '@/composables/loader'
-import { createAliment, updateAliment, deleteAliment } from '../../APIService'
+import { createAliment, updateAliment, deleteAliment } from '../../APIService/aliments'
 
 const labelPlacement = "floating"
 const props = defineProps<{ aliment?: Aliment }>()
@@ -73,23 +74,13 @@ const props = defineProps<{ aliment?: Aliment }>()
 const confirm = () => {
 
     if (!props.aliment) {
-        createAliment(state).then(async (res) => {
-            let alert = await showAlert(`Aliment: ${res.data}`)
-            alert.present()
-        }).catch(async (err) => {
-            let alert = await showAlert(`Error: ${err.message}`)
-            alert.present()
-            modalController.dismiss(null, 'cancel')
-        });
+        createAliment(state, (err, data) => {
+            if (err) return true
+        })
     } else {
-        updateAliment(props.aliment._id, state).then(async (res) => {
-            let alert = await showAlert(`Aliment: ${res.data}`)
-            alert.present()
-        }).catch(async (err) => {
-            let alert = await showAlert(`Error: ${err.message}`)
-            alert.present()
-            modalController.dismiss(null, 'cancel')
-        });
+        updateAliment(props.aliment._id, state, (err: any, data: any) => {
+            if (err) return true
+        })
     }
     modalController.dismiss(state, 'confirm')
 }

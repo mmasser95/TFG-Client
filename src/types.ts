@@ -7,6 +7,7 @@ export interface Oferta {
   active: boolean;
   quantitatDisponible: number;
   categoria: string;
+  url_imatge: string;
 }
 export interface Direccio {
   _id: string;
@@ -19,6 +20,7 @@ export interface Direccio {
 export interface Establiment {
   _id: string;
   nom: string;
+  correu?: string;
   descripcio: string;
   latitude: string;
   longitude: string;
@@ -92,8 +94,22 @@ export interface Comanda {
   _id: string;
   establimentId: Establiment;
   ofertaId: string;
-  userId: string;
+  oferta?: {
+    nom: string;
+    preu: number;
+  };
+  userId: string | any;
   total: string;
   data: string;
   quantitat: number;
 }
+export interface Avaluacio {
+  comentari?: string;
+  quantitat: number;
+  qualitat: number;
+  data_creacio: string;
+}
+export type CallbackFunction = (
+  err: Object | null,
+  data?: Object
+) => Promise<void | boolean> | void | boolean;

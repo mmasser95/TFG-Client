@@ -67,10 +67,10 @@ import { IonPage, modalController, IonSelect, IonSelectOption, IonHeader, IonFab
 import { pencil, trash, add, filter } from 'ionicons/icons'
 import { ref, Ref, computed, onMounted, watch } from 'vue'
 
-import { getAllAliments } from '../../APIService'
+import { getAllAliments } from '../../APIService/aliments'
 import { Aliment } from '../../types'
 import { showAlert, showLoading } from '../../composables/loader'
-import { deleteAliment } from '../../APIService'
+import { deleteAliment } from '../../APIService/aliments'
 import newAliment from './newAliment.vue'
 const aliments: Ref<Aliment[]> = ref([])
 
@@ -83,17 +83,14 @@ const filteredAliments = computed(() => {
 
 
 })
-
 const fillAliments = async () => {
     let loading = await showLoading("Carregant aliments")
     loading.present()
-    getAllAliments().then((res) => {
-        aliments.value = res.data.aliments
-    }).catch((err) => {
-
-    }).finally(() => {
-        loading.dismiss()
-    });
+    getAllAliments((err: any, data: any) => {
+        loading.dismiss
+        if (err) return true
+        aliments.value = data.aliments
+    })
 }
 const openModalCreate = async () => {
     let modal = await modalController.create({
@@ -120,15 +117,10 @@ const openModalUpdate = async (aliment: any) => {
 }
 
 const eliminarAliment = (alimentId: any) => {
-    deleteAliment(alimentId).then(async (res) => {
-        let alert = await showAlert('Aliment eliminat')
-        alert.present()
-    }).catch(async (err) => {
-        let alert = await showAlert(`Error: ${err.message}`)
-        alert.present()
-    }).finally(() => {
+    deleteAliment(alimentId, (err, res) => {
+        if (err) return true
         fillAliments()
-    });
+    })
 }
 
 onMounted(() => {
