@@ -20,6 +20,7 @@ export const useLoginStore = defineStore('login', () => {
   function setUserType(type: string) {
     userType.value = type;
   }
+  
   return {
     userId,
     token,

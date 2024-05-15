@@ -17,11 +17,11 @@
               <ion-row>
                 <ion-col>
                   <ion-item>
-                    <ion-input label="Correu electrònic" @ion-blur="v$.correu.$touch" type="email"
+                    <ion-input id="input-correu" label="Correu electrònic" @ion-blur="v$.correu.$touch" type="email"
                       labelPlacement="floating" v-model="state.correu"></ion-input>
                   </ion-item>
                   <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
-                    message="Aquest camp és obligatori" />
+                    message="El correu és obligatori" />
                   <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
                     message="El correu electrònic no és valid" />
                 </ion-col>
@@ -29,18 +29,18 @@
               <ion-row>
                 <ion-col>
                   <ion-item>
-                    <ion-input label="Contrasenya" @ion-blur="v$.contrasenya.$touch" type="password"
+                    <ion-input id="input-contrasenya" label="Contrasenya" @ion-blur="v$.contrasenya.$touch" type="password"
                       labelPlacement="floating" v-model="state.contrasenya"></ion-input>
                   </ion-item>
                   <ErrorMessage v-if="v$.contrasenya.$error && v$.contrasenya.required.$invalid"
-                    message="Aquest camp és obligatori" />
+                    message="La contrasenya és obligatoria" />
                   <ErrorMessage v-if="v$.contrasenya.$error && v$.contrasenya.minLength.$invalid"
                     message="La contrasenya ha de contenir minim 8 caràcters" />
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col></ion-col>
-                <ion-col size="12" sizeMd="6"><ion-button type="submit" expand="block">Login</ion-button></ion-col>
+                <ion-col size="12" sizeMd="6"><ion-button id="btn-login" type="submit" expand="block">Login</ion-button></ion-col>
                 <ion-col></ion-col>
               </ion-row>
             </form>
