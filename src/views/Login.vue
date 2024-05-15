@@ -29,8 +29,8 @@
               <ion-row>
                 <ion-col>
                   <ion-item>
-                    <ion-input id="input-contrasenya" label="Contrasenya" @ion-blur="v$.contrasenya.$touch" type="password"
-                      labelPlacement="floating" v-model="state.contrasenya"></ion-input>
+                    <ion-input id="input-contrasenya" label="Contrasenya" @ion-blur="v$.contrasenya.$touch"
+                      type="password" labelPlacement="floating" v-model="state.contrasenya"></ion-input>
                   </ion-item>
                   <ErrorMessage v-if="v$.contrasenya.$error && v$.contrasenya.required.$invalid"
                     message="La contrasenya és obligatoria" />
@@ -40,7 +40,8 @@
               </ion-row>
               <ion-row>
                 <ion-col></ion-col>
-                <ion-col size="12" sizeMd="6"><ion-button id="btn-login" type="submit" expand="block">Login</ion-button></ion-col>
+                <ion-col size="12" sizeMd="6"><ion-button id="btn-login" type="submit"
+                    expand="block">Login</ion-button></ion-col>
                 <ion-col></ion-col>
               </ion-row>
             </form>
@@ -53,10 +54,9 @@
             <div class="googleContainer">
               <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
             </div>
+
             <div class="googleContainer">
-              <ion-button :disabled="!isReady" @click="() => loginOneTap()">
-                Trigger One Tap Login Manually
-              </ion-button>
+              <ion-button @click="myGoogleSignin">Google Login</ion-button>
             </div>
           </ion-col>
           <ion-col></ion-col>
@@ -95,7 +95,7 @@ import { required, email, minLength } from '@vuelidate/validators'
 
 import { useRouter } from 'vue-router';
 
-import { showLoading } from '../composables/loader';
+import { showLoading, showAlert } from '../composables/loader';
 
 import ErrorMessage from '../components/ErrorMessage.vue';
 
@@ -107,6 +107,7 @@ import {
   GoogleSignInButton, useOneTap,
   type CredentialResponse,
 } from "vue3-google-signin";
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 const router = useRouter();
 //Store
@@ -244,11 +245,45 @@ const handleLoginError = () => {
   console.error("Login failed");
 };
 
-const { isReady, login: loginOneTap } = useOneTap({
-  disableAutomaticPrompt: false,
-  onSuccess: handleLoginSuccess,
-  onError: handleLoginError
-})
+const myGoogleSignin = async () => {
+  try {
+    let token = await GoogleAuth.signIn()
+    console.log(token)
+  } catch (err) {
+    let alert = await showAlert(`S'ha produit l'error següent quan s'intentava iniciar sessió ${err}`)
+    alert.present()
+  }
+}
+
+onMounted(async () => {
+  try {
+    GoogleAuth.initialize({
+      clientId: "981593687954-d0h9henugkvditar81b2jdmuo7o1rgum.apps.googleusercontent.com",
+      scopes: ['profile', 'email']
+    });
+    let alert = await showAlert(`Inicialitzat correctament`)
+    alert.present()
+  } catch (err) {
+    let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth ${err}. A continuació s'intenta inicialitzar el GoogleAuthenticator sense configuració predeterminada`)
+    alert.present()
+    try {
+      GoogleAuth.initialize()
+    } catch (err2) {
+      let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth sense configuració ${err2}.`)
+      alert.present()
+      
+    }
+  }
+  try {
+        GoogleAuth.initialize({
+          clientId: "981593687954-b1d85d1dobq1mmentruvk2hrr8v5cj66.apps.googleusercontent.com",
+          scopes: ['profile', 'email']
+        });
+      } catch (err3) {
+        let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth amb la configuració d'android ${err3}.`)
+        alert.present()
+      }
+});
 
 </script>
 
