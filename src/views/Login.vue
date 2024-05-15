@@ -249,6 +249,8 @@ const myGoogleSignin = async () => {
   try {
     let token = await GoogleAuth.signIn()
     console.log(token)
+    let alert = await showAlert(`S'ha aconseguit iniciar sessio a la plataforma amb el token ${token.authentication.idToken}`)
+    alert.present()
   } catch (err) {
     let alert = await showAlert(`S'ha produit l'error següent quan s'intentava iniciar sessió ${err}`)
     alert.present()
@@ -271,18 +273,28 @@ onMounted(async () => {
     } catch (err2) {
       let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth sense configuració ${err2}.`)
       alert.present()
-      
+     
     }
   }
-  try {
-        GoogleAuth.initialize({
-          clientId: "981593687954-b1d85d1dobq1mmentruvk2hrr8v5cj66.apps.googleusercontent.com",
-          scopes: ['profile', 'email']
-        });
-      } catch (err3) {
-        let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth amb la configuració d'android ${err3}.`)
-        alert.present()
-      }
+//  try {
+//        GoogleAuth.initialize({
+//          clientId: "981593687954-b1d85d1dobq1mmentruvk2hrr8v5cj66.apps.googleusercontent.com",
+//          scopes: ['profile', 'email']
+//        });
+//      } catch (err3) {
+//        let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth amb la configuració d'android ${err3}.`)
+//        alert.present()
+
+//	try {
+//	        GoogleAuth.initialize({
+//	          clientId: "981593687954-b1d85d1dobq1mmentruvk2hrr8v5cj66.apps.googleusercontent.com",
+//	          scopes: ['profile', 'email']
+//	        });
+//	} catch (err3) {
+//		let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth amb la configuració d'android ${err3}.`)
+//		alert.present()
+//	}
+//      }
 });
 
 </script>

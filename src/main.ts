@@ -44,7 +44,7 @@ const app = createApp(App)
 .use(router)
 .use(pinia)
 .use(GoogleSignInPlugin, {
-  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+  clientId: "981593687954-d0h9henugkvditar81b2jdmuo7o1rgum.apps.googleusercontent.com",
 })
 .component('star-rating',vue3starRatings)
 
