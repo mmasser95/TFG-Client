@@ -223,8 +223,7 @@ const operModalRegistreEstabliment = async () => {
 
 }
 
-const handleLoginSuccess = (response: CredentialResponse) => {
-  const { credential } = response;
+const handleLoginSuccess = (credential: string) => {
   googleLogin(credential, (err: any, data: any) => {
     if (err) return true
     setToken(data.token);
@@ -251,6 +250,7 @@ const myGoogleSignin = async () => {
     console.log(token)
     let alert = await showAlert(`S'ha aconseguit iniciar sessio a la plataforma amb el token ${token.authentication.idToken}`)
     alert.present()
+    handleLoginSuccess(token.authentication.idToken)
   } catch (err) {
     let alert = await showAlert(`S'ha produit l'error següent quan s'intentava iniciar sessió ${err}`)
     alert.present()
@@ -263,6 +263,7 @@ onMounted(async () => {
       clientId: "981593687954-d0h9henugkvditar81b2jdmuo7o1rgum.apps.googleusercontent.com",
       scopes: ['profile', 'email']
     });
+
     let alert = await showAlert(`Inicialitzat correctament`)
     alert.present()
   } catch (err) {
