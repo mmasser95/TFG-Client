@@ -52,11 +52,10 @@
           <ion-col></ion-col>
           <ion-col size="12" sizeMd="6">
             <div class="googleContainer">
-              <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
-            </div>
-
-            <div class="googleContainer">
-              <ion-button @click="myGoogleSignin">Google Login</ion-button>
+              <ion-text>Iniciar sessió amb Google, únicament per a clients:</ion-text>
+              <ion-button id="googleBtn" @click="myGoogleSignin">
+                <ion-icon :icon="logoGoogle" slot="start"></ion-icon>
+                Google Login</ion-button>
             </div>
           </ion-col>
           <ion-col></ion-col>
@@ -80,8 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonLabel, IonRow, IonCol, IonList, IonItem, IonInput, IonButton, IonText, alertController, modalController } from '@ionic/vue';
-
+import { IonPage, IonHeader, IonIcon, IonToolbar, IonTitle, IonContent, IonGrid, IonLabel, IonRow, IonCol, IonList, IonItem, IonInput, IonButton, IonText, alertController, modalController } from '@ionic/vue';
+import { logoGoogle } from "ionicons/icons"
 import { useLoginStore } from '../store/loginStore';
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, computed } from 'vue';
@@ -103,10 +102,6 @@ import { useFavStore } from '../store/favStore'
 
 import { useAlimentStore } from '../store/alimentStore'
 import { useFirebaseStore } from '../store/firebaseStore'
-import {
-  GoogleSignInButton, useOneTap,
-  type CredentialResponse,
-} from "vue3-google-signin";
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 const router = useRouter();
@@ -239,10 +234,6 @@ const handleLoginSuccess = (credential: string) => {
   })
 };
 
-// handle an error event
-const handleLoginError = () => {
-  console.error("Login failed");
-};
 
 const myGoogleSignin = async () => {
   try {
@@ -269,33 +260,16 @@ onMounted(async () => {
   } catch (err) {
     let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth ${err}. A continuació s'intenta inicialitzar el GoogleAuthenticator sense configuració predeterminada`)
     alert.present()
+    console.log(err)
     try {
       GoogleAuth.initialize()
     } catch (err2) {
       let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth sense configuració ${err2}.`)
       alert.present()
-     
+
     }
   }
-//  try {
-//        GoogleAuth.initialize({
-//          clientId: "981593687954-b1d85d1dobq1mmentruvk2hrr8v5cj66.apps.googleusercontent.com",
-//          scopes: ['profile', 'email']
-//        });
-//      } catch (err3) {
-//        let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth amb la configuració d'android ${err3}.`)
-//        alert.present()
 
-//	try {
-//	        GoogleAuth.initialize({
-//	          clientId: "981593687954-b1d85d1dobq1mmentruvk2hrr8v5cj66.apps.googleusercontent.com",
-//	          scopes: ['profile', 'email']
-//	        });
-//	} catch (err3) {
-//		let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth amb la configuració d'android ${err3}.`)
-//		alert.present()
-//	}
-//      }
 });
 
 </script>
@@ -303,7 +277,12 @@ onMounted(async () => {
 <style scoped>
 .googleContainer {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+  flex-flow: column wrap;
+  justify-content: space-evenly;
+  align-items:center;
+  gap:10px;
+}
+#googleBtn{
+  max-width:200px
 }
 </style>

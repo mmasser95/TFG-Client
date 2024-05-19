@@ -31,4 +31,4 @@ export const updateOferta = (id_oferta: any, data: any, cb: CallbackFunction) =>
     getHeaders()
   );
 export const deleteOferta = (id_oferta: any, cb: CallbackFunction) =>
-  axiosWrapper(instance.delete, cb, '/ofertes', getHeaders());
+  axiosWrapper(instance.delete, cb, `/ofertes/${id_oferta}`, getHeaders());

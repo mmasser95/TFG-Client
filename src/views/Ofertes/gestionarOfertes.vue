@@ -15,8 +15,11 @@
                         <ion-card class="ion-activatable myCard" v-for="(oferta, k) in ofertes" :key="k">
                             <ion-ripple-effect></ion-ripple-effect>
                             <div class="img_fons">
-                                <img v-if="oferta.url_imatge" :src="oferta.url_imatge" :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
-                                <img v-else src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg" :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
+                                <img v-if="oferta.url_imatge" :src="`https://app.flyfood.online/${oferta.url_imatge}`"
+                                    :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
+                                <img v-else
+                                    src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg"
+                                    :alt="`Imatge de fons de l'oferta ${oferta.nom}`">
                             </div>
                             <ion-card-header>
                                 <ion-card-title>{{ oferta.nom }}</ion-card-title>
@@ -30,17 +33,15 @@
                                     <ion-text>{{ oferta.categoria }}</ion-text>
                                 </div>
                                 <div class="container-2">
-                                    <ion-button expand="block" color="secondary"
-                                        @click="openModalUpdate(oferta._id)">
+                                    <ion-button expand="block" color="secondary" @click="openModalUpdate(oferta._id)">
                                         <ion-icon :icon="pencil" slot="icon-only"></ion-icon>
-                                        
+
                                     </ion-button>
-                                        <ion-button expand="block" color="danger"
-                                            @click="eliminarOferta(oferta._id)">
-                                            <ion-icon :icon="trash" slot="icon-only"></ion-icon>
-                                        </ion-button>
+                                    <ion-button expand="block" color="danger" @click="eliminarOferta(oferta._id)">
+                                        <ion-icon :icon="trash" slot="icon-only"></ion-icon>
+                                    </ion-button>
                                 </div>
-                                
+
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
@@ -81,7 +82,7 @@ import {
     IonRippleEffect
 } from '@ionic/vue'
 
-import { add,pencil,trash } from 'ionicons/icons'
+import { add, pencil, trash } from 'ionicons/icons'
 
 import { crearOferta, deleteOferta, getOfertes, updateOferta } from '../../APIService/ofertes';
 import { Ref, ref } from 'vue';
@@ -151,33 +152,36 @@ const eliminarOferta = (ofertaId: any) => {
 fillOfertes();
 </script>
 <style scoped>
-.container{
-    display:flex;
-    flex-flow:row wrap;
+.container {
+    display: flex;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
-    gap:20px
-}
-.container-1{
-    display:flex;
-    justify-content: flex-start;
-    flex-flow:row wrap;
-    gap:20px;
+    gap: 20px
 }
 
-.container-2{
-    display:flex;
-    flex-flow:row wrap;
+.container-1 {
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    gap: 20px;
+}
+
+.container-2 {
+    display: flex;
+    flex-flow: row wrap;
     justify-content: flex-end;
-    gap:20px
+    gap: 20px
 }
-.img_fons{
-    height:100px;
-    overflow:hidden;
+
+.img_fons {
+    height: 100px;
+    overflow: hidden;
 }
-.myCard{
-    position:relative;
-    border-radius:10px;
-    margin:10px
+
+.myCard {
+    position: relative;
+    border-radius: 10px;
+    margin: 10px
 }
 </style>

@@ -56,7 +56,7 @@ import { storeToRefs } from 'pinia'
 import { add, informationCircle } from 'ionicons/icons'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import cardInventari from '../components/cardInventari.vue'
-import { getRebosts, crearRebost, updateRebost } from '../APIService/rebosts'
+import { getRebosts } from '../APIService/rebosts';
 import 'swiper/css'
 import newRebost from './Rebost/newRebost.vue';
 import { showLoading } from '../composables/loader';
@@ -99,12 +99,7 @@ const openModalUpdate = async (rebostId: any) => {
 
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
-    console.log(data)
-    updateRebost(rebostId, { nom: data }, (err: any, data: any) => {
-      if (err) return
-      fillRebosts()
-    })
-
+    fillRebosts()
   }
 }
 
@@ -118,10 +113,7 @@ const openModalCreate = async () => {
 
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
-    crearRebost({ nom: data }, (err, data) => {
-      if (err) return
-      fillRebosts();
-    })
+    fillRebosts();
   }
 }
 

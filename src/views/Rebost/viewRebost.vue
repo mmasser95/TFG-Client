@@ -7,15 +7,28 @@
                         <ion-icon :icon="arrowBack" slot="icon-only"></ion-icon>
                     </ion-button>
                 </ion-buttons>
-                <ion-title class="ion-text-center">Inventari</ion-title>
+                <ion-title class="ion-text-center ion-activatable" id="rebost">Rebost
+                    <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                </ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
             <ion-grid>
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col>
-
+                        <div class="ordenar-container">
+                            <ion-select v-model="ordenarPer" label-placement="floating">
+                                <ion-select-option value="aliment.nom">Nom</ion-select-option>
+                                <ion-select-option value="data_caducitat">Data de caducitat</ion-select-option>
+                                <ion-select-option value="data_compra">Data de compra</ion-select-option>
+                                <ion-select-option value="aliment.categoria">Categoria</ion-select-option>
+                            </ion-select>
+                            <ion-toggle v-model="ordenarAsc"></ion-toggle>
+                        </div>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -23,7 +36,7 @@
                     <ion-col></ion-col>
                     <ion-col size="12" sizeSm="10" sizeMd="8" sizeLg="6">
                         <div class="element-container" v-if="rebostId">
-                            <div v-for="element in elements" :key="element._id">
+                            <div v-for="element in orderedElements" :key="element._id">
                                 <cardElement :rebostId="rebostId" :element="element" @deleteElement="fillRebost"
                                     @updateElement="showUpdateModal"></cardElement>
                             </div>
@@ -34,9 +47,9 @@
 
             </ion-grid>
 
-            <ion-fab slot="fixed" vertical="bottom" horitzontal="center">
-                <ion-fab-button>
-                    <ion-icon :icon="add"></ion-icon>
+            <ion-fab id="addBtn" slot="fixed" vertical="bottom" horitzontal="center">
+                <ion-fab-button id="addBtn2" class="ion-activatable">
+                    <ion-icon id="addBtn3" :icon="add"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="top">
                     <ion-fab-button @click="takePhoto()">
@@ -47,9 +60,10 @@
                     </ion-fab-button>
                 </ion-fab-list>
             </ion-fab>
-        </ion-content>
 
+        </ion-content>
     </ion-page>
+    <onboarding :steps="onBoardingViewRebostSteps" @start-onboarding="startOnboarding"></onboarding>
 </template>
 <script setup lang="ts">
 import {
@@ -74,14 +88,18 @@ import {
     IonToolbar,
     IonButtons,
     alertController,
-    modalController
+    modalController,
+    IonToggle,
+    IonSelect,
+    IonSelectOption,
+    IonRefresher,
+    IonRefresherContent,
 } from '@ionic/vue';
-import { arrowBack } from 'ionicons/icons'
-import { getAllElements, createElement, putElement } from '../../APIService/elements';
+import { getAllElements } from '../../APIService/elements';
 import { getAlimentsByNoms } from '../../APIService/aliments';
 import { ref, Ref, reactive, computed, onMounted, defineProps, watch } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
-import { add, camera, pencil } from 'ionicons/icons';
+import { add, camera, pencil, informationCircle, arrowBack } from 'ionicons/icons';
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
 import { createWorker } from 'tesseract.js';
 import newElement from '@/views/Elements/newElement.vue'
@@ -93,9 +111,22 @@ import { Element } from '../../types';
 import { stringSimilarity } from 'string-similarity-js'
 import { storeToRefs } from 'pinia';
 
+import onboarding from '../../components/onboarding.vue';
+import { StepEntity } from 'v-onboarding';
+
+import orderBy from 'lodash/orderBy'
+
+
+const ordenarPer = ref("aliment.nom")
+const ordenarAsc = ref(true)
 const { takePhoto, photos, lastPhoto } = usePhotoGallery();
 const { loggedIn } = useLoginStore();
 const { getAllNoms } = storeToRefs(useAlimentStore())
+const onBoardingViewRebostSteps: Ref<StepEntity[] | any[]> = ref([])
+const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
+const startOnboarding = (element: any) => {
+    onboardingElement.value = element
+}
 interface Aliment {
     _id: string,
     nom: string,
@@ -105,7 +136,8 @@ interface Aliment {
 
 
 const elements: Ref<Element[] | null> = ref(null)
-
+const orderDirection = computed(() => ordenarAsc.value ? ["asc"] : ["desc"])
+const orderedElements = computed(() => orderBy(elements.value, [ordenarPer.value], orderDirection.value))
 const props = defineProps({
     rebostId: String
 })
@@ -161,6 +193,7 @@ const fillRebost = async () => {
     }
     loader.dismiss(null, 'cancel')
 }
+
 watch(lastPhoto, async (v: any, oV: any) => {
     let textOfPhoto = await readImage(v.webviewPath)
 
@@ -177,22 +210,75 @@ watch(lastPhoto, async (v: any, oV: any) => {
 
 onMounted(() => {
     fillRebost()
+    onBoardingViewRebostSteps.value = [{
+        attachTo: {
+            element: "#rebost"
+        },
+        content: {
+            title: "Elements del rebost",
+            description: "Aquí podras trobar tots els elements dins d'un mateix rebost i veure quan els vas comprar, quan caduquen i la quantitat restant de cada aliment"
+        },
+        options: {
+            popper: {
+                placement: 'bottom'
+            }
+        }
+    }, {
+        attachTo: {
+            element: "#addBtn"
+        },
+        content: {
+            title: "Afegir nous aliments al rebost",
+            description: "Si cliques obre aquest botó t'apereixeran dos botons més on podras..."
+        },
+        options: {
+            popper: {
+                placement: 'top-end'
+            }
+        }
+    },
+    {
+        attachTo: {
+            element: "#addBtn2"
+        },
+        content: {
+            title: "Afegir nous aliments al rebost",
+            description: "Si cliques sobre la icona del llapis, podràs afegir manualment un aliment mitjançant un formulari."
+        },
+        options: {
+            popper: {
+                placement: 'top-end'
+            }
+        }
+    },
+    {
+        attachTo: {
+            element: "#addBtn3"
+        },
+        content: {
+            title: "Afegir nous aliments al rebost",
+            description: "Si cliques sobre la icona de la càmera, podràs utilitzar la fotografia d'un tiquet de la compra per afegir aliments més ràpid."
+        },
+        options: {
+            popper: {
+                placement: 'top-end'
+            }
+        }
+    }]
 });
 
 const openModalCreate = async () => {
     const modal = await modalController.create({
-        component: newElement
+        component: newElement,
+        componentProps: { rebostId: props.rebostId }
     })
 
     modal.present();
 
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
-        createElement(props.rebostId, data, (err: any, data: any) => {
-            if (err) return
-            presentAlert('Element creat correctament')
-            fillRebost()
-        })
+        presentAlert('Element creat correctament')
+        fillRebost()
     }
 }
 
@@ -209,11 +295,8 @@ const showUpdateModal = async (event: { element: Element, rebostId: string }) =>
     modal.present();
     const { data, role } = await modal.onWillDismiss();
     if (role == 'confirm') {
-        putElement(event.rebostId, event.element._id, data, (err: any, data: any) => {
-            if (err) return
-            presentAlert('Element editat correctament')
-            fillRebost()
-        })
+        presentAlert('Element editat correctament')
+        fillRebost()
     }
 
 }
@@ -232,7 +315,11 @@ const showChooseAlimentModal = async (aliments: Aliment[]) => {
         fillRebost()
 }
 
-console.log(searchAliment("Limon Cacahuetes Lechuga Iceberg Doca Nabana", 0.6))
+const handleRefresh = async (event: any) => {
+    await fillRebost()
+    // Any calls to load data go here
+    event.target?.complete();
+};
 
 </script>
 <style scoped>
@@ -251,5 +338,13 @@ cardElement {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
+}
+
+.ordenar-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
 }
 </style>

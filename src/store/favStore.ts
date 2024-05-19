@@ -34,7 +34,7 @@ export const useFavStore = defineStore('fav', () => {
       favorites.value.splice(indexEliminar, 1);
     });
   };
-
+  
   return {
     favorites,
     setFavs,

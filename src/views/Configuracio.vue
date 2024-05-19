@@ -18,13 +18,17 @@
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
                         <ion-list>
-                            <ion-item v-for="(item, k) in opcionsUser" :key="k" @click="item.modalToShow"
-                                v-if="userType == 'client'">
-                                <ion-icon :icon="item.icon" slot="start"></ion-icon>
-                                {{ item.label }}
+                            <ion-item class="ion-activatable" v-for="(item, k) in opcionsUser" :key="k"
+                                @click="item.modalToShow" v-if="userType == 'client'">
+                                <ion-ripple-effect></ion-ripple-effect>
+                                <div>
+                                    <ion-icon :icon="item.icon" slot="start"></ion-icon>
+                                    {{ item.label }}
+                                </div>
                             </ion-item>
-                            <ion-item v-for="(item, k) in opcionsEstabliment" :key="k" @click="item.modalToShow"
-                                v-if="userType == 'establiment'">
+                            <ion-item class="ion-activatable" v-for="(item, k) in opcionsEstabliment" :key="k"
+                                @click="item.modalToShow" v-if="userType == 'establiment'">
+                                <ion-ripple-effect></ion-ripple-effect>
                                 <ion-icon :icon="item.icon" slot="start"></ion-icon>
                                 {{ item.label }}
                             </ion-item>
@@ -35,9 +39,10 @@
             </ion-grid>
         </ion-content>
     </ion-page>
+    
 </template>
 <script lang="ts" setup>
-import { IonPage, IonToolbar, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
+import { IonPage, IonToolbar, IonHeader, IonRippleEffect, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonTitle, IonIcon, IonLabel, modalController, alertController } from '@ionic/vue';
 import { personCircle, image, eye, key, lockClosed, helpBuoy, exit, ban, documentText } from 'ionicons/icons'
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
@@ -45,20 +50,25 @@ import canviarFotoPerfil from './Configuracio/canviarImatges.vue'
 import canviarContrasenya from './Configuracio/canviarContrasenya.vue'
 import { useLoginStore } from '../store/loginStore';
 import { useFirebaseStore } from '../store/firebaseStore'
+import { useGeneralOnboarding } from '../store/generalOnboarding'
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { deleteUser, deleteFirebaseToken } from '../APIService/utils';
 import { deleteEstabliment } from '../APIService/establiments';
-import { onMounted } from 'vue';
+import { onMounted, ref, Ref, nextTick } from 'vue';
+
 const store = useLoginStore()
 const router = useRouter()
 const { setToken, setUserId, setUserType } = store
-const { userType } = storeToRefs(store)
+const { userType, userId } = storeToRefs(store)
+const {  onboardingElement } = storeToRefs(useGeneralOnboarding())
+
 
 const { myToken } = storeToRefs(useFirebaseStore())
 
-onMounted(() => {
+onMounted(async () => {
     console.log('userType.value :>> ', userType);
+    
 })
 
 const modalConfiguracioPerfil = async () => {
@@ -186,7 +196,7 @@ const alertEliminarCompte2 = async () => {
                     'aria-label': 'Si',
                 },
                 handler: () => {
-                    if (userType.value == 'user') {
+                    if (userType.value == 'client') {
                         deleteUser((err: any) => {
                             if (err) return
                             setToken('')
@@ -195,16 +205,7 @@ const alertEliminarCompte2 = async () => {
                             router.push('/login')
 
                         })
-                        /*deleteUser().then((result) => {
-                            if (result.data) {
-                                setToken('')
-                                setUserId('')
-                                setUserType('')
-                                router.push('/login')
-                            }
-                        }).catch((err) => {
 
-                        });*/
                     } else {
                         deleteEstabliment((err: any) => {
                             if (err) return
@@ -213,16 +214,7 @@ const alertEliminarCompte2 = async () => {
                             setUserType('')
                             router.push('/login')
                         })
-                        /*deleteEstabliment().then((result) => {
-                            if (result.data) {
-                                setToken('')
-                                setUserId('')
-                                setUserType('')
-                                router.push('/login')
 
-                            }).catch((err) => {
-
-                            });*/
                     }
                 }
             },
@@ -264,7 +256,8 @@ const opcionsUser = [
     },
     {
         label: "Ajuda",
-        icon: helpBuoy
+        icon: helpBuoy,
+        modalToShow: () => {  },
     },
     {
         label: 'Eliminar compte',
@@ -319,5 +312,7 @@ const opcionsEstabliment = [
     }
 
 ]
+
+
 </script>
 <style></style>

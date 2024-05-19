@@ -48,7 +48,7 @@ export const updateEstabliment = (
   );
 
 export const deleteEstabliment = (cb: CallbackFunction) =>
-  axiosWrapper(instance.delete, cb);
+  axiosWrapper(instance.delete, cb,`/establiments/`);
 
 export const putImatgePerfil = (formData: any, cb: CallbackFunction) =>
   axiosWrapper(

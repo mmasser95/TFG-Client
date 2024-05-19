@@ -199,7 +199,7 @@
                                 <ion-col size="12" sizeXl="4">
                                     <div class="input-container">
                                         <ion-item>
-                                            <ion-select label="Tipus Establiment" :label-placement="labelPlacement">
+                                            <ion-select label="Tipus Establiment" :label-placement="labelPlacement" v-model="state.tipus">
                                                 <ion-select-option disabled> Seleccionar tipus d'establiment</ion-select-option>
                                                 <ion-select-option value="restaurant">Restaurant</ion-select-option>
                                                 <ion-select-option value="supermercat">Supermercat</ion-select-option>
@@ -244,7 +244,7 @@ const state = reactive({
     contrasenya: "",
     rcontrasenya: "",
     descripcio: "",
-    tipus: "establiment",
+    tipus: "",
     horariString: '',
     telf: "",
     web: "",

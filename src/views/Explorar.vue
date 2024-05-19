@@ -106,7 +106,9 @@ const cercleRadi = ref(15)
 const markersLayer: Ref<any> = ref(null)
 const myPopup = ref(null)
 
-const onBoardingExplorarSteps: Ref<StepEntity[] | any[]> = ref([])
+const onBoardingExplorarStepsMapa: Ref<StepEntity[] | any[]> = ref([])
+const onBoardingExplorarStepsLlista: Ref<StepEntity[] | any[]> = ref([])
+const onBoardingExplorarSteps = computed(() => pestanyaMapa.value ? onBoardingExplorarStepsMapa : onBoardingExplorarStepsLlista)
 const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
 const startOnboarding = (element: any) => {
     console.log('element :>> ', element);
@@ -129,17 +131,18 @@ const changePestanya = (event: any) => {
 const getCurrentPosition = async () => {
     try {
         const coordinates = await Geolocation.getCurrentPosition();
+        if (coordinates.coords.latitude == 0 || coordinates.coords.longitude == 0) throw new Error("GPS no funciona")
         mapCoordinates.value[0] = coordinates.coords.latitude
         mapCoordinates.value[1] = coordinates.coords.longitude
         myLocation.value = mapCoordinates.value
     } catch (err) {
-        if (err instanceof GeolocationPositionError) {
-            if (err.code == 1)
-                doIPLocation((err: any, data: any) => {
-                    if (err) return
-                    myLocation.value = [data.location.lat, data.location.lon]
-                })
-        }
+        //if (err instanceof GeolocationPositionError) {
+        //    if (err.code == 1)
+        doIPLocation((err: any, data: any) => {
+            if (err) return
+            myLocation.value = [data.location.lat, data.location.lon]
+        })
+        //}
     }
     map.value?.flyTo(myLocation.value)
     fillEstabliments()
@@ -235,7 +238,7 @@ onMounted(async () => {
     setTimeout(() => map.value = loadMap(), 50)
     fillEstabliments()
     getCurrentPosition()
-    onBoardingExplorarSteps.value = [{
+    onBoardingExplorarStepsMapa.value = [{
         attachTo: {
             element: "#map"
         },

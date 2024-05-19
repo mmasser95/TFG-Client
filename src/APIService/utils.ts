@@ -36,16 +36,21 @@ export const axiosWrapper = (
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
-        let showDebug = await cb({
+        cb({
           status: error.response.status,
           message: error.response.data,
         });
-        if (showDebug) {
+        if (error.response.status == 401 || error.response.status == 400) {
           let alert = await createErrorAlert(
             error.response.data.message,
             error.response.status
           );
           alert.present();
+        }
+        if (error.response.status == 500) {
+          console.log(
+            `Error status: ${error.response.status} Error message: ${error.response.data.message}`
+          );
         }
       } else if (error.request) {
         // The request was made but no response was received
@@ -219,6 +224,6 @@ export const canviarContrasenya = (
     { oldC, newC, rnewC },
     getHeaders()
   );
-/*export function canviarContrasenya(oldC: any, newC: any) {
-  return instance.post(`/contrasenya`, { oldC, newC }, getHeaders());
-}*/
+
+export const correuDisponible = (correu: any, cb: CallbackFunction) =>
+  axiosWrapper(instance.get, cb, `/correu/${correu}`);

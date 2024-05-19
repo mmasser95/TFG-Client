@@ -38,7 +38,7 @@
                         </div>
                     </ion-badge>
                     <p class="ion-text-center"> Tipus</p>
-                    <ion-badge color="tertiary">{{ establiment.tipus }}</ion-badge>
+                    <badgeTipus :tipus="establiment.tipus"></badgeTipus>
                 </div>
                 <div>
                     <div class="content3" v-if="typeof establiment.horari == 'string'">
@@ -78,6 +78,7 @@ import { call, star } from 'ionicons/icons'
 import { defineProps, computed } from 'vue';
 import favButton from './favButton.vue';
 import badgeHorari from './badgeHorari.vue';
+import badgeTipus from './badgeTipus.vue';
 import { Establiment2 } from '../types';
 import round from "lodash/round"
 //import _ from 'lodash'

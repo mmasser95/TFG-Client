@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-
+import {register} from "swiper/element/bundle"
 import { IonicVue } from '@ionic/vue';
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
@@ -48,6 +48,7 @@ const app = createApp(App)
 })
 .component('star-rating',vue3starRatings)
 
+register()
 
 router.isReady().then(() => {
   app.mount('#app');

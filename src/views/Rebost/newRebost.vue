@@ -46,7 +46,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, maxLength, minLength } from '@vuelidate/validators'
 import { storeToRefs } from 'pinia'
 import { useLoginStore } from '../../store/loginStore';
-import { getRebost } from '../../APIService/rebosts';
+import { getRebost, crearRebost, updateRebost } from '../../APIService/rebosts'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 const props = defineProps({
     update: String
@@ -67,7 +67,23 @@ const rules = {
 const v$ = useVuelidate(rules, state);
 
 const cancel = () => modalController.dismiss(null, 'cancel');
-const confirm = () => modalController.dismiss(state.nom, 'confirm');
+const confirm = async () => {
+    const valid = await v$.value.$validate();
+    if (valid) {
+        if (props.update != undefined&&props.update!="") {
+            updateRebost(props.update, { nom: state.nom }, (err: any, data: any) => {
+                if (err) return
+                modalController.dismiss(null, 'confirm');
+            })
+        } else {
+            crearRebost({ nom: state.nom }, (err, data) => {
+                if (err) return
+                modalController.dismiss(null, 'confirm');
+            })
+        }
+    }
+
+}
 
 onMounted(() => {
     if (props.update != undefined) {

@@ -7,12 +7,20 @@
         </ion-card-header>
         <ion-card-content>
             <div class="myContainer">
-                <div>Data compra: {{ data_compra }}
-                    <ion-datetime-button :datetime="`datetime.compra.${aliment._id}`"> </ion-datetime-button>
-                </div>
-                <div>Data caducitat: {{ data_caducitat }}
-                    <ion-datetime-button :datetime="`datetime.caducitat.${aliment._id}`"></ion-datetime-button>
-                </div>
+                    <div class="input-container">
+                        <ion-item>
+                            <ion-input :label-placement="labelPlacement" label="Data de compra" type="date"
+                                v-model="data_compra"></ion-input>
+                        </ion-item>
+                    </div>
+                    <div class="input-container">
+                        <ion-item>
+                            <ion-input type="date" v-model="data_caducitat" :label-placement="labelPlacement"
+                                label="Data de caducitat"></ion-input>
+                        </ion-item>
+                    </div>
+                    
+                
                 <div class="myContainerQuantitat">
                     <ion-input type="number" label="Quantitat" :label-placement="labelPlacement"
                         v-model="quantitat"></ion-input>
@@ -31,27 +39,35 @@
             </div>
         </ion-card-content>
     </ion-card>
-    <ion-modal :keep-contents-mounted="true">
+    <!--<ion-modal :keep-contents-mounted="true">
         <ion-datetime @ionChange="dateTimeCompraChange" :id="`datetime.compra.${aliment._id}`" presentation="date"
             :value="data_compra_iso" :show-default-buttons="true"></ion-datetime>
 
     </ion-modal>
     <ion-modal :keep-contents-mounted="true">
         <ion-datetime @ionChange="dateTimeCaducitatChange" :id="`datetime.caducitat.${aliment._id}`" presentation="date"
-            :value="data_caducitat_calc" :show-default-buttons="true"></ion-datetime></ion-modal>
+            :value="data_caducitat_calc" :show-default-buttons="true"></ion-datetime></ion-modal>-->
 </template>
 <script setup lang="ts">
-import { IonItem, IonCard, IonCardContent, IonInput, IonCardHeader, IonCardTitle, IonModal,IonDatetime,IonCardSubtitle,IonRippleEffect, modalController, IonDatetimeButton, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption } from '@ionic/vue';
+import { IonItem, IonCard, IonCardContent, IonInput, IonCardHeader, IonCardTitle, IonModal, IonDatetime, IonCardSubtitle, IonRippleEffect, modalController, IonDatetimeButton, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption } from '@ionic/vue';
 import { computed, onMounted, ref } from 'vue';
 import { pencil, trash } from 'ionicons/icons';
 import { Aliment } from '../types'
-import { addDays, addWeeks, addMonths, format, formatRelative, formatISO, parseISO } from 'date-fns';
+import { addDays } from 'date-fns/addDays';
+import { addWeeks } from 'date-fns/addWeeks'
+import { addMonths } from 'date-fns/addMonths'
+import { format } from 'date-fns/format'
+import { formatRelative } from 'date-fns/formatRelative'
+import { formatISO } from 'date-fns/formatISO'
+import { parseISO } from 'date-fns/parseISO'
 
 import { useScanStore } from '../store/scanStore';
 
 import { useDebounceFn } from '@vueuse/core';
 
-const {addItem,updateItem,deleteItem} =useScanStore()
+const { addItem, updateItem, deleteItem } = useScanStore()
+
+const orderedElements=computed(()=>{})
 
 const labelPlacement = "floating"
 
@@ -64,7 +80,8 @@ const unitat = ref('unitats')
 
 const emit = defineEmits(['updateAliment', 'deleteAliment'])
 
-const data_compra = ref(formatISO(Date.now()))
+
+const data_compra = ref(format(Date.now(),"yyyy-MM-dd"))
 const data_compra_iso = computed(() => formatISO(Date.now()))
 
 const data_caducitat_calc = computed(() => {
@@ -82,19 +99,22 @@ const data_caducitat_calc = computed(() => {
             data = Date.now()
     } else
         data = Date.now()
-    return formatISO(data)
+    return format(data,"yyyy-MM-dd")
 })
 const data_caducitat = ref(data_caducitat_calc.value)
 
+
+
 const updateAliment = useDebounceFn(() => {
-    updateItem(props.aliment._id,{
-        aliment:props.aliment._id,
-        data_compra:data_compra.value,
-        data_caducitat:data_caducitat.value,
-        quantitat:quantitat.value,
-        q_unitat:unitat.value
+    updateItem(props.aliment._id, {
+        aliment: props.aliment._id,
+        data_compra: data_compra.value,
+        data_caducitat: data_caducitat.value,
+        quantitat: quantitat.value,
+        q_unitat: unitat.value
     })
-},1000)
+}, 1000)
+
 const deleteAliment = () => {
     deleteItem(props.aliment._id)
     emit("deleteAliment", props.aliment)
@@ -113,14 +133,15 @@ const dateTimeCaducitatChange = (event: any) => {
     updateAliment()
 }
 
-onMounted(()=>{
+onMounted(() => {
     addItem({
-        aliment:props.aliment._id,
-        data_compra:data_compra.value,
-        data_caducitat:data_caducitat.value,
-        quantitat:quantitat.value,
-        q_unitat:unitat.value
+        aliment: props.aliment._id,
+        data_compra: data_compra.value,
+        data_caducitat: data_caducitat.value,
+        quantitat: quantitat.value,
+        q_unitat: unitat.value
     })
+    
 })
 
 </script>
@@ -139,8 +160,8 @@ onMounted(()=>{
 .myContainerQuantitat {
     display: flex;
 }
-ion-card{
-    border-radius:10px;
-}
 
+ion-card {
+    border-radius: 10px;
+}
 </style>

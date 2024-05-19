@@ -26,44 +26,36 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'tab1',
         component: () => import('@/views/HomePage.vue'),
-        
       },
       {
         path: 'explorar',
         component: () => import('@/views/Explorar.vue'),
-        
       },
       {
         path: 'tab3',
         component: () => import('@/views/Rebost.vue'),
-        
       },
       {
-        
-          path: 'rebost/:rebostId',
-          props: true,
-          component: () => import('@/views/Rebost/viewRebost.vue'),
-        
+        path: 'rebost/:rebostId',
+        props: true,
+        component: () => import('@/views/Rebost/viewRebost.vue'),
       },
       {
         path: 'tab4',
         component: () => import('@/views/Configuracio.vue'),
-        
       },
       {
         path: 'tab5',
         component: () => import('@/views/Ofertes/gestionarOfertes.vue'),
-        
       },
       {
         path: 'tab6',
         component: () => import('@/views/Comandes/viewComandes.vue'),
-        
       },
       {
-        path:'aliments',
-        component:()=>import('@/views/Aliments/viewAliments.vue')
-      }
+        path: 'aliments',
+        component: () => import('@/views/Aliments/viewAliments.vue'),
+      },
     ],
   },
   {
@@ -71,10 +63,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Explorar/viewEstabliment.vue'),
     props: true,
   },
-  
-
-  
- 
 ];
 
 const router = createRouter({

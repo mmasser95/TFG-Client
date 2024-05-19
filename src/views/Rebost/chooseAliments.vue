@@ -4,7 +4,9 @@
             <ion-buttons slot="start">
                 <ion-button @click="cancel">Cancel</ion-button>
             </ion-buttons>
-            <ion-title class="ion-text-center">Tria els aliments escanejats</ion-title>
+            <ion-title id="scan" class="ion-text-center">Tria els aliments escanejats
+                <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+            </ion-title>
             <ion-buttons slot="end">
                 <ion-button @click="confirm">Confirm</ion-button>
             </ion-buttons>
@@ -20,9 +22,8 @@
             </ion-col>
             <ion-col></ion-col>
         </ion-row>
-        
-                
     </ion-content>
+    <onboarding :steps="onBoardingChooseAlimentsSteps" @start-onboarding="startOnboarding"></onboarding>
 </template>
 <script setup lang="ts">
 import {
@@ -49,13 +50,22 @@ import {
     alertController,
     modalController
 } from '@ionic/vue';
+import { informationCircle } from 'ionicons/icons';
 import { Aliment } from '../../types';
 import cardAliment from '../../components/cardAliment.vue';
 import { showAlert } from '../../composables/loader';
-import { Ref,ref } from 'vue';
+import { Ref,onMounted,ref,nextTick } from 'vue';
 import {useScanStore} from '../../store/scanStore'
 import { storeToRefs } from 'pinia';
 import { createElementScan } from '../../APIService/elements';
+import onboarding from '../../components/onboarding.vue';
+import { StepEntity } from 'v-onboarding';
+
+const onBoardingChooseAlimentsSteps: Ref<StepEntity[] | any[]> = ref([])
+const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
+const startOnboarding = (element: any) => {
+    onboardingElement.value = element
+}
 const {clearStore}=useScanStore()
 const {elementsAfegir}=storeToRefs(useScanStore())
 clearStore()
@@ -86,7 +96,37 @@ const deleteAliment=async(event:any)=>{
     MyAliments.value.splice(idx,1)
 }
 
-
+onMounted(async()=>{
+    await nextTick()
+    onBoardingChooseAlimentsSteps.value = [{
+        attachTo: {
+            element: "#scan"
+        },
+        content: {
+            title: "Elements escanejats",
+            description: "Aquí podràs trobar un llistat de tots els elements que escaneji la IA"
+        },
+        options: {
+            popper: {
+                placement: 'bottom'
+            }
+        }
+    },{
+        attachTo: {
+            element: "#scan"
+        },
+        content: {
+            title: "Elements escanejats",
+            description: "Si hi ha algun error podràs esborrar l'element i afegir-lo manualment, després. A més a més, tens opcions per a afegir la quantitat d'aliment comprat"
+        },
+        options: {
+            popper: {
+                placement: 'bottom'
+            }
+        }
+    },
+]
+})
 
 </script>
 <style scoped>

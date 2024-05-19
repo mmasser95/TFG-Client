@@ -75,7 +75,10 @@
                     <ion-row>
                         <ion-col size="12" sizeXl="6">
                             <ion-item>
-                                <input type="file">
+                                <input class="ion-hide" @change="onChangeFileDialog" type="file" id="foto_oferta">
+                                <ion-button @click="openFileDialog('foto_oferta')">
+                                    Foto de perfil <ion-icon slot="end" :icon="camera"></ion-icon>
+                                </ion-button>
                             </ion-item>
                         </ion-col>
                         <ion-col size="12" sizeXl="6">
@@ -101,6 +104,7 @@
 </template>
 <script setup lang="ts">
 import { IonPage, IonContent, IonGrid, IonButtons, IonHeader, IonToolbar, IonRow, IonCol, IonTitle, IonList, IonItem, IonInput, IonButton, IonSelect, IonSelectOption, IonCheckbox } from '@ionic/vue'
+import { camera } from "ionicons/icons"
 import { ref, reactive, computed, defineProps, onMounted } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, minValue, numeric } from '@vuelidate/validators'
@@ -119,7 +123,8 @@ const state = reactive({
     preu: 0.0,
     quantitatDisponible: 0,
     active: false,
-    categoria: ''
+    categoria: '',
+    image_oferta: null
 })
 
 const rules = {
@@ -135,11 +140,26 @@ const v$ = useVuelidate(rules, state);
 const cancel = () => modalController.dismiss(null, 'cancel');
 const confirm = async () => {
     const valid = await v$.value.$validate();
+    let data = new FormData()
+    data.append("nom", state.nom)
+    data.append("descripcio", state.descripcio)
+    data.append("preu", state.preu)
+    data.append("quantitatDisponible", state.quantitatDisponible)
+    data.append("active", state.active)
+    data.append("categoria", state.categoria)
+    if (state.image_oferta)
+        data.append("img_oferta", state.image_oferta)
     if (valid)
-        modalController.dismiss(state, 'confirm');
+        modalController.dismiss(data, 'confirm');
 
 }
 
+const openFileDialog = (fileDialogId: any) => {
+    (document as any).getElementById(fileDialogId).click()
+}
+const onChangeFileDialog = (ev: any) => {
+    state.image_oferta = ev.target.files![0]
+}
 onMounted(() => {
     if (props.update != undefined) {
         if (props.update !== '') {

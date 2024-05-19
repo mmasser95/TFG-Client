@@ -48,12 +48,15 @@
                                 <div class="input-container">
                                     <ion-item>
                                         <ion-input label="Email" type="email" v-model="state.correu"
-                                            @ion-blur="v$.correu.$touch" :label-placement="labelPlacement"></ion-input>
+                                            @ion-change="emailDisponible" @ion-blur="v$.correu.$touch"
+                                            :label-placement="labelPlacement"></ion-input>
                                     </ion-item>
                                     <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
                                         message="Els correu és obligatori" />
                                     <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
                                         message="El correu és invàlid" />
+                                    <ErrorMessage v-if="emailDisponibleVar"
+                                        message="El correu ja existeix per a un altre compte" />
                                 </div>
                             </ion-col>
                         </ion-row>
@@ -134,12 +137,14 @@
 </template>
 <script setup lang="ts">
 import { IonHeader, IonContent, IonPage, IonToolbar, IonGrid, IonRow, IonCol, IonList, IonItem, IonButtons, IonTitle, IonInput, IonButton, alertController, modalController } from '@ionic/vue';
-import { reactive, computed } from 'vue';
+import { reactive, computed, ref } from 'vue';
 
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, sameAs, maxLength, numeric } from '@vuelidate/validators'
 import ErrorMessage from '../components/ErrorMessage.vue';
+import { correuDisponible } from '../APIService/utils'
 
+import { useDebounceFn } from '@vueuse/core'
 const labelPlacement = "floating"
 const presentAlert = async (prompt: string) => {
     const alert = await alertController.create({
@@ -149,6 +154,7 @@ const presentAlert = async (prompt: string) => {
     })
     await alert.present()
 }
+const emailDisponibleVar = ref(false)
 
 const state = reactive({
     nom: '',
@@ -164,10 +170,22 @@ const computedContrasenya = computed(() => {
     return state.contrasenya
 })
 
+const emailDisponible = useDebounceFn(() => {
+    if(!v$.value.correu.$invalid)
+    correuDisponible(state.correu, (err, data) => {
+        if (err) {
+            emailDisponibleVar.value = true
+            return false;
+        }
+        emailDisponibleVar.value = false
+    })
+}
+    , 500)
+
 const rules = {
     nom: { required, minLength: minLength(3) },
     cognoms: { required, minLength: minLength(3) },
-    correu: { required, email },
+    correu: { required, email, emailDisponible },
     telf: { required, minLength: minLength(9), maxLength: maxLength(9), numeric },
     data_naixement: { required },
     contrasenya: { required, minLength: minLength(8) },
@@ -176,15 +194,14 @@ const rules = {
 
 const v$ = useVuelidate(rules, state);
 
+
 const cancel = () => modalController.dismiss(null, 'cancel');
 const confirm = async () => {
     const valid = await v$.value.$validate();
-    if (valid)
+    if (valid && (emailDisponibleVar.value == false))
         modalController.dismiss(state, 'confirm');
 }
 
 
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -15,7 +15,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :pagination="{ clickable: true }">
+            <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :navigation="true" :pagination="{ clickable: true }">
               <swiper-slide v-if="establiments" v-for="(i, k) in establiments" :key="i._id">
                 <myCard :establiment="i" />
               </swiper-slide>
@@ -31,7 +31,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1" v-if="establimentsPreferits != null">
+            <swiper :slides-per-view="1" v-if="establimentsPreferits != null" :freeMode="true" :navigation="true">
               <swiper-slide v-for="d in establimentsPreferits" :key="d._id" v-if="establimentsPreferits.length > 0">
                 <myCard :establiment="d"></myCard>
               </swiper-slide>
@@ -50,9 +50,12 @@
 import { IonPage, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
 import { informationCircle } from 'ionicons/icons';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+
 import 'swiper/css';
 import 'swiper/css/free-mode'
 import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+
 import myCard from '../components/myCard.vue';
 import { onMounted, ref, Ref, watch } from 'vue';
 import { showLoading } from '../composables/loader';
@@ -70,9 +73,9 @@ const { favorites } = storeToRefs(favStore)
 const latitude = ref(41.0408888)
 const longitude = ref(0.7479283)
 const radi = ref(25)
-
 const started = ref(false)
 const establiments: Ref<[Establiment] | null> = ref(null)
+
 const establimentsPreferits: Ref<[Establiment] | null> = ref(null)
 
 const onboardingHomeSteps = [{
@@ -165,11 +168,6 @@ onMounted(async () => {
     console.log('data :>> ', data);
   })
   started.value=true
-  // testFCM().then((res) => {
-  //   console.log('res :>> ', res);
-  // }).catch((err) => {
-  //   console.log('err :>> ', err);
-  // });
 
 })
 

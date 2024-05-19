@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { IonApp, createAnimation, IonRouterOutlet, useBackButton, useIonRouter } from '@ionic/vue';
 import { onBeforeMount, onMounted } from 'vue';
 import { initializeApp } from "firebase/app";
@@ -70,8 +71,10 @@ if (token) {
     loader.present()
     verificarToken((err: any, data: any) => {
       loader.dismiss()
-      router.push("/login")
-      if (err) return false
+      if (err) {
+        //router.push("/login")
+        return false
+      }
       setToken(data.token)
       localStorage.setItem('token', data.token)
       setUserId(data.userId)

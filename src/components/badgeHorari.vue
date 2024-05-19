@@ -1,6 +1,6 @@
 <template>
-    <div class="horari" v-if="horaris">
-        <ion-badge v-for="horari in horaris" :key="horari._id" >
+    <div class="horari" v-if="horaris.length>0">
+        <ion-badge data-test="badge" v-for="horari in horaris" :key="horari._id" >
             {{ horari.inici }}-{{ horari.final }}
         </ion-badge>
     </div>
