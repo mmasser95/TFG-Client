@@ -1,14 +1,14 @@
 <template>
     <ion-page>
+        <ion-header>
+            <ion-toolbar>
+                <ion-title id="ofertes" class="ion-text-center">Gestionar Ofertes
+                    <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                </ion-title>
+            </ion-toolbar>
+        </ion-header>
         <ion-content>
             <ion-grid>
-                <ion-row>
-                    <ion-col></ion-col>
-                    <ion-col size="12" sizeXl="8">
-                        <ion-title class="ion-text-center">Gestionar Ofertes publicades per {{ userId }}</ion-title>
-                    </ion-col>
-                    <ion-col></ion-col>
-                </ion-row>
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
@@ -55,12 +55,14 @@
             </ion-fab>
         </ion-content>
     </ion-page>
+    <onboarding :steps="onBoardingOfertesSteps" @start-onboarding="startOnboarding"></onboarding>
 </template>
 <script setup lang="ts">
 import {
     IonPage,
     IonContent,
     IonHeader,
+    IonToolbar,
     IonTitle,
     IonButton,
     IonList,
@@ -81,18 +83,24 @@ import {
     IonFabButton,
     IonRippleEffect
 } from '@ionic/vue'
-
+import onboarding from '../../components/onboarding.vue';
+import { StepEntity } from 'v-onboarding';
 import { add, pencil, trash } from 'ionicons/icons'
 
 import { crearOferta, deleteOferta, getOfertes, updateOferta } from '../../APIService/ofertes';
-import { Ref, ref } from 'vue';
+import { Ref, ref,onMounted } from 'vue';
 import newOferta from './newOferta.vue';
 import { useLoginStore } from '../../store/loginStore';
 import { storeToRefs } from 'pinia';
 import { Oferta } from '../../types'
 const store = useLoginStore()
 const { userId } = storeToRefs(store)
-
+const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
+const startOnboarding = (element: any) => {
+    console.log('element :>> ', element);
+    onboardingElement.value = element
+}
+const onBoardingOfertesSteps: Ref<StepEntity[] | any[]> = ref([])
 const presentAlert = async (prompt: string) => {
     const alert = await alertController.create({
         header: 'Missatge del sistema',
@@ -150,6 +158,37 @@ const eliminarOferta = (ofertaId: any) => {
 }
 
 fillOfertes();
+onMounted(async()=>{
+    await fillOfertes();
+    onBoardingOfertesSteps.value=[{
+        attachTo: {
+            element: "#ofertes"
+        },
+        content: {
+            title: "Gestionar ofertes",
+            description: "En aquest apartat podràs gestionar totes les ofertes actives i no actives del teu establiment."
+        },
+        options: {
+            popper: {
+                placement: 'bottom'
+            }
+        }
+    }, {
+        attachTo: {
+            element: "#afegir"
+        },
+        content: {
+            title: "Crear oferta",
+            description: "Per a crear i publicar una nova oferta clica sobre aquest botó"
+        },
+        options: {
+            popper: {
+                placement: 'top'
+            }
+        }
+    },]
+
+})
 </script>
 <style scoped>
 .container {

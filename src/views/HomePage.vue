@@ -1,5 +1,11 @@
 <template>
   <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title class="ion-text-center">Home <ion-icon color="primary" :icon="informationCircle"
+            @click="onboardingElement?.start"></ion-icon></ion-title>
+      </ion-toolbar>
+    </ion-header>
     <ion-content :fullscreen="true" class="ion-padding">
       <ion-refresher slot="fixed" @ion-refresh.stop="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
@@ -7,15 +13,15 @@
       <ion-grid>
         <ion-row>
           <ion-col class="ion-activatable" id="negocisSection">
-            <ion-title class="ion-text-center ion-activatable" >Llista de negocis <ion-icon
-                :icon="informationCircle" @click="onboardingElement?.start"></ion-icon></ion-title>
+            <ion-title class="ion-text-center ion-activatable">Llista de negocis </ion-title>
 
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :navigation="true" :pagination="{ clickable: true }">
+            <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :navigation="true"
+              :pagination="{ clickable: true }">
               <swiper-slide v-if="establiments" v-for="(i, k) in establiments" :key="i._id">
                 <myCard :establiment="i" />
               </swiper-slide>
@@ -25,7 +31,7 @@
         </ion-row>
         <ion-row>
           <ion-col class="ion-activatable" id="preferitsSection">
-            <ion-title class="ion-text-center ion-activatable" >Negocis preferits</ion-title>
+            <ion-title class="ion-text-center ion-activatable">Negocis preferits</ion-title>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -50,12 +56,10 @@
 import { IonPage, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonList, IonItem, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
 import { informationCircle } from 'ionicons/icons';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-
 import 'swiper/css';
 import 'swiper/css/free-mode'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
-
 import myCard from '../components/myCard.vue';
 import { onMounted, ref, Ref, watch } from 'vue';
 import { showLoading } from '../composables/loader';
@@ -68,6 +72,7 @@ import { useFavStore } from '../store/favStore';
 import { storeToRefs } from 'pinia';
 import { useDebounceFn } from '@vueuse/core'
 import onboarding from '../components/onboarding.vue';
+//Variables inicials
 const favStore = useFavStore()
 const { favorites } = storeToRefs(favStore)
 const latitude = ref(41.0408888)
@@ -77,7 +82,7 @@ const started = ref(false)
 const establiments: Ref<[Establiment] | null> = ref(null)
 
 const establimentsPreferits: Ref<[Establiment] | null> = ref(null)
-
+//Les passes de l'onboarding
 const onboardingHomeSteps = [{
   attachTo: {
     element: "#negocisSection"
@@ -105,20 +110,16 @@ const onboardingHomeSteps = [{
     description: "En aquest apartat podràs trobar els establiments que has marcat com a preferits"
   }
 }]
-
+//L'element de l'onboarding
 const onboardingElement = ref<{ start: Function, finish: Function, goToStep: Function } | null>(null)
-
+//Funció per a executar l'onboarding
 const startOnboarding = (element: any) => {
   console.log('element :>> ', element);
-  
+
   onboardingElement.value = element
 }
 
-watch(favStore.favorites, async (before, after) => {
-  await fillEstablimentsPreferits()
-  console.log(before, after)
-}, { deep: true })
-
+//Funció per a obtenir els establiments propers
 const fillEstabliments = async () => {
   const loader = await showLoading("Carregant establiments")
   loader.present()
@@ -127,15 +128,8 @@ const fillEstabliments = async () => {
     if (err) return
     establiments.value = data.establiments
   })
-  /*searchEstabliments(latitude.value, longitude.value, radi.value).then((result) => {
-    establiments.value = result.data.establiments
-  }).catch((err) => {
-
-  }).finally(() => {
-    loader.dismiss(null, 'cancel')
-  });*/
 }
-
+//Funció per obtenir els establiments preferits de l'usuari
 const fillEstablimentsPreferits = useDebounceFn(async () => {
   const loader = await showLoading("Carregant establiments preferits")
   loader.present()
@@ -144,15 +138,9 @@ const fillEstablimentsPreferits = useDebounceFn(async () => {
     if (err) return
     establimentsPreferits.value = data.preferits.establiments_fav
   })
-  // getMyFavs().then((result) => {
-  //   establimentsPreferits.value = result.data.preferits.establiments_fav
-  // }).catch((err) => {
-
-  // }).finally(() => {
-  //   loader.dismiss(null, 'cancel')
-  // });
 }, 250)
 
+//Funció per a refrescar els resultats de la pantalla principal
 const handleRefresh = (event: RefresherCustomEvent) => {
   fillEstabliments().then((res) => {
     event.target.complete()
@@ -160,15 +148,17 @@ const handleRefresh = (event: RefresherCustomEvent) => {
 }
 
 onMounted(async () => {
-  console.log(establimentsPreferits.value)
+  //Es fan les crides a la API per a mostrar els resultats un cop es monti el component
   await fillEstabliments()
   await fillEstablimentsPreferits()
-  testFCM((err: any, data: any) => {
-    if (err) return
-    console.log('data :>> ', data);
-  })
-  started.value=true
+  started.value = true
 
 })
+//Aquesta funció watch permet observar si s'afegeixen o es borren elements dels preferits
+//I actualitza automàticament l'slider
+watch(favStore.favorites, async (before, after) => {
+  await fillEstablimentsPreferits()
+  console.log(before, after)
+}, { deep: true })
 
 </script>

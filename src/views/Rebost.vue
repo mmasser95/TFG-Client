@@ -7,7 +7,7 @@
             <ion-row class="ion-justify-content-center ion-align-items-center">
               <ion-col>
                 <ion-title class="ion-text-center">Rebost
-                  <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                  <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
                 </ion-title>
               </ion-col>
             </ion-row>

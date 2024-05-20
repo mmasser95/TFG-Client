@@ -7,48 +7,75 @@
                 </ion-button>
             </ion-buttons>
             <ion-title class="ion-text-center ion-activatable">Veure comanda
-                <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
             </ion-title>
         </ion-toolbar>
     </ion-header>
     <ion-content>
         <div class="container ion-activatable" v-if="userType == 'client'">
             <div class="container-2 ">
-                Establiment: {{comanda.establimentId.nom}}
+                Establiment: <router-link :to="`/establiment/${comanda.establimentId._id}`">{{ comanda.establimentId.nom }}</router-link>
             </div>
             <div class="container-2">
-                Correu: {{comanda.establimentId.correu}}
+                Correu: {{ comanda.establimentId.correu }}
             </div>
             <div class="container-2">
-                
+                Oferta comprada: {{comanda.oferta?.nom}}
+            </div>
+            <div class="container-2">
+                Preu oferta: {{comanda.oferta?.preu}} €
+            </div>
+            <div class="container-2">
+                Quantitat: {{comanda.quantitat}}
+            </div>
+            <div class="container-2">
+                Preu total: {{comanda.total}} €
+            </div>
+            <div class="container-2">
+                Data compra: {{format(comanda.data,"dd/MM/yyyy HH:mm")}}
             </div>
         </div>
         <div class="container ion-activatable" v-else>
             <div class="container-2">
-                Usuari: {{comanda.userId.nom}} {{comanda.userId.cognoms}}
+                Usuari: {{ comanda.userId.nom }} {{ comanda.userId.cognoms }}
             </div>
             <div class="container-2">
                 Correu: {{ comanda.userId.correu }}
             </div>
-            <div class="container-2"></div>
+            <div class="container-2">
+                Oferta comprada: {{comanda.oferta?.nom}}
+            </div>
+            <div class="container-2">
+                Preu oferta: {{comanda.oferta?.preu}}
+            </div>
+            <div class="container-2">
+                Quantitat: {{comanda.quantitat}}
+            </div>
+            <div class="container-2">
+                Preu total: {{comanda.total}}
+            </div>
+            <div class="container-2">
+                Data compra: {{format(comanda.data,"dd/MM/yyyy HH:mm")}}
+            </div>
         </div>
         <div class="container comentari ion-activatable">
-            <comentariComponent :comandaId="comanda._id"/>
+            <comentariComponent :comandaId="comanda._id" />
         </div>
         <onboarding :steps="onBoardingViewComandaSteps" @start-onboarding="startOnboarding"></onboarding>
     </ion-content>
-    
+
 </template>
 <script setup lang="ts">
 import { IonPage, IonContent, IonItem, IonIcon, IonHeader, IonToolbar, IonButton, IonButtons, IonTitle, IonGrid, IonRow, IonCol, modalController } from '@ionic/vue'
 import comentariComponent from '../../components/comentariComponent.vue';
-import { onMounted,nextTick,ref,Ref } from 'vue';
-import { arrowBack,informationCircle } from 'ionicons/icons';
+import { onMounted, nextTick, ref, Ref } from 'vue';
+import { arrowBack, informationCircle } from 'ionicons/icons';
 import { Comanda } from '../../types';
 import { useLoginStore } from '../../store/loginStore';
 import { storeToRefs } from 'pinia'
 import onboarding from '../../components/onboarding.vue';
 import { StepEntity } from 'v-onboarding';
+import format from "date-fns/format"
 const startOnboarding = (element: any) => {
     onboardingElement.value = element
 }
@@ -59,10 +86,10 @@ const { userType } = storeToRefs(useLoginStore())
 const props = defineProps<{
     comanda: Comanda
 }>()
-onMounted(async()=>{
+onMounted(async () => {
     await nextTick()
     if (useLoginStore().userType == "client")
-    onBoardingViewComandaSteps.value = [{
+        onBoardingViewComandaSteps.value = [{
             attachTo: {
                 element: ".container-2"
             },
@@ -72,10 +99,10 @@ onMounted(async()=>{
             },
             options: {
                 popper: {
-                    placement: 'bottom'
+                    placement: 'bottom-start'
                 }
             }
-        },{
+        }, {
             attachTo: {
                 element: ".comentari"
             },
@@ -85,12 +112,12 @@ onMounted(async()=>{
             },
             options: {
                 popper: {
-                    placement: 'bottom'
+                    placement: 'bottom-start'
                 }
             }
         },]
     else
-    onBoardingViewComandaSteps.value = [{
+        onBoardingViewComandaSteps.value = [{
             attachTo: {
                 element: ".container2"
             },
@@ -100,10 +127,10 @@ onMounted(async()=>{
             },
             options: {
                 popper: {
-                    placement: 'bottom'
+                    placement: 'bottom-start'
                 }
             }
-        },{
+        }, {
             attachTo: {
                 element: ".comentari"
             },
@@ -113,17 +140,17 @@ onMounted(async()=>{
             },
             options: {
                 popper: {
-                    placement: 'bottom'
+                    placement: 'bottom-start'
                 }
             }
         },]
 })
 </script>
 <style scoped>
-.container{
+.container {
     display: flex;
-    gap:15px;
-    flex-flow:column wrap;
-    padding:16px
+    gap: 15px;
+    flex-flow: column wrap;
+    padding: 16px
 }
 </style>

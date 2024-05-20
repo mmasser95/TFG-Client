@@ -8,7 +8,7 @@
                     </ion-button>
                 </ion-buttons>
                 <ion-title class="ion-text-center ion-activatable" id="rebost">Rebost
-                    <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                    <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
                 </ion-title>
             </ion-toolbar>
         </ion-header>
@@ -48,14 +48,14 @@
             </ion-grid>
 
             <ion-fab id="addBtn" slot="fixed" vertical="bottom" horitzontal="center">
-                <ion-fab-button id="addBtn2" class="ion-activatable">
+                <ion-fab-button color="primary" id="addBtn2" class="ion-activatable">
                     <ion-icon id="addBtn3" :icon="add"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="top">
-                    <ion-fab-button @click="takePhoto()">
+                    <ion-fab-button color="tertiary" @click="takePhoto()">
                         <ion-icon :icon="camera"></ion-icon>
                     </ion-fab-button>
-                    <ion-fab-button @click="openModalCreate">
+                    <ion-fab-button color="secondary" @click="openModalCreate">
                         <ion-icon :icon="pencil"></ion-icon>
                     </ion-fab-button>
                 </ion-fab-list>

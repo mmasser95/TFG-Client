@@ -17,14 +17,14 @@
         </ion-card-header>
         <ion-card-content class="container1">
             <div class="container2">
-                <div class="container3">{{ total }}</div>
+                <div class="container3">{{ total }} €</div>
                 <div class="container3" @click.stop="null">
                     <ion-input id="quantitat" label="Quantitat" label-placement="floating" type="number" min="1"
-                    :max="oferta.quantitatDisponible"  v-model="quantitat"></ion-input>
+                        :max="oferta.quantitatDisponible" v-model="quantitat"></ion-input>
                 </div>
                 <div class="container3">
                     <ion-button color="secondary" @click.stop="alertComprar" expand="block">
-                        <ion-icon :icon="bag"></ion-icon>
+                        <ion-icon :icon="cart"></ion-icon>
                     </ion-button>
                 </div>
             </div>
@@ -35,18 +35,19 @@
     </ion-card>
 </template>
 <script setup lang="ts">
-import { IonCard,IonCardContent,IonCardHeader,IonCardSubtitle,IonCardTitle, IonRippleEffect, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonRippleEffect, alertController, useIonRouter, IonRow, IonCol, IonTitle, IonText, IonButton, IonIcon, IonInput, modalController } from '@ionic/vue';
 import viewOferta from '../views/Explorar/viewOferta.vue';
-import { bag } from 'ionicons/icons';
+import { cart } from 'ionicons/icons';
 import { ref, computed, watch } from 'vue';
 import { Oferta } from '../types'
 import { createComanda } from '../APIService/comandes'
 import round from "lodash/round"
+import ceil from "lodash/ceil"
 const router = useIonRouter()
 
 const alertComprar = async () => {
     let alert = await alertController.create({
-        header: `Vols comprar x${quantitat.value} aquesta oferta per ${props.oferta.preu * quantitat.value}€?`,
+        header: `Vols comprar x${ceil(quantitat.value)} aquesta oferta per ${props.oferta.preu * ceil(quantitat.value)}€?`,
         message: "Seras redireccionat a la pasarela de pagament.",
         buttons: [{
             text: "Si",
@@ -64,12 +65,12 @@ const alertComprar = async () => {
 let props = defineProps<{
     oferta: Oferta,
     establimentId: string,
-    img_fons?:string
+    img_fons?: string
 }>()
 
 let quantitat = ref(1)
 
-let total = computed(() => round(props.oferta.preu * quantitat.value,2))
+let total = computed(() => round(props.oferta.preu * ceil(quantitat.value), 2))
 const showModalOferta = async () => {
     const modal = await modalController.create({
         component: viewOferta,
@@ -87,8 +88,8 @@ const ferCompra = () => {
     createComanda({
         establimentId: props.establimentId,
         oferta: JSON.stringify(props.oferta),
-        quantitat: quantitat.value,
-        total: props.oferta.preu * quantitat.value
+        quantitat: ceil(quantitat.value),
+        total: round(props.oferta.preu * ceil(quantitat.value), 2)
     }, async (err: any, data: any) => {
         if (err) return true
         let alert = await alertController.create({
@@ -116,14 +117,16 @@ const ferCompra = () => {
     justify-content: flex-end;
     gap: 40px;
 }
-.container2{
+
+.container2 {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
     justify-content: flex-end;
     gap: 40px;
-    width:100%
+    width: 100%
 }
+
 /*ion-button {
     --background: linear-gradient(to right, #70995c, #a5b061, #dfc36f, #ffd489);
 }*/

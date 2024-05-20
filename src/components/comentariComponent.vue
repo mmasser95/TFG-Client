@@ -14,28 +14,23 @@
                 {{ comentariState.quantitat }}
             </div>
         </div>
-        <ion-grid>
-            <ion-row>
-                <ion-col></ion-col>
-                <ion-col size="8">
-                    <ion-item>
-                        <ion-textarea :disabled="isDisabled" v-model="comentariState.comentari"
-                            placeholder="Escriure un comentari..."></ion-textarea>
-                    </ion-item>
-                </ion-col>
-                <div class="buttonContainer">
-                    <ion-button type="submit" :disabled="isDisabled" @click="confirm">
-                        <ion-icon slot="icon-only" :icon="pencil"></ion-icon>
-                    </ion-button>
-                </div>
-            </ion-row>
-        </ion-grid>
+        <div class="container-box">
+            <ion-item>
+                <ion-textarea :disabled="isDisabled" v-model="comentariState.comentari"
+                    placeholder="Escriure un comentari..."></ion-textarea>
+            </ion-item>
+            <div class="buttonContainer">
+                <ion-button type="submit" :disabled="isDisabled" @click="confirm">
+                    <ion-icon slot="icon-only" :icon="send"></ion-icon>
+                </ion-button>
+            </div>
+        </div>
     </form>
 </template>
 <script setup lang="ts">
 import { IonTextarea, IonLabel, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonItem } from '@ionic/vue';
 
-import { pencil } from 'ionicons/icons';
+import { send } from 'ionicons/icons';
 import { Ref, ref, onMounted, computed } from 'vue';
 import { getAvaluacio, createAvaluacio } from '../APIService/avaluacions'
 import { showAlert } from '../composables/loader';
@@ -104,5 +99,10 @@ onMounted(() => {
     flex-flow: row wrap;
     align-items: center;
 
+}
+.container-box{
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content: center;
 }
 </style>

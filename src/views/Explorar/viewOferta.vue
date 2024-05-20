@@ -17,24 +17,22 @@
                         <div v-else>{{ label }}: {{ oferta[k] }}</div>
                     </div>
                 </div>
+                <form action="" @submit.prevent="">
+                    <div class="container3">
 
-                <div class="container3">
-                    <form action="" @submit.prevent="">
                         <div class="item3">
                             <ion-item>
                                 <ion-input type="number" :min="1" :max="50" v-model="quantitat"></ion-input>
                             </ion-item>
                         </div>
                         <div class="item3">
-                            {{ quantitat * oferta.preu }} €
+                            Total: {{ round(quantitat * oferta.preu,2) }} €
                         </div>
-                        <div class="item3">
-                            <ion-button  @click="alertComprar" expand="block">
-                                <ion-icon slot="icon-only" :icon="bag"></ion-icon>
+                            <ion-button @click="alertComprar" expand="block">
+                                <ion-icon slot="icon-only" :icon="cart"></ion-icon>
                             </ion-button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </ion-content>
     </ion-page>
@@ -43,10 +41,12 @@
 import { IonPage, IonHeader, IonToolbar, IonButtons, alertController, IonButton, IonIcon, IonTitle, IonContent, IonItem, IonList, modalController, IonInput } from '@ionic/vue';
 import { Ref, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { bag } from 'ionicons/icons';
+import { cart } from 'ionicons/icons';
 import { showLoading, showAlert } from '../../composables/loader';
 import { Oferta } from '../../types';
 import { createComanda } from '../../APIService/comandes'
+import round from "lodash/round"
+import ceil from "lodash/ceil"
 //import { getOfertaUser } from '../../APIService/ofertes';
 const router = useRouter()
 const cancel = () => modalController.dismiss(null, 'cancel')
@@ -70,9 +70,8 @@ const labels = {
 }
 
 const alertComprar = async () => {
-    console.log("Gola")
     let alert = await alertController.create({
-        header: `Vols comprar x${quantitat.value} aquesta oferta per ${props.oferta.preu * quantitat.value}€?`,
+        header: `Vols comprar x${ceil(quantitat.value)} aquesta oferta per ${props.oferta.preu * ceil(quantitat.value)}€?`,
         message: "Seras redireccionat a la pasarela de pagament.",
         buttons: [{
             text: "Si",
@@ -90,8 +89,8 @@ const ferCompra = () => {
     createComanda({
         establimentId: props.establimentId,
         oferta: JSON.stringify(props.oferta),
-        quantitat: quantitat.value,
-        total: props.oferta.preu * quantitat.value
+        quantitat: ceil(quantitat.value),
+        total: round(props.oferta.preu * quantitat.value,2)
     }, async (err: any, data: any) => {
         if (err) return true
         let alert = await alertController.create({
@@ -135,9 +134,10 @@ onMounted(() => {
 
 .container3 {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
+    align-items: center;
     margin: 10px;
-    gap: 10px;
+    gap: 17px;
 }
 
 .container3>ion-item {
@@ -155,7 +155,7 @@ ion-item>ion-button {
 
 .container4 {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
 }
 
 ion-input {

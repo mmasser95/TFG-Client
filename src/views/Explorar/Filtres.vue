@@ -2,7 +2,7 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button color="secondary" @click="confirm">
+                <ion-button color="primary" @click="confirm">
                     <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
                 </ion-button>
             </ion-buttons>
@@ -26,7 +26,7 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <ion-range @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
+                    <ion-range color="secondary" @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
                         :label-placement="labelPlacement"
                         :label="`Horari ${hores[horari.lower]}-${hores[horari.upper]}`" :dual-knobs="true" :pin="true"
                         :pin-formatter="pinFormatterHorari"></ion-range>
@@ -36,7 +36,7 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                            <ion-range v-model="qualitatMinima" @ion-change="qualitatChange"
+                            <ion-range color="tertiary" v-model="qualitatMinima" @ion-change="qualitatChange"
                                 :label="`Valoració qualitat: ${qualitatMinima}`" :label-placement="labelPlacement"
                                 :max="4" :min="0" :pin="true"></ion-range>
                 </ion-col>
@@ -45,7 +45,7 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                            <ion-range v-model="quantitatMinima" :label="`Valoraciò quantitat:${quantitatMinima}`"
+                            <ion-range color="tertiary" v-model="quantitatMinima" :label="`Valoraciò quantitat:${quantitatMinima}`"
                                 :label-placement="labelPlacement" :max="4" :min="0" :pin="true"></ion-range>
                         </ion-col>
                 <ion-col></ion-col>

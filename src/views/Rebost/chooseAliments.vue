@@ -4,8 +4,8 @@
             <ion-buttons slot="start">
                 <ion-button @click="cancel">Cancel</ion-button>
             </ion-buttons>
-            <ion-title id="scan" class="ion-text-center">Tria els aliments escanejats
-                <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+            <ion-title id="scan" class="ion-text-center">Resultats
+                <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
             </ion-title>
             <ion-buttons slot="end">
                 <ion-button @click="confirm">Confirm</ion-button>

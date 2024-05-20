@@ -37,14 +37,7 @@
                         </ion-radio-group>
                     </ion-col>
                 </ion-row>
-                <ion-row>
-                    <ion-col>
-                        <ion-title class="ion-text-center">Mida de la lletra</ion-title>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col>Slider per la mida de la lletra</ion-col>
-                </ion-row>
+            
             </ion-grid>
         </ion-content>
     </ion-page>
@@ -75,24 +68,26 @@ const onChangeTheme = (ev: any) => {
         mode.value = 'contrast'
     else if (ev.detail.value == 'fosc')
         mode.value = 'dark'
-    else
+    else if(ev.detail.value=="clar")
         mode.value = 'light'
+    else
+        mode.value = 'auto'
 }
 
 onMounted(() => {
-    let theme = localStorage.getItem('theme');
-    if (!theme) {
-        localStorage.setItem('theme', 'sys');
-        theme = 'sys';
-    }
-    myTheme.value = theme;
+    console.log('mode.value :>> ', mode.value);
+    // if (!theme) {
+    //     localStorage.setItem('theme', 'sys');
+    //     theme = 'sys';
+    // }
+    // myTheme.value = theme;
 })
 
 </script>
 <style scoped>
 .container {
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: row wrap;
     gap: 20px;
     justify-content: space-evenly;
 }

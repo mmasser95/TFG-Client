@@ -48,7 +48,7 @@ const tabsEstabliment = ref([{
 }, {
   tabName: 'tab3',
   hrf: '/tabs/tab3',
-  icon: cube,
+  icon: fastFood,
   label: 'Rebost',
   id: "rebost"
 }, {
@@ -57,6 +57,11 @@ const tabsEstabliment = ref([{
   icon: cog,
   label: 'Config.',
   id: "config"
+}, {
+  tabName: 'tab7',
+  hrf: "/tabs/aliments",
+  icon: fastFood,
+  label: "Afegir aliments"
 }])
 const tabsUser = ref([{
   tabName: 'tab1',
@@ -73,7 +78,7 @@ const tabsUser = ref([{
 }, {
   tabName: 'tab3',
   hrf: '/tabs/tab3',
-  icon: cube,
+  icon: fastFood,
   label: 'Rebost',
   id: "rebost"
 }, {
@@ -82,11 +87,6 @@ const tabsUser = ref([{
   icon: cog,
   label: 'Config.',
   id: "config"
-}, {
-  tabName: 'tab7',
-  hrf: "/tabs/aliments",
-  icon: fastFood,
-  label: "Afegir aliments"
 }])
 
 </script>

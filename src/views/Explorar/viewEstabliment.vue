@@ -21,10 +21,16 @@
                         sizeSm="12">
                         <div class="container1">
                             <div class="container-img-fondo">
-                                <img class="img_fondo" crossorigin="anonymous"
-                                    :src="`https://app.flyfood.online/${establiment.url_fondo}`" alt="Prova">
+                                <favButton class="fav" :establimentId="establiment._id"></favButton>
+                                <img v-if="establiment.url_fondo" class="img_fondo"
+                                    :src="`https://app.flyfood.online/${establiment.url_fondo}`" :alt="`Imatge del fons del negoci ${establiment.nom}`"/>
+                                <img v-else class="img_fondo" :alt="`Imatge del fons del negoci ${establiment.nom}`"
+                                    src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg" />
                                 <ion-thumbnail class="img_perfil">
-                                    <img :src="`https://app.flyfood.online/${establiment.url_imatge}`" alt="Prova2">
+                                    <img v-if="establiment.url_imatge" :alt="`Imatge del logotip del negoci ${establiment.nom}`"
+                                        :src="`https://app.flyfood.online/${establiment.url_imatge}`">
+                                    <img v-else :alt="`Imatge del logotip del negoci ${establiment.nom}`"
+                                        src="https://ionicframework.com/docs/img/demos/card-media.png" />
                                 </ion-thumbnail>
 
                             </div>
@@ -43,14 +49,17 @@
                                     <badgeHorari :horaris="establiment.horari" />
                                 </div>
                                 <div v-else-if="label == 'Telèfon'">
-                                    Telèfon: <ion-chip class="telfBadge">
+                                    <ion-badge color="secondary" class="telfBadge">
                                         <div class="myBadge">
                                             {{ establiment.telf }} <ion-icon :icon="call"></ion-icon>
                                         </div>
-                                    </ion-chip>
+                                    </ion-badge>
+                                </div>
+                                <div v-else-if="label=='Tipus'">
+                                    <badgeTipus :tipus="establiment[k]"></badgeTipus>
                                 </div>
                                 <div v-else>
-                                    {{ label }}: {{ establiment[k] }}
+                                    {{ establiment[k] }}
                                 </div>
                             </ion-item>
                             <ion-item>
@@ -62,7 +71,7 @@
                                 {{ round(quantitat, 1) }}
                             </ion-item>
                             <ion-item>
-                                Direccio: {{ direccio }}
+                                {{ direccio }}
                             </ion-item>
                             <ion-item>
                                 <div id="map" style="height:300px; width:100%;"></div>
@@ -70,6 +79,17 @@
                         </ion-list>
                     </ion-col>
                     <ion-col></ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+
+                    </ion-col>
+                    <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
+                        <ion-title class="ion-text-center">Ofertes disponibles</ion-title>
+                    </ion-col>
+                    <ion-col>
+
+                    </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col></ion-col>
@@ -91,7 +111,6 @@
                         <div v-else>
                             <p class="ion-text-center">Encara no hi ha comentaris sobre aquest establiment...</p>
                         </div>
-
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -115,7 +134,9 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import location from "leaflet/dist/images/marker-icon.png"
+import favButton from '../../components/favButton.vue';
 import badgeHorari from '../../components/badgeHorari.vue';
+import badgeTipus from '../../components/badgeTipus.vue';
 import cardComentari from '../../components/cardComentari.vue';
 import round from 'lodash/round'
 import takeRight from 'lodash/takeRight';
@@ -203,7 +224,7 @@ onMounted(async () => {
 </script>
 <style scoped>
 .telfBadge {
-    background: #008b90;
+    
     display: flex;
     align-items: center;
 }
@@ -229,11 +250,16 @@ onMounted(async () => {
 .img_perfil {
     position: absolute;
     bottom: 10px;
-    left: 50px
+    left: 30px
 }
 
 ion-thumbnail {
-    --size: 120px;
-    --border-radius: 20px;
+    --size: 75px;
+    --border-radius: 10px;
+}
+.fav {
+    position: absolute;
+    top: 25px;
+    right: 25px;
 }
 </style>

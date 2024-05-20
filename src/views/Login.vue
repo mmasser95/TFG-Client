@@ -103,9 +103,9 @@ import { useFavStore } from '../store/favStore'
 import { useAlimentStore } from '../store/alimentStore'
 import { useFirebaseStore } from '../store/firebaseStore'
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
-
+//Router de Vue
 const router = useRouter();
-//Store
+//Store de pinia
 const store = useLoginStore();
 const { userId, token } = storeToRefs(store);
 const { setToken, setUserId, setUserType } = store;
@@ -154,7 +154,6 @@ const presentAlert = async (prompt: string) => {
 
 const login = async () => {
   const valid = await v$.value.$validate();
-  //const valid = true
   if (valid) {
     const loader = await showLoading("Iniciant sessió")
     loader.present()
@@ -204,7 +203,6 @@ const operModalRegistreEstabliment = async () => {
     breakpoints: [0, 0.33, 0.66, 1]
   })
   modal.present();
-
   const { data, role } = await modal.onWillDismiss();
   if (role == 'confirm') {
     const loader = await showLoading("Enviant informació de registre de l'establiment")

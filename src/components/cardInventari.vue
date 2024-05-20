@@ -15,7 +15,7 @@
                 </ion-button>
                 <ion-button expand="block" class="deleteBtn" color="danger"
                     @click.stop="createConfirmationAlert('Estas segur que vols eliminar aquest rebost i el seu contingut?', estasSegur)">
-                    <ion-icon :icon="trashBinSharp"></ion-icon>
+                    <ion-icon :icon="trash"></ion-icon>
                 </ion-button>
             </div>
         </ion-card-content>
@@ -24,7 +24,7 @@
 </template>
 <script setup lang="ts">
 import { IonText, IonCard, IonIcon, IonCardHeader, IonCardTitle, IonCardContent, IonButton, alertController, IonCol, IonRow, IonGrid, IonCardSubtitle, IonRippleEffect } from '@ionic/vue'
-import { boat, pencilSharp, pencil, trashBinSharp } from 'ionicons/icons'
+import { boat, pencilSharp, pencil, trash } from 'ionicons/icons'
 import { defineProps } from 'vue';
 import { deleteRebost } from '../APIService/rebosts';
 import { useRouter } from 'vue-router';

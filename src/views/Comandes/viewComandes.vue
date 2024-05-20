@@ -3,7 +3,7 @@
         <ion-header>
             <ion-toolbar>
                 <ion-title id="comandes" class="ion-text-center"> Veure comandes
-                    <ion-icon color="tertiary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
+                    <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
                 </ion-title>
             </ion-toolbar>
         </ion-header>
@@ -82,7 +82,7 @@ onMounted(async () => {
             },
             options: {
                 popper: {
-                    placement: 'bottom'
+                    placement: 'bottom-start'
                 }
             }
         },]
@@ -97,7 +97,7 @@ onMounted(async () => {
             },
             options: {
                 popper: {
-                    placement: 'bottom'
+                    placement: 'bottom-start'
                 }
             }
         },]
@@ -123,7 +123,7 @@ const handleRefresh = async (event: any) => {
 .comandes-container {
     display: flex;
     flex-flow: row-reverse wrap;
-    justify-content: flex-end;
+    justify-content: space-evenly;
 }
 
 .item {

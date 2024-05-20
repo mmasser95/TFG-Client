@@ -1,6 +1,6 @@
 <template>
     <div class="horari" v-if="horaris.length>0">
-        <ion-badge data-test="badge" v-for="horari in horaris" :key="horari._id" >
+        <ion-badge color="success" data-test="badge" v-for="horari in horaris" :key="horari._id" >
             {{ horari.inici }}-{{ horari.final }}
         </ion-badge>
     </div>
@@ -21,9 +21,6 @@ const props=defineProps<{
 }
 
 ion-badge{
-    @media (prefers-color-scheme: dark) {
-        --background:  linear-gradient(to right, #70995c,#a5b061,#dfc36f,#ffd489);
-        color:black;
-    }
+    
 }
 </style>

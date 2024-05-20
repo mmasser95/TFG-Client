@@ -24,11 +24,11 @@
         <div class="myBtns">
             <ion-buttons class="myRowContainer myCenter">
                 <ion-button @click="updateElement" expand="full">
-                    <ion-icon :icon="pencil"></ion-icon>
+                    <ion-icon color="warning" :icon="pencil"></ion-icon>
                 </ion-button>
                 <ion-button
                     @click="createConfirmationAlert('Estas segur que vols eliminar-lo del rebost?', estasSegur)">
-                    <ion-icon :icon="trash"></ion-icon>
+                    <ion-icon color="danger" :icon="trash"></ion-icon>
                 </ion-button>
             </ion-buttons>
         </div>
