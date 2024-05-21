@@ -36,8 +36,8 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                            <ion-range color="tertiary" v-model="qualitatMinima" @ion-change="qualitatChange"
-                                :label="`Valoració qualitat: ${qualitatMinima}`" :label-placement="labelPlacement"
+                            <ion-range color="secondary" v-model="qualitatMinima" @ion-change="qualitatChange"
+                                :label="`Valoració quantitat: ${qualitatMinima}`" :label-placement="labelPlacement"
                                 :max="4" :min="0" :pin="true"></ion-range>
                 </ion-col>
                 <ion-col></ion-col>
@@ -45,7 +45,7 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                            <ion-range color="tertiary" v-model="quantitatMinima" :label="`Valoraciò quantitat:${quantitatMinima}`"
+                            <ion-range color="tertiary" v-model="quantitatMinima" :label="`Valoraciò qualitat:${quantitatMinima}`"
                                 :label-placement="labelPlacement" :max="4" :min="0" :pin="true"></ion-range>
                         </ion-col>
                 <ion-col></ion-col>

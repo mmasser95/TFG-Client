@@ -244,8 +244,8 @@ const myGoogleSignin = async () => {
   try {
     let token = await GoogleAuth.signIn()
     console.log(token)
-    let alert = await showAlert(`S'ha aconseguit iniciar sessio a la plataforma amb el token ${token.authentication.idToken}`)
-    alert.present()
+    /*let alert = await showAlert(`S'ha aconseguit iniciar sessio a la plataforma amb el token ${token.authentication.idToken}`)
+    alert.present()*/
     handleLoginSuccess(token.authentication.idToken)
   } catch (err) {
     let alert = await showAlert(`S'ha produit l'error següent quan s'intentava iniciar sessió ${err}`)
@@ -259,9 +259,6 @@ onMounted(async () => {
       clientId: "981593687954-d0h9henugkvditar81b2jdmuo7o1rgum.apps.googleusercontent.com",
       scopes: ['profile', 'email']
     });
-
-    let alert = await showAlert(`Inicialitzat correctament`)
-    alert.present()
   } catch (err) {
     let alert = await showAlert(`S'ha produit l'error següent quan s'intentava inicialitzar el Google Auth ${err}. A continuació s'intenta inicialitzar el GoogleAuthenticator sense configuració predeterminada`)
     alert.present()

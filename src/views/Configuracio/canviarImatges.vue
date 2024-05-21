@@ -22,7 +22,7 @@
                             <ion-col>
                                 <input class="ion-hide" @change="setImagePerfil" type="file" id="foto_perfil">
                                 <ion-button @click="openFileDialog('foto_perfil')">
-                                    Foto de perfil <ion-icon slot="end" :icon="cloud"></ion-icon>
+                                    Foto de perfil <ion-icon slot="start" :icon="cloud"></ion-icon>
                                 </ion-button>
                             </ion-col>
                             <ion-col>

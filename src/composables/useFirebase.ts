@@ -28,11 +28,7 @@ export const useFirebase = () => {
         .then((currentToken) => {
           if (currentToken) {
             myToken.value=currentToken
-            /*sendFirebaseToken(currentToken,(err:any)=>{
-              return
-            })*/
           } else {
-            // Show permission request UI
             console.log(
               'No registration token available. Request permission to generate one.'
             );
@@ -48,24 +44,12 @@ export const useFirebase = () => {
         console.log('payload :>> ', payload);
         let toast=await toastController.create({
           message:payload.notification?.title+" "+payload.notification?.body,
-          duration:5000,
+          duration:3000,
           position:'bottom'
         })
         toast.present()
         // ...
-      }); /*
-    onBackgroundMessage(messaging, (payload) => {
-      console.log('[firebase-messaging-sw.js] Received background message ', payload);
-      // Customize notification here
-      const notificationTitle = 'Background Message Title';
-      const notificationOptions = {
-        body: 'Background Message body.',
-        icon: '/firebase-logo.png'
-      };
-  
-      self.registration.showNotification(notificationTitle,
-        notificationOptions);
-    });*/
+      }); 
     } catch (err) {
       console.log(err);
     }

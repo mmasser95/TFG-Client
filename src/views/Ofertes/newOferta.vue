@@ -81,7 +81,7 @@
                             <ion-item>
                                 <input class="ion-hide" @change="onChangeFileDialog" type="file" id="foto_oferta">
                                 <ion-button @click="openFileDialog('foto_oferta')">
-                                    Foto de perfil <ion-icon slot="end" :icon="camera"></ion-icon>
+                                    Foto de fons de l'oferta <ion-icon slot="start" :icon="camera"></ion-icon>
                                 </ion-button>
                             </ion-item>
                         </ion-col>

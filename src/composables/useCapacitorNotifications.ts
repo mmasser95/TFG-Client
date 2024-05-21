@@ -2,7 +2,6 @@ import { toastController } from '@ionic/vue';
 import { ref, reactive, Ref, computed } from 'vue';
 import { showAlert } from '@/composables/loader';
 import { PushNotifications } from '@capacitor/push-notifications';
-import { sendFirebaseToken } from '@/APIService/utils';
 import { useFirebaseStore } from '../store/firebaseStore';
 import { storeToRefs } from 'pinia';
 
@@ -10,12 +9,9 @@ export const useCapacitorNotifications = () => {
   const { myToken } = storeToRefs(useFirebaseStore());
   const addListeners = async () => {
     await PushNotifications.addListener('registration', async (token) => {
-      let alert = await showAlert(`Token: ${token.value}`);
-      alert.present();
+      /*let alert = await showAlert(`Token: ${token.value}`);
+      alert.present();*/
       myToken.value = token.value;
-      /*sendFirebaseToken(token.value,(err:any,data:any)=>{
-        if(err)return
-      })*/
     });
 
     await PushNotifications.addListener('registrationError', async (err) => {
@@ -28,7 +24,7 @@ export const useCapacitorNotifications = () => {
       async (notification) => {
         let toast = await toastController.create({
           message: notification.title + ' ' + notification.body,
-          duration: 5000,
+          duration: 3000,
           position: 'bottom',
         });
         toast.present();

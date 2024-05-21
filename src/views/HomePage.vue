@@ -37,7 +37,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1" v-if="establimentsPreferits != null" :freeMode="true" :navigation="true">
+            <swiper :slides-per-view="1" v-if="establimentsPreferits != null" :pagination="{ clickable: true }" :freeMode="true" :navigation="true">
               <swiper-slide v-for="d in establimentsPreferits" :key="d._id" v-if="establimentsPreferits.length > 0">
                 <myCard :establiment="d"></myCard>
               </swiper-slide>
@@ -64,7 +64,8 @@ import myCard from '../components/myCard.vue';
 import { onMounted, ref, Ref, watch } from 'vue';
 import { showLoading } from '../composables/loader';
 import { LatLngTuple } from 'leaflet'
-import { testFCM } from '../APIService/utils';
+import { doIPLocation } from '../APIService/utils';
+import { Geolocation } from '@capacitor/geolocation';
 import { getMyFavs } from '../APIService/favs'
 import { searchEstabliments } from '../APIService/establiments';
 import { Establiment } from '../types';
@@ -77,7 +78,7 @@ const favStore = useFavStore()
 const { favorites } = storeToRefs(favStore)
 const latitude = ref(41.0408888)
 const longitude = ref(0.7479283)
-const radi = ref(25)
+const radi = ref(30)
 const started = ref(false)
 const establiments: Ref<[Establiment] | null> = ref(null)
 
@@ -118,7 +119,6 @@ const startOnboarding = (element: any) => {
 
   onboardingElement.value = element
 }
-
 //Funció per a obtenir els establiments propers
 const fillEstabliments = async () => {
   const loader = await showLoading("Carregant establiments")
@@ -140,6 +140,33 @@ const fillEstablimentsPreferits = useDebounceFn(async () => {
   })
 }, 250)
 
+//Funció per a obtenir la posició
+const getCurrentPosition = async () => {
+    try {
+        //En primera instancia intenta rebre les coordenades de capacitor
+        const coordinates = await Geolocation.getCurrentPosition();
+        //En cas de que tot i que funcioni pero ens retorni la localització 0,0. Executarem el catch
+        if (coordinates.coords.latitude == 0 || coordinates.coords.longitude == 0)
+            throw new Error("GPS no funciona")
+        //En cas de que capacitor ens retorni les coordenades, actualitzem les variables reactives
+        latitude.value= coordinates.coords.latitude
+        longitude.value= coordinates.coords.longitude
+
+    } catch (err) {
+        //En cas d'un error, es realitza una crida a la API MyIp.io per a obtenir les coordenades
+        //A partir de la ip i mostrar una localització aproximada
+        doIPLocation((err: any, data: any) => {
+            if (err) return
+            latitude.value = data.location.lat
+            longitude.value= data.location.lon
+        })
+      }
+    //Es realitza la cerca
+    fillEstabliments()
+};
+
+
+
 //Funció per a refrescar els resultats de la pantalla principal
 const handleRefresh = (event: RefresherCustomEvent) => {
   fillEstabliments().then((res) => {
@@ -149,7 +176,8 @@ const handleRefresh = (event: RefresherCustomEvent) => {
 
 onMounted(async () => {
   //Es fan les crides a la API per a mostrar els resultats un cop es monti el component
-  await fillEstabliments()
+  await getCurrentPosition()
+  //await fillEstabliments()
   await fillEstablimentsPreferits()
   started.value = true
 
