@@ -28,9 +28,9 @@ export const useFirebase = () => {
         .then((currentToken) => {
           if (currentToken) {
             myToken.value=currentToken
-            sendFirebaseToken(currentToken,(err:any)=>{
+            /*sendFirebaseToken(currentToken,(err:any)=>{
               return
-            })
+            })*/
           } else {
             // Show permission request UI
             console.log(

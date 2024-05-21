@@ -6,7 +6,7 @@
           <ion-grid>
             <ion-row class="ion-justify-content-center ion-align-items-center">
               <ion-col>
-                <ion-title class="ion-text-center">Rebost
+                <ion-title data-test="rebost-title" class="ion-text-center">Rebost
                   <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
                 </ion-title>
               </ion-col>
@@ -25,9 +25,9 @@
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
             <ion-grid id="rebostsSection">
-              <ion-row v-for="(i, k) in rebosts">
+              <ion-row  data-test="inventari" v-for="(i, k) in rebosts">
                 <ion-col>
-                  <cardInventari :title="i.nom" :subtitle="i.descripcio" :idd="i._id" @updateRebost="openModalUpdate"
+                  <cardInventari  :title="i.nom" :subtitle="i.descripcio" :idd="i._id" @updateRebost="openModalUpdate"
                     @deleteRebost="fillRebosts" />
                 </ion-col>
               </ion-row>
@@ -84,6 +84,8 @@ const fillRebosts = async () => {
     loader.dismiss()
     if (err) return
     rebosts.value = data.rebosts;
+    console.log("Rebosts", data.rebosts)
+    console.log("data", data)
   })
 }
 

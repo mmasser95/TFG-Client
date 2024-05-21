@@ -1,12 +1,12 @@
 <template>
     <ion-header>
         <ion-toolbar>
-            <ion-buttons slot="start">
+            <ion-title class="ion-text-center">Filtres</ion-title>
+            <ion-buttons slot="end">
                 <ion-button color="primary" @click="confirm">
                     <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
                 </ion-button>
             </ion-buttons>
-            <ion-title class="ion-text-center">Filtres</ion-title>
             <!--<ion-buttons slot="end">
                 <ion-button color="primary" @click="confirm">Confirmar</ion-button>
             </ion-buttons>-->
@@ -26,10 +26,10 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <ion-range color="secondary" @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
+                    <!--<ion-range color="secondary" @ion-change="horariChange" :model-value="horari" :min="0" :max="47"
                         :label-placement="labelPlacement"
                         :label="`Horari ${hores[horari.lower]}-${hores[horari.upper]}`" :dual-knobs="true" :pin="true"
-                        :pin-formatter="pinFormatterHorari"></ion-range>
+                        :pin-formatter="pinFormatterHorari"></ion-range>-->
                 </ion-col>
                 <ion-col></ion-col>
             </ion-row>
@@ -53,7 +53,7 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <div class="checkbox-container">
+                    <!--<div class="checkbox-container">
                         <ion-checkbox v-model="filtres.restaurant" label-placement="fixed">Restaurant</ion-checkbox>
                         <ion-checkbox v-model="filtres.supermercat" label-placement="fixed">Supermercat</ion-checkbox>
                         <ion-checkbox v-model="filtres.fleca" label-placement="fixed">Fleca</ion-checkbox>
@@ -61,7 +61,7 @@
                         <ion-checkbox v-model="filtres.carnisseria" label-placement="fixed">Carnisseria</ion-checkbox>
                         <ion-checkbox v-model="filtres.fruiteria_verduleria" label-placement="fixed">Fruita
                             Verdura</ion-checkbox>
-                    </div>
+                    </div>-->
                 </ion-col>
                 <ion-col></ion-col>
             </ion-row>

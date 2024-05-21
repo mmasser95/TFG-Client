@@ -2,13 +2,17 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="cancel">Cancel</ion-button>
+                <ion-button @click="cancel" color="secondary">
+                    <ion-icon :icon="close" slot="icon-only"></ion-icon>
+                </ion-button>
             </ion-buttons>
             <ion-title id="scan" class="ion-text-center">Resultats
                 <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
             </ion-title>
             <ion-buttons slot="end">
-                <ion-button @click="confirm">Confirm</ion-button>
+                <ion-button @click="confirm" color="primary">
+                    <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
+                </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
@@ -50,7 +54,7 @@ import {
     alertController,
     modalController
 } from '@ionic/vue';
-import { informationCircle } from 'ionicons/icons';
+import { informationCircle,checkmark,close } from 'ionicons/icons';
 import { Aliment } from '../../types';
 import cardAliment from '../../components/cardAliment.vue';
 import { showAlert } from '../../composables/loader';

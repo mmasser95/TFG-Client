@@ -53,7 +53,6 @@ import { personCircle, image, eye, key, lockClosed, helpBuoy, exit, ban, documen
 import configuracioVista from './Configuracio/configuracioVista.vue';
 import configuracióPerfil from './Configuracio/configuracióPerfil.vue';
 import canviarFotoPerfil from './Configuracio/canviarImatges.vue'
-import canviarContrasenya from './Configuracio/canviarContrasenya.vue'
 //Store de login
 import { useLoginStore } from '../store/loginStore';
 //Store de firebase
@@ -114,15 +113,6 @@ const modalConfiguracioVista = async () => {
     }
 }
 
-//Funció per a mostrar el modal del formulari de canviar la contrasenya
-const modalCanviarContrasenya = async () => {
-    const modal = await modalController.create({
-        component: canviarContrasenya,
-        initialBreakpoint: 0.66,
-        breakpoints: [0, 0.33, 0.66, 1]
-    })
-    modal.present()
-}
 //Funció per a mostrar el modal per a canviar la foto de perfil en els establiments
 const modalCanviarFotoPerfil = async () => {
     const modal = await modalController.create({
@@ -253,11 +243,6 @@ const opcionsUser = [
         modalToShow: modalConfiguracioPerfil,
     },
     {
-        label: "Canviar contrasenya",
-        icon: key,
-        modalToShow: modalCanviarContrasenya
-    },
-    {
         label: "Configuració de la vista",
         icon: eye,
         modalToShow: modalConfiguracioVista,
@@ -294,11 +279,6 @@ const opcionsEstabliment = [
         label: "Configuració del perfil",
         icon: personCircle,
         modalToShow: modalConfiguracioPerfil,
-    },
-    {
-        label: "Canviar contrasenya",
-        icon: key,
-        modalToShow: modalCanviarContrasenya
     },
     {
         label: "Configuració de la vista",

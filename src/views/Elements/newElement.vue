@@ -2,13 +2,16 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button color="secondary" @click="cancel">Cancel</ion-button>
+                <ion-button color="secondary" @click="cancel">
+                    <ion-icon :icon="close" slot="icon-only"></ion-icon></ion-button>
             </ion-buttons>
             <ion-title v-if="!element" class="ion-text-center">Crear element</ion-title>
             <ion-title v-if="element" class="ion-text-center">Editar element</ion-title>
             <ion-buttons slot="end">
-                <ion-button v-if="!element" color="primary" @click="confirm">Crear</ion-button>
-                <ion-button v-if="element" color="primary" @click="confirm">Guardar</ion-button>
+                
+                <ion-button color="primary" @click="confirm">
+                    <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
+                </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
@@ -107,7 +110,7 @@
 <script setup lang="ts">
 import { IonLabel, IonHeader, IonContent, IonGrid, IonRow, IonCol, IonItem, IonIcon, IonToolbar, IonButtons, IonButton, IonTitle, IonInput, modalController, IonSelect, IonSelectOption } from '@ionic/vue';
 import { Ref, ref, computed, reactive, defineProps, onMounted, } from 'vue';
-
+import { checkmark,close } from 'ionicons/icons';
 import { getArticleCategories, getAllAlimentsByTipus } from '../../APIService/aliments';
 import { createElement, putElement } from '../../APIService/elements';
 import cercadorAliments from '../../components/cercadorAliments.vue';

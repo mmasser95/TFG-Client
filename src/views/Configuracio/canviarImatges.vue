@@ -2,11 +2,13 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button color="tertiary" @click="cancel">Cancel·la</ion-button>
+                <ion-button color="tertiary" @click="cancel"><ion-icon :icon="close"
+                        slot="icon-only"></ion-icon></ion-button>
             </ion-buttons>
             <ion-title class="ion-text-center">Canviar Foto perfil</ion-title>
             <ion-buttons slot="end">
-                <ion-button color="primary" @click="confirm">Confirma</ion-button>
+                <ion-button color="primary" @click="confirm">
+                    <ion-icon :icon="checkmark" slot="icon-only"></ion-icon></ion-button>
             </ion-buttons>
         </ion-toolbar>
 
@@ -24,7 +26,8 @@
                                 </ion-button>
                             </ion-col>
                             <ion-col>
-                                <input class="ion-hide" @change="setImageFondo" type="file" id="foto_fondo" style="display:'none';">
+                                <input class="ion-hide" @change="setImageFondo" type="file" id="foto_fondo"
+                                    style="display:'none';">
                                 <ion-button @click="openFileDialog('foto_fondo')">
                                     Foto de fons <ion-icon slot="start" :icon="cloud"></ion-icon>
                                 </ion-button>
@@ -35,7 +38,8 @@
             </ion-row>
             <ion-row>
                 <ion-col>
-                    <myCard @click.stop="null" v-if="myEstabliment" :establiment="myEstabliment" :img_fondo="imageFondoBase64" :img_perfil="imagePerfilBase64" />
+                    <myCard @click.stop="null" v-if="myEstabliment" :establiment="myEstabliment"
+                        :img_fondo="imageFondoBase64" :img_perfil="imagePerfilBase64" />
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -59,7 +63,7 @@ import {
     modalController
 } from '@ionic/vue'
 import myCard from '../../components/myCard.vue'
-import { cloud } from 'ionicons/icons'
+import { cloud, checkmark, close } from 'ionicons/icons'
 import { Ref, ref, onMounted, watch } from 'vue';
 import { useLoginStore } from '../../store/loginStore';
 import { putImatgePerfil, putImatgeFondo } from '../../APIService/establiments'
@@ -75,7 +79,7 @@ const confirm = async () => {
         let formdata = new FormData()
         formdata.append('nom', userId.value)
         formdata.append('img_perfil', imagePerfil.value)
-        putImatgePerfil(formdata,(err,data)=>{
+        putImatgePerfil(formdata, (err, data) => {
             console.log("Ok");
             return
         })
@@ -84,7 +88,7 @@ const confirm = async () => {
         let formdata = new FormData()
         formdata.append('nom', userId.value)
         formdata.append('img_fondo', imageFondo.value)
-        putImatgeFondo(formdata,(err:any,data:any)=>{
+        putImatgeFondo(formdata, (err: any, data: any) => {
             console.log("Ok")
             return
         })
@@ -130,10 +134,10 @@ const fileToBase64 = async (f: any) => {
     return convert()
 }
 const imageFondoBase64 = ref('')
-const imagePerfilBase64=ref('')
+const imagePerfilBase64 = ref('')
 const fillPerfil = () => {
-    getPerfil((err:any,data:any)=>{
-        if(err)return
+    getPerfil((err: any, data: any) => {
+        if (err) return
         myEstabliment.value = data.perfil
     })
 }

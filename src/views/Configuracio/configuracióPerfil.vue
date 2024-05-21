@@ -3,11 +3,15 @@
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
-                    <ion-button @click="cancel()">Cancel</ion-button>
+                    <ion-button @click="cancel()" color="secondary">
+                        <ion-icon :icon="close" slot="icon-only"></ion-icon>
+                    </ion-button>
                 </ion-buttons>
                 <ion-title class="ion-text-center">Configurar perfil</ion-title>
                 <ion-buttons slot="end">
-                    <ion-button @click="confirm()">Confirmar</ion-button>
+                    <ion-button @click="confirm()" color="primary">
+                        <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
+                    </ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
@@ -248,7 +252,8 @@
     </ion-page>
 </template>
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonContent, IonToolbar, IonButtons, IonButton, IonTitle, IonGrid, IonRow, IonCol, modalController, IonList, IonInput, IonItem, IonTextarea, IonSelect, IonSelectOption } from '@ionic/vue';
+import { IonPage, IonHeader, IonContent, IonToolbar, IonButtons, IonButton, IonTitle, IonGrid, IonRow, IonCol, modalController, IonList, IonInput, IonItem, IonTextarea, IonSelect, IonSelectOption,IonIcon } from '@ionic/vue';
+import { checkmark,close } from 'ionicons/icons';
 import { reactive, onMounted } from 'vue';
 
 import { useVuelidate } from '@vuelidate/core'

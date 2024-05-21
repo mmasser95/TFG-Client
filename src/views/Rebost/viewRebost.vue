@@ -42,7 +42,8 @@
                             </div>
                         </div>
                     </ion-col>
-                    <ion-col></ion-col>
+                    <ion-col>
+                    </ion-col>
                 </ion-row>
 
             </ion-grid>
@@ -169,9 +170,15 @@ const readImage = async (src: any) => {
     return result
 }
 
+//Funció per a cercar els aliments
+// de la base de dades si estan presents en el text 
+//Accepta un paràmetre acceptance per a establir 
+//el minim d'acceptació per a afegir l'aliment al rebost
 const searchAliment = (text: string, acceptance: number) => {
+    //Per cada un dels aliments de la base de dades
     let aliments = getAllNoms.value?.map((val, idx, arr) => {
         let mx = 0
+        //Busca l'acceptació de cada paraula del text amb l'aliment
         text.split(' ').forEach((val2, idx2, arr2) => {
             let res = stringSimilarity(val, val2)
             if (res > mx)
@@ -179,6 +186,8 @@ const searchAliment = (text: string, acceptance: number) => {
         })
         return { similarity: mx, val }
     })
+    //Finalment es retornen unicament els aliments de la base de dades
+    // que obtenen una similaritat major a al limit establert
     return aliments?.filter((val, idx, arr) => val.similarity > acceptance)
 }
 
@@ -199,8 +208,8 @@ watch(lastPhoto, async (v: any, oV: any) => {
 
     if (textOfPhoto) {
         let alimentsEscanejats = searchAliment(textOfPhoto, 0.6)
-        let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.map((el) => el.val).join(' ')}`)
-        alert.present()
+        //let alert = await showAlert(`Els elements que s'han escanejat de la foto són ${alimentsEscanejats?.map((el) => el.val).join(' ')}`)
+        //alert.present()
         getAlimentsByNoms(alimentsEscanejats?.map((el) => el.val), (err: any, data: any) => {
             if (err) return
             showChooseAlimentModal(data.aliments)

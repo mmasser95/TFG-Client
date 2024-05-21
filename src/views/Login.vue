@@ -104,6 +104,7 @@ import { useAlimentStore } from '../store/alimentStore'
 import { useFirebaseStore } from '../store/firebaseStore'
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 //Router de Vue
+
 const router = useRouter();
 //Store de pinia
 const store = useLoginStore();
@@ -113,6 +114,7 @@ const { setToken, setUserId, setUserType } = store;
 const { setLoginFavs } = useFavStore()
 
 const { setAliments } = useAlimentStore()
+
 const { myToken } = storeToRefs(useFirebaseStore());
 
 const loginError = ref('');
@@ -165,6 +167,11 @@ const login = async () => {
       setUserId(data.userId)
       setUserType(data.userType)
       setAliments()
+      console.log("Prova", myToken.value)
+      sendFirebaseToken(myToken.value, (err, data) => {
+        if (err) return
+        console.log(myToken.value, "Token afegit")
+      })
       if (data.userType == 'client') {
         setLoginFavs()
         router.push('/tabs/tab1');
@@ -277,10 +284,11 @@ onMounted(async () => {
   display: flex;
   flex-flow: column wrap;
   justify-content: space-evenly;
-  align-items:center;
-  gap:10px;
+  align-items: center;
+  gap: 10px;
 }
-#googleBtn{
-  max-width:200px
+
+#googleBtn {
+  max-width: 200px
 }
 </style>

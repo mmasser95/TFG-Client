@@ -7,7 +7,7 @@
                         <ion-icon :icon="arrowBack"></ion-icon>
                     </ion-button>
                 </ion-buttons>
-                <ion-title class="ion-text-center">{{ establiment.nom }}</ion-title>
+                <ion-title data-test="titol" class="ion-text-center">{{ establiment.nom }}</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>

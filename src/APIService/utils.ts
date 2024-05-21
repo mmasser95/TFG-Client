@@ -10,16 +10,14 @@ const createErrorAlert = (message: string, status: string) =>
     header: `Error de la petició al servidor amb codi ${status}`,
     subHeader: "El missatge d'error és: ",
     message: message,
+    buttons: ['Ok'],
   });
 
 export const instance = axios.create({
   baseURL: base_url,
   timeout: 10000,
-  headers: {
-    'ngrok-skip-browser-warning': '69420',
-    'x-content-type-options': '',
-  },
 });
+
 export const axiosWrapper = (
   fn: Function,
   cb: CallbackFunction,
@@ -70,8 +68,7 @@ export const axiosWrapper = (
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message);
-        /*let alert = await createErrorAlert('Error general', error.message);
-        alert.present();*/
+
         cb({
           status: 'General error',
           message: `No response received ${error.message}`,

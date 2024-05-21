@@ -12,12 +12,9 @@ import { Image } from 'image-js';
 
 const preprocessImage = async (imagePath: any) => {
   let img = await Image.load(imagePath);
-  console.log(imagePath, await img.toBlob());
   img = img.grey();
   img=img.medianFilter()
-  //   img=img.medianFilter({ radius: 3 });
-  //   img=img.sobelFilter();
-     img=img.resize({ width: 1200 });
+  img=img.resize({ width: 1200 });
 
   return await img.toDataURL();
 };

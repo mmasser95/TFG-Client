@@ -3,12 +3,16 @@
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
-                    <ion-button @click="cancel()">Cancel</ion-button>
+                    <ion-button @click="cancel()" color="secondary">
+                        <ion-icon :icon="close" slot="icon-only"></ion-icon>
+                    </ion-button>
                 </ion-buttons>
                 <ion-title v-if="props.update == ''" class="ion-text-center">Nova Oferta</ion-title>
                 <ion-title v-if="props.update != ''" class="ion-text-center">Editar Oferta</ion-title>
                 <ion-buttons slot="end">
-                    <ion-button @click="confirm()">Confirma</ion-button>
+                    <ion-button @click="confirm()" color="primary">
+                        <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
+                    </ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
@@ -104,7 +108,7 @@
 </template>
 <script setup lang="ts">
 import { IonPage, IonContent, IonGrid, IonButtons, IonHeader, IonToolbar, IonRow, IonCol, IonTitle, IonList, IonItem, IonInput, IonButton, IonSelect, IonSelectOption, IonCheckbox } from '@ionic/vue'
-import { camera } from "ionicons/icons"
+import { camera,checkmark,close } from "ionicons/icons"
 import { ref, reactive, computed, defineProps, onMounted } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, minValue, numeric } from '@vuelidate/validators'

@@ -28,7 +28,8 @@
                     <ion-col></ion-col>
                     <ion-col size="10" sizeXl="8">
                         <div class="controls-container">
-                            <ion-range v-if="pestanyaMapa" color="tertiary" id="rango" :min="1" :max="25" v-model="cercleRadi"></ion-range>
+                            <ion-range v-if="pestanyaMapa" color="tertiary" id="rango" :min="1" :max="25"
+                                v-model="cercleRadi"></ion-range>
                             <ion-text v-if="pestanyaMapa">{{ cercleRadi }} km.</ion-text>
                             <ion-button id="locate" v-if="pestanyaMapa" @click="getCurrentPosition" color="tertiary">
                                 <ion-icon slot="icon-only" :icon="locate"></ion-icon>
@@ -58,17 +59,20 @@
         </ion-content>
     </ion-page>
     <onboarding :steps="onBoardingExplorarSteps" @start-onboarding="startOnboarding"></onboarding>
-    
-    
+
+
     <div class="ion-hide">
         <!--En aquest for es generen tots els elements que s'inclouen dins dels popups dels establiments que apareixen al mapa
         A mesura que la variable establiments va canviant a causa dels resultats de cerca, es generaran els elements necessàris aquí
         i es guardarà la referència al refers.set. Que com es podrà veure al <script> és una llista de referències que ens permetrà injectar
         aquests elements dins del tooltip de leaflet
         -->
-        <div v-for="(establiment, k) in establiments" :key="k" :ref="refers.set">
-            <router-link :to="`/establiment/${establiment._id}`">Anar a
-                l'establiment {{ establiment.nom }}</router-link>
+        <div v-for="(establiment, k) in establiments" :key="k" :ref="refers.set" class="container-map">
+            <router-link :to="`/establiment/${establiment._id}`">{{ establiment.nom }}</router-link><badgeTipus :tipus="establiment.tipus"></badgeTipus>
+            <p>
+                {{establiment.descripcio}}
+            </p>
+            
         </div>
 
     </div>
@@ -78,7 +82,6 @@
 import { IonPage, IonText, IonTitle, IonToolbar, IonHeader, IonContent, IonList, IonItem, IonRefresher, IonRefresherContent, IonCard, IonSegment, IonLabel, IonSegmentButton, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonCardTitle, IonButton, IonImg, IonIcon, IonThumbnail, alertController, RefresherCustomEvent, IonRange, modalController } from '@ionic/vue'
 import { Ref, onMounted, getCurrentInstance, ref, computed, defineComponent, nextTick, toRaw, watch, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
 import { doIPLocation } from '../APIService/utils';
 import { searchEstabliments } from '../APIService/establiments'
 import { Geolocation } from '@capacitor/geolocation';
@@ -89,6 +92,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { filter, informationCircle, locate } from 'ionicons/icons'
 import location from "leaflet/dist/images/marker-icon.png"
+import badgeTipus from '../components/badgeTipus.vue';
 import myCard from '../components/myCard.vue';
 import { showLoading, showAlert } from '../composables/loader';
 import { Establiment } from '../types';
@@ -156,7 +160,8 @@ const getCurrentPosition = async () => {
         //En primera instancia intenta rebre les coordenades de capacitor
         const coordinates = await Geolocation.getCurrentPosition();
         //En cas de que tot i que funcioni pero ens retorni la localització 0,0. Executarem el catch
-        if (coordinates.coords.latitude == 0 || coordinates.coords.longitude == 0) throw new Error("GPS no funciona")
+        if (coordinates.coords.latitude == 0 || coordinates.coords.longitude == 0)
+            throw new Error("GPS no funciona")
         //En cas de que capacitor ens retorni les coordenades, actualitzem les variables reactives
         mapCoordinates.value[0] = coordinates.coords.latitude
         mapCoordinates.value[1] = coordinates.coords.longitude
@@ -169,7 +174,7 @@ const getCurrentPosition = async () => {
             if (err) return
             myLocation.value = [data.location.lat, data.location.lon]
         })
-        
+
     }
     //Finalment es canvia la posició en el mapa amb la localització obtinguda
     map.value?.flyTo(myLocation.value)
@@ -241,7 +246,7 @@ const loadMap = () => {
     //Per a crear el cercle
     cercleMapa.value = new L.Circle([mapCoordinates.value[0], mapCoordinates.value[1]], cercleRadi.value * 1000)
     cercleMapa.value.addTo(map)
-    
+
     //Es capturen els events de moure el mapa
     map.on('drag', (event) => {
         var map = event.target
@@ -329,7 +334,7 @@ onMounted(async () => {
                 placement: 'left'
             }
         }
-    },{
+    }, {
         attachTo: {
             element: "#filtres"
         },
@@ -436,11 +441,15 @@ ion-title {
 ion-label {
     margin: 0px;
 }
-.controls-container{
-    display:flex;
-    flex-flow:row nowrap;
-    justify-content:flex-end;
-    align-items:center;
-    gap:15px
+
+.controls-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px
+}
+.container-map{
+
 }
 </style>

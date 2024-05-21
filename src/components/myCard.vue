@@ -30,19 +30,17 @@
         <ion-card-content class="content">
             <div class="content2">
                 <div class="content3">
-                    <p class="ion-text-center">Telèfon</p>
                     <ion-badge color="secondary">
                         <div class="myBadge">
                             {{ establiment.telf }}
                             <ion-icon :icon="call"></ion-icon>
                         </div>
                     </ion-badge>
-                    <p class="ion-text-center"> Tipus</p>
                     <badgeTipus :tipus="establiment.tipus"></badgeTipus>
                 </div>
                 <div>
                     <div class="content3" v-if="typeof establiment.horari == 'string'">
-                        Horari: {{ establiment.horari }}
+                         {{ establiment.horari }}
                     </div>
                     <div v-else>
                         <p class="ion-text-center">Horari</p>
@@ -52,7 +50,7 @@
                 </div>
                 <div class="content3"
                     v-if="establiment.quantitatMitjana != undefined && establiment.qualitatMitjana != undefined">
-                    Valoració:
+                    
                     <div class="content4" v-if="establiment.quantitatMitjana != undefined">
                         <ion-icon :icon="star" class="star-icon"></ion-icon>
                         <p>{{ round(establiment.quantitatMitjana, 2) }} Quantitat</p>
@@ -100,8 +98,8 @@ const formatDistance = computed(() => {
     position: relative;
     width: 95%;
     border-radius: 10px;
-    margin: 10px;
-
+    margin-bottom:25px;
+    
 }
 
 .fav {
@@ -135,6 +133,7 @@ ion-thumbnail {
     align-items: center;
     justify-content: center;
     gap: 25px;
+    margin-bottom:25px;
 }
 
 .content2 {
@@ -161,6 +160,6 @@ ion-thumbnail {
 .distance-container{
     position:absolute;
     bottom:10px;
-    right:30px;
+    right:15px;
 }
 </style>

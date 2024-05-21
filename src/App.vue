@@ -17,7 +17,7 @@ import { UseColorMode } from '@vueuse/components'
 //La següent funció s'inicialitza per a recordar la ultima opció triada per l'usuari
 import { useColorMode } from '@vueuse/core';
 //Aquesta funció de la API permet verificar si el token guardat 
-import { verificarToken } from "./APIService/utils"
+import { verificarToken,sendFirebaseToken } from "./APIService/utils"
 //Amb aquest element podem controlar la store de login i podrem saber quan s'ha iniciat sessió
 import { useLoginStore } from './store/loginStore';
 //Amb aquesta store guardem tots els aliments presents en la base de dades. 
@@ -34,7 +34,6 @@ import { useRouter } from 'vue-router';
 //Funcionalitat per a convertir les variables internes de una store de pinia en refs (variables reactives)
 //de la plantilla
 import { storeToRefs } from 'pinia';
-
 //Composable per a utilitzar les notificacions de firebase en el navegador
 import { useFirebase } from './composables/useFirebase'
 //Composable per a utilitzar les notificacions de capacitor en l'app
@@ -107,6 +106,11 @@ if (token && token!="") {
       setUserId(data.userId)
       setUserType(data.userType)
       setAliments()
+      console.log("Prova", myToken.value)
+      sendFirebaseToken(myToken.value, (err, data) => {
+        if (err) return
+        console.log(myToken.value, "Token afegit")
+      })
       if (data.userType == 'client') {
         setLoginFavs()
         router.push('/tabs/tab1');
