@@ -85,7 +85,7 @@
                                 </ion-button>
                             </ion-item>
                         </ion-col>
-                        <ion-col size="12" sizeXl="6">
+                        <!--<ion-col size="12" sizeXl="6">
                             <ion-item>
                                 <ion-select v-model="state.categoria" @ion-blur="v$.categoria.$touch"
                                     labelPlacement="floating" label="Tipus">
@@ -96,7 +96,7 @@
                             </ion-item>
                             <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.required.$invalid"
                                 message="Aquest camp és obligatori" />
-                        </ion-col>
+                        </ion-col>-->
                     </ion-row>
 
 
@@ -127,7 +127,6 @@ const state = reactive({
     preu: 0.0,
     quantitatDisponible: 0,
     active: false,
-    categoria: '',
     image_oferta: null
 })
 
@@ -136,7 +135,6 @@ const rules = {
     descripcio: { required, minLength: minLength(10) },
     preu: { required, minValue: minValue(1), },
     quantitatDisponible: { required, minValue: minValue(1), },
-    categoria: { required }
 }
 
 const v$ = useVuelidate(rules, state);
@@ -150,7 +148,7 @@ const confirm = async () => {
     data.append("preu", state.preu)
     data.append("quantitatDisponible", state.quantitatDisponible)
     data.append("active", state.active)
-    data.append("categoria", state.categoria)
+    data.append("categoria", "oferta")
     if (state.image_oferta)
         data.append("img_oferta", state.image_oferta)
     if (valid)
@@ -174,7 +172,7 @@ onMounted(() => {
                 state.preu = data.oferta.preu;
                 state.quantitatDisponible = data.oferta.quantitatDisponible
                 state.active = data.oferta.active
-                state.categoria = data.oferta.categoria
+                
             })
         }
     }

@@ -30,14 +30,13 @@
                                     <ion-text></ion-text>
                                     <ion-text>{{ oferta.quantitatDisponible }} lots </ion-text>
                                     <ion-text>{{ oferta.preu }}€</ion-text>
-                                    <ion-text>{{ oferta.categoria }}</ion-text>
                                 </div>
                                 <div class="container-2">
                                     <ion-button expand="block" color="secondary" @click="openModalUpdate(oferta._id)">
                                         <ion-icon :icon="pencil" slot="icon-only"></ion-icon>
 
                                     </ion-button>
-                                    <ion-button expand="block" color="danger" @click="eliminarOferta(oferta._id)">
+                                    <ion-button expand="block" color="danger" @click="alertEliminarOferta(oferta._id)">
                                         <ion-icon :icon="trash" slot="icon-only"></ion-icon>
                                     </ion-button>
                                 </div>
@@ -85,7 +84,7 @@ import {
 } from '@ionic/vue'
 import onboarding from '../../components/onboarding.vue';
 import { StepEntity } from 'v-onboarding';
-import { add, pencil, trash } from 'ionicons/icons'
+import { add, pencil, trash,informationCircle } from 'ionicons/icons'
 
 import { crearOferta, deleteOferta, getOfertes, updateOferta } from '../../APIService/ofertes';
 import { Ref, ref,onMounted } from 'vue';
@@ -149,7 +148,31 @@ const openModalUpdate = async (ofertaId: any) => {
         })
     }
 }
-
+const alertEliminarOferta  = async (ofertaId:any) => {
+    const alert = await alertController.create({
+        header: `Eliminar l'oferta?`,
+        message: "Estas segur? Recorda que aquesta acció no es pot desfer",
+        buttons: [
+            {
+                text: 'Si',
+                htmlAttributes: {
+                    'aria-label': 'Si',
+                },
+                handler: () => {
+                    //En cas que l'usuari premi si, li apareixerà un segon avís per a confirmar l'acció
+                    eliminarOferta(ofertaId)
+                }
+            },
+            {
+                text: 'No',
+                htmlAttributes: {
+                    'aria-label': 'No',
+                },
+            }
+        ],
+    })
+    alert.present()
+}
 const eliminarOferta = (ofertaId: any) => {
     deleteOferta(ofertaId, (err: any, data: any) => {
         if (err) return
