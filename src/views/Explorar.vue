@@ -51,7 +51,9 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10" v-show="!pestanyaMapa">
-                        <myCard v-for="establiment in establiments" :key="establiment._id" :establiment="establiment" />
+                        <myCard v-for="establiment in establiments" 
+                        :key="establiment._id" 
+                        :establiment="establiment" />
                     </ion-col>
                     <ion-col> </ion-col>
                 </ion-row>
@@ -68,11 +70,12 @@
         aquests elements dins del tooltip de leaflet
         -->
         <div v-for="(establiment, k) in establiments" :key="k" :ref="refers.set" class="container-map">
-            <router-link :to="`/establiment/${establiment._id}`">{{ establiment.nom }}</router-link><badgeTipus :tipus="establiment.tipus"></badgeTipus>
+            <router-link :to="`/establiment/${establiment._id}`">{{ establiment.nom }}</router-link>
+            <badgeTipus :tipus="establiment.tipus"></badgeTipus>
             <p>
-                {{establiment.descripcio}}
+                {{ establiment.descripcio }}
             </p>
-            
+
         </div>
 
     </div>
@@ -449,7 +452,6 @@ ion-label {
     align-items: center;
     gap: 15px
 }
-.container-map{
 
-}
+.container-map {}
 </style>

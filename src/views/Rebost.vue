@@ -84,8 +84,6 @@ const fillRebosts = async () => {
     loader.dismiss()
     if (err) return
     rebosts.value = data.rebosts;
-    console.log("Rebosts", data.rebosts)
-    console.log("data", data)
   })
 }
 

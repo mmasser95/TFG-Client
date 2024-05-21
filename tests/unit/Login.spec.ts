@@ -13,8 +13,4 @@ describe('Test del component Login.vue', () => {
     expect(wrapper.find('#input-contrasenya').exists()).toBe(true);
     expect(wrapper.find('#btn-login').exists()).toBe(true);
   });
-  test("S'inicialitza correctament la store de Pinia", () => {
-    const wrapper = mount(Login);
-    
-  });
 });

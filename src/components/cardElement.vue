@@ -1,24 +1,5 @@
 <template>
-    <!--<ion-grid>
-        <ion-row>
-            <ion-col>
-                Nom: {{ element.aliment?.nom }}
-            </ion-col>
-            <ion-col>Tipus: {{ element.aliment?.tipus }}</ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col>Data compra: {{ dataCompraAgo }}</ion-col>
-            <ion-col>Data caducitat: {{ dataCaducitatRelative }}</ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col>Quantitat:{{ element.quantitat }} {{ element.q_unitat }}</ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col>
-
-            </ion-col>
-        </ion-row>
-    </ion-grid>-->
+   
     <ion-card class="ion-activatable myCard">
         <ion-ripple-effect></ion-ripple-effect>
         <div class="myBtns">
@@ -50,7 +31,6 @@
 
                 </div>
             </div>
-
         </ion-card-content>
         <div class="myRowContainer">
             <div class="myColContainer myCenter">
@@ -86,6 +66,22 @@ const props = defineProps<{
 const emit = defineEmits(['updateElement', 'deleteElement'])
 
 const quantitatElement = ref(props.element.quantitat)
+
+const dataCompraAgo = computed(() => {
+    if (props.element) {
+        if (Math.abs(differenceInHours(Date.now(), props.element.data_compra)) < 24)
+            return "Avui"
+        return formatDistanceToNow(props.element.data_compra, { addSuffix: true, locale: ca })
+    }
+
+})
+const dataCaducitatRelative = computed(() => {
+    if (props.element) {
+        if (Math.abs(differenceInHours(Date.now(), props.element.data_caducitat)) < 24)
+            return "Avui"
+        return formatDistanceToNow(props.element.data_caducitat, { addSuffix: true, locale: ca })
+    }
+})
 
 const createConfirmationAlert = async (message: string, myHandler: any) => {
     let alert = await alertController.create({
@@ -125,21 +121,6 @@ const eliminarElement = async () => {
     })
 }
 
-const dataCompraAgo = computed(() => {
-    if (props.element) {
-        if (Math.abs(differenceInHours(Date.now(), props.element.data_compra)) < 24)
-            return "Avui"
-        return formatDistanceToNow(props.element.data_compra, { addSuffix: true, locale: ca })
-    }
-
-})
-const dataCaducitatRelative = computed(() => {
-    if (props.element) {
-        if (Math.abs(differenceInHours(Date.now(), props.element.data_caducitat)) < 24)
-            return "Avui"
-        return formatDistanceToNow(props.element.data_caducitat, { addSuffix: true, locale: ca })
-    }
-})
 
 const updateElement = () => {
     emit('updateElement', { ...props })
@@ -151,9 +132,6 @@ const canviarQuantitat = useDebounceFn(() => {
 
 </script>
 <style scoped>
-ion-card {
-    padding: 10px;
-}
 
 .container1 {
     display: flex;
@@ -179,6 +157,9 @@ ion-card {
     border-radius: 10px
 }
 
+ion-card {
+    padding: 10px;
+}
 ion-input {
     max-width: 50px;
     margin: 5px;

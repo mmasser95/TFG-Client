@@ -22,8 +22,10 @@
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
             <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :navigation="true"
               :pagination="{ clickable: true }">
-              <swiper-slide v-if="establiments" v-for="(i, k) in establiments" :key="i._id">
-                <myCard :establiment="i" />
+              <swiper-slide v-if="establiments"
+               v-for="(establiment, k) in establiments" 
+              :key="establiment._id">
+                <myCard :establiment="establiment" />
               </swiper-slide>
             </swiper>
           </ion-col>
@@ -38,8 +40,9 @@
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
             <swiper :slides-per-view="1" v-if="establimentsPreferits != null" :pagination="{ clickable: true }" :freeMode="true" :navigation="true">
-              <swiper-slide v-for="d in establimentsPreferits" :key="d._id" v-if="establimentsPreferits.length > 0">
-                <myCard :establiment="d"></myCard>
+              <swiper-slide v-for="establiment in establimentsPreferits" 
+                            :key="establiment._id" v-if="establimentsPreferits.length > 0">
+                <myCard :establiment="establiment"></myCard>
               </swiper-slide>
               <p v-else class="ion-text-center">No es troba cap establiment com a preferit</p>
             </swiper>

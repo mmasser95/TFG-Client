@@ -57,12 +57,12 @@ const tabsEstabliment = ref([{
   icon: cog,
   label: 'Config.',
   id: "config"
-}, {
+}, /*{
   tabName: 'tab7',
   hrf: "/tabs/aliments",
   icon: fastFood,
   label: "Afegir aliments"
-}])
+}*/])
 const tabsUser = ref([{
   tabName: 'tab1',
   hrf: '/tabs/tab1',

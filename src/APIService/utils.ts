@@ -18,19 +18,14 @@ export const instance = axios.create({
   timeout: 10000,
 });
 
-export const axiosWrapper = (
-  fn: Function,
-  cb: CallbackFunction,
-  ...options: any
-) => {
+export const axiosWrapper = (fn: Function,cb: CallbackFunction,...options: any) => {
   fn(...options)
     .then((response: any) => {
       cb(null, response.data);
     })
     .catch(async (error: any) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
+        // La request s'ha fet pero s'ha obtingut un status diferent a 2xx
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
@@ -51,9 +46,7 @@ export const axiosWrapper = (
           );
         }
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
+        // La request s'ha fet pero no s'obté resposta
         console.log(error.request);
         let alert = await createErrorAlert(
           'No response',
@@ -66,7 +59,6 @@ export const axiosWrapper = (
           request: error.request,
         });
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message);
 
         cb({
