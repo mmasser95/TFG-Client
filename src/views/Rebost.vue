@@ -25,12 +25,22 @@
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
             <ion-grid id="rebostsSection">
-              <ion-row  data-test="inventari" v-for="(i, k) in rebosts">
-                <ion-col>
-                  <cardInventari  :title="i.nom" :subtitle="i.descripcio" :idd="i._id" @updateRebost="openModalUpdate"
-                    @deleteRebost="fillRebosts" />
-                </ion-col>
-              </ion-row>
+              <div v-if="rebosts != null">
+                <ion-row data-test="inventari" v-for="(i, k) in rebosts" v-if="rebosts.length > 0">
+                  <ion-col>
+                    <cardInventari :title="i.nom" :subtitle="i.descripcio" :idd="i._id" @updateRebost="openModalUpdate"
+                      @deleteRebost="fillRebosts" />
+                  </ion-col>
+                </ion-row>
+                <ion-row v-else>
+                  <ion-col>
+                    <p class="ion-text-center">No s'ha creat encara cap rebost. Crea un nou rebost on afegir els
+                      aliments que es troben a la nevera, a l'armari... Per a poder gestionar correctament la seva data
+                      de caducitat. Per a crear un nou rebost. Prem sobre la icona "+" de la part inferior dreta de la
+                      pantalla</p>
+                  </ion-col>
+                </ion-row>
+              </div>
             </ion-grid>
           </ion-col>
           <ion-col></ion-col>

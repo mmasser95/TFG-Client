@@ -347,4 +347,9 @@ onMounted(() => {
 })
 
 </script>
-<style></style>
+<style scoped>
+#logo{
+    margin-top:75px;
+    margin-bottom:50px;
+}
+</style>

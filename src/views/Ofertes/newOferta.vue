@@ -10,7 +10,7 @@
                 <ion-title v-if="props.update == ''" class="ion-text-center">Nova Oferta</ion-title>
                 <ion-title v-if="props.update != ''" class="ion-text-center">Editar Oferta</ion-title>
                 <ion-buttons slot="end">
-                    <ion-button @click="confirm()" color="primary">
+                    <ion-button @click="confirm()" color="tertiary">
                         <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
                     </ion-button>
                 </ion-buttons>

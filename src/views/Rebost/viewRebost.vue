@@ -21,13 +21,13 @@
                     <ion-col></ion-col>
                     <ion-col>
                         <div class="ordenar-container">
-                            <ion-select v-model="ordenarPer" label-placement="floating">
+                            <ion-select v-model="ordenarPer" label="Ordenar elements" label-placement="floating">
                                 <ion-select-option value="aliment.nom">Nom</ion-select-option>
                                 <ion-select-option value="data_caducitat">Data de caducitat</ion-select-option>
                                 <ion-select-option value="data_compra">Data de compra</ion-select-option>
                                 <ion-select-option value="aliment.categoria">Categoria</ion-select-option>
                             </ion-select>
-                            <ion-toggle v-model="ordenarAsc"></ion-toggle>
+                            <ion-toggle v-model="ordenarAsc" label-placement="fixed">{{ toogleLabel }}</ion-toggle>
                         </div>
                     </ion-col>
                     <ion-col></ion-col>
@@ -35,11 +35,27 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeSm="10" sizeMd="8" sizeLg="6">
-                        <div class="element-container" v-if="rebostId">
-                            <div v-for="element in orderedElements" :key="element._id">
+                        <div class="element-container" v-if="rebostId && orderedElements != null">
+                            <div v-for="element in orderedElements" :key="element._id" v-if="orderedElements.length > 0">
                                 <cardElement :rebostId="rebostId" :element="element" @deleteElement="fillRebost"
                                     @updateElement="showUpdateModal"></cardElement>
                             </div>
+                            <div v-else>
+                                <p class="ion-text-center">No s'ha trobat cap element al rebost. Pots afegir un element
+                                    manualment amb el botó del llapis <ion-icon :icon="pencil"></ion-icon> que veuras en
+                                    premer el botó amb la icona <ion-icon :icon="add"></ion-icon>. </p>
+                                <p class="ion-text-center">Podras afegir també elements de forma automàtica prement a la
+                                    icona <ion-icon :icon="camera"></ion-icon> i fent la fotografia a la llista
+                                    d'elements d'un ticket de compra! </p>
+                            </div>
+                        </div>
+                        <div class="ion-text-center" v-else>
+                            <p class="ion-text-center">No s'ha trobat cap element al rebost. Pots afegir un element
+                                manualment amb el botó del llapis <ion-icon :icon="pencil"></ion-icon> que veuras en
+                                premer el botó amb la icona <ion-icon :icon="add"></ion-icon>. </p>
+                            <p class="ion-text-center">Podras afegir també elements de forma automàtica prement a la
+                                icona <ion-icon :icon="camera"></ion-icon> i fent la fotografia a la llista d'elements
+                                d'un ticket de compra! </p>
                         </div>
                     </ion-col>
                     <ion-col>
@@ -120,6 +136,7 @@ import orderBy from 'lodash/orderBy'
 
 const ordenarPer = ref("aliment.nom")
 const ordenarAsc = ref(true)
+const toogleLabel = computed(() => ordenarAsc.value ? "Ordre (asc):" : "Ordre (desc):")
 const { takePhoto, photos, lastPhoto } = usePhotoGallery();
 const { loggedIn } = useLoginStore();
 const { getAllNoms } = storeToRefs(useAlimentStore())

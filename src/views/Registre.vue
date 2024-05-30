@@ -2,11 +2,15 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="cancel()">Cancel</ion-button>
+                <ion-button color="secondary" @click="cancel()">
+                    <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                </ion-button>
             </ion-buttons>
             <ion-title class="ion-text-center">Registre Usuari</ion-title>
             <ion-buttons slot="end">
-                <ion-button @click="confirm">Confirm</ion-button>
+                <ion-button color="tertiary" @click="confirm">
+                    <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
+                </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
@@ -136,9 +140,9 @@
 
 </template>
 <script setup lang="ts">
-import { IonHeader, IonContent, IonPage, IonToolbar, IonGrid, IonRow, IonCol, IonList, IonItem, IonButtons, IonTitle, IonInput, IonButton, alertController, modalController } from '@ionic/vue';
+import { IonHeader,IonIcon, IonContent, IonPage, IonToolbar, IonGrid, IonRow, IonCol, IonList, IonItem, IonButtons, IonTitle, IonInput, IonButton, alertController, modalController } from '@ionic/vue';
 import { reactive, computed, ref } from 'vue';
-
+import { checkmark,close } from 'ionicons/icons';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, sameAs, maxLength, numeric } from '@vuelidate/validators'
 import ErrorMessage from '../components/ErrorMessage.vue';

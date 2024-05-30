@@ -48,7 +48,7 @@ const router = useIonRouter()
 const alertComprar = async () => {
     let alert = await alertController.create({
         header: `Vols comprar x${ceil(quantitat.value)} aquesta oferta per ${props.oferta.preu * ceil(quantitat.value)}€?`,
-        message: "Seras redireccionat a la pasarela de pagament.",
+        message: "Seras redirigit a la passarel·la de pagament.",
         buttons: [{
             text: "Si",
             handler: () => {

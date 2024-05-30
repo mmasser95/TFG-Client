@@ -2,11 +2,15 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="cancel()">Cancel</ion-button>
+                <ion-button color="secondary" @click="cancel()">
+                    <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                </ion-button>
             </ion-buttons>
             <ion-title class="ion-text-center">Registre establiment</ion-title>
             <ion-buttons slot="end">
-                <ion-button @click="confirm()">Confirmar</ion-button>
+                <ion-button color="tertiary" @click="confirm()">
+                    <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
+                </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
@@ -199,15 +203,18 @@
                                 <ion-col size="12" sizeXl="4">
                                     <div class="input-container">
                                         <ion-item>
-                                            <ion-select label="Tipus Establiment" :label-placement="labelPlacement" v-model="state.tipus">
-                                                <ion-select-option disabled> Seleccionar tipus d'establiment</ion-select-option>
+                                            <ion-select label="Tipus Establiment" :label-placement="labelPlacement"
+                                                v-model="state.tipus">
+                                                <ion-select-option disabled> Seleccionar tipus
+                                                    d'establiment</ion-select-option>
                                                 <ion-select-option value="restaurant">Restaurant</ion-select-option>
                                                 <ion-select-option value="supermercat">Supermercat</ion-select-option>
                                                 <ion-select-option value="fleca">Fleca</ion-select-option>
                                                 <ion-select-option value="peixateria">Peixateria</ion-select-option>
                                                 <ion-select-option value="carnisseria">Carnisseria</ion-select-option>
-                                                <ion-select-option value="fruiteria_verduleria">Fruita Verdura</ion-select-option>
-                                             </ion-select>
+                                                <ion-select-option value="fruiteria_verduleria">Fruita
+                                                    Verdura</ion-select-option>
+                                            </ion-select>
                                         </ion-item>
                                     </div>
                                 </ion-col>
@@ -221,7 +228,8 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonLabel, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent,IonSelect,IonSelectOption, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, alertController, IonTextarea } from '@ionic/vue';
+import { IonLabel, IonIcon, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonItem, IonInput, modalController, alertController, IonTextarea } from '@ionic/vue';
+import { checkmark, close } from 'ionicons/icons';
 import { useVuelidate } from '@vuelidate/core'
 import { minLength, required, email, sameAs, minValue, numeric, maxLength } from '@vuelidate/validators';
 import { reactive, computed } from 'vue';
@@ -304,8 +312,8 @@ const confirm = async () => {
     let valid = await v$.value.$validate()
     try {
         let coords = await getCoordinates(state.direccio.carrer, state.direccio.numero, state.direccio.poblacio, state.direccio.provincia, state.direccio.CP)
-        let body=state
-        body.direccio=JSON.stringify(body.direccio)
+        let body = state
+        body.direccio = JSON.stringify(body.direccio)
         if (!coords) presentAlert("L'adreça podria tenir algun error ja que el sistema no en detecta les coordenades")
         if (valid && coords) {
             modalController.dismiss({ ...body, ...coords, horari: JSON.stringify(parseHorari(state.horariString)) }, 'confirm')

@@ -3,7 +3,7 @@
         <ion-toolbar>
             <ion-title class="ion-text-center">Filtres</ion-title>
             <ion-buttons slot="end">
-                <ion-button color="primary" @click="confirm">
+                <ion-button color="tertiary" @click="confirm">
                     <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
                 </ion-button>
             </ion-buttons>
@@ -17,7 +17,7 @@
             <ion-row>
                 <ion-col></ion-col>
                 <ion-col size="8">
-                    <ion-range @ion-change="preuChange" :min="1" :max="50" :model-value="preu"
+                    <ion-range @ion-change="preuChange" :min="0" :max="50" :model-value="preu"
                         :label-placement="labelPlacement" :label="`Preu ${preu.lower} € - ${preu.upper} €`"
                         :dual-knobs="true" :pin="true" :pin-formatter="pinFormatterPreu"></ion-range>
                 </ion-col>

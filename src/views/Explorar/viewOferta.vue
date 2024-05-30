@@ -66,13 +66,12 @@ const labels = {
     descripcio: "Descripcio",
     preu: "Preu",
     quantitatDisponible: "Quantitat disponible",
-    categoria: "Categoria"
 }
 
 const alertComprar = async () => {
     let alert = await alertController.create({
         header: `Vols comprar x${ceil(quantitat.value)} aquesta oferta per ${props.oferta.preu * ceil(quantitat.value)}€?`,
-        message: "Seras redireccionat a la pasarela de pagament.",
+        message: "Seràs redirigit a la passarel·la de pagament.",
         buttons: [{
             text: "Si",
             handler: () => {

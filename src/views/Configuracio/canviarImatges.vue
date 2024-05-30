@@ -2,13 +2,15 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button color="tertiary" @click="cancel"><ion-icon :icon="close"
-                        slot="icon-only"></ion-icon></ion-button>
+                <ion-button color="secondary" @click="cancel"><ion-icon :icon="close"
+                        slot="icon-only"></ion-icon>
+                    </ion-button>
             </ion-buttons>
             <ion-title class="ion-text-center">Canviar Foto perfil</ion-title>
             <ion-buttons slot="end">
-                <ion-button color="primary" @click="confirm">
-                    <ion-icon :icon="checkmark" slot="icon-only"></ion-icon></ion-button>
+                <ion-button color="tertiary" @click="confirm">
+                    <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
+                </ion-button>
             </ion-buttons>
         </ion-toolbar>
 

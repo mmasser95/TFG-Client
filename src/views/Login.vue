@@ -5,7 +5,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <img src="/logo.PNG?url" alt="Logo">
+            <img src="/logo.PNG?url" alt="Logo" id="logo">
             <ion-text v-if="loginError" color="danger">{{ loginError }}</ion-text>
           </ion-col>
           <ion-col></ion-col>
@@ -23,7 +23,7 @@
                   <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
                     message="El correu és obligatori" />
                   <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
-                    message="El correu electrònic no és valid" />
+                    message="El correu electrònic no és vàlid" />
                 </ion-col>
               </ion-row>
               <ion-row>
@@ -63,14 +63,15 @@
         <ion-row>
           <ion-col>
             <p class="ion-text-center">
-              Si no tens compte, segueix <a @click="operModalRegistre">link</a>
+              Si no tens compte de Google, i vols registrar-te com a client, segueix el següent <a 
+                @click="operModalRegistre">enllaç</a>
             </p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="ion-text-center">Si vols colaborar com a establiment <a
-                @click="operModalRegistreEstabliment">link</a></p>
+            <p class="ion-text-center">Si vols col·laborar com a establiment, segueix el següent <a 
+                @click="operModalRegistreEstabliment">enllaç</a></p>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -287,5 +288,10 @@ onMounted(async () => {
 
 #googleBtn {
   max-width: 200px
+}
+
+#logo {
+  margin-top: 75px;
+  margin-bottom: 50px;
 }
 </style>

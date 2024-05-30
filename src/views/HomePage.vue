@@ -20,13 +20,14 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-            <swiper :slides-per-view="1" :space-between="10" :freeMode="true" :navigation="true"
+            <swiper v-if="establiments!=null" :slides-per-view="1" :space-between="10" :freeMode="true" :navigation="true"
               :pagination="{ clickable: true }">
-              <swiper-slide v-if="establiments"
+              <swiper-slide v-if="establiments.length>0"
                v-for="(establiment, k) in establiments" 
               :key="establiment._id">
                 <myCard :establiment="establiment" />
               </swiper-slide>
+              <p class="ion-text-center" v-else>No es troba cap establiment a prop, utilitza el <router-link to="/tabs/explorar">mapa</router-link> per explorar establiments.</p>
             </swiper>
           </ion-col>
           <ion-col></ion-col>

@@ -51,9 +51,11 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10" v-show="!pestanyaMapa">
-                        <myCard v-for="establiment in establiments" 
-                        :key="establiment._id" 
-                        :establiment="establiment" />
+                        <div v-if="establiments != null">
+                            <myCard v-for="establiment in establiments" v-if="establiments.length>0" :key="establiment._id"
+                                :establiment="establiment" />
+                            <p v-else class="ion-text-center">No es troba cap establiment en aquesta àrea amb els filtres introduïts. Canvia l'àrea de cerca del mapa o modifica els filtres.</p>
+                        </div>
                     </ion-col>
                     <ion-col> </ion-col>
                 </ion-row>

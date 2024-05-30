@@ -2,6 +2,7 @@
     <ion-page>
         <ion-header>
             <ion-toolbar>
+                <!--Botons i barra superior-->
                 <ion-buttons slot="start">
                     <ion-button @click="cancel()" color="secondary">
                         <ion-icon :icon="close" slot="icon-only"></ion-icon>
@@ -9,7 +10,7 @@
                 </ion-buttons>
                 <ion-title class="ion-text-center">Configurar perfil</ion-title>
                 <ion-buttons slot="end">
-                    <ion-button @click="confirm()" color="primary">
+                    <ion-button @click="confirm()" color="tertiary">
                         <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
                     </ion-button>
                 </ion-buttons>
@@ -19,6 +20,7 @@
             <ion-grid>
                 <ion-row>
                     <ion-col>
+                        <!-- Formulari en cas que l'usuari sigui un client-->
                         <form v-if="userType == 'client'" @submit.prevent="confirm()">
                             <ion-row>
                                 <ion-col>
@@ -29,8 +31,8 @@
                                         </ion-item>
                                         <ErrorMessage v-if="v$.nom.$error && v$.nom.required.$invalid"
                                             message="Aquest camp és obligatori" />
-                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
-                                            message="El correu electrònic no és valid" />
+                                        <ErrorMessage v-if="v$.nom.$error && v$.nom.minLength.$invalid"
+                                            message="Aquest camp ha de tenir com a mínim 3 caràcters" />
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -42,14 +44,14 @@
                                                 v-model="stateUser.cognoms"
                                                 :label-placement="labelPlacement"></ion-input>
                                         </ion-item>
-                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
+                                        <ErrorMessage v-if="v$.cognoms.$error && v$.cognoms.required.$invalid"
                                             message="Aquest camp és obligatori" />
-                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
-                                            message="El correu electrònic no és valid" />
+                                        <ErrorMessage v-if="v$.cognoms.$error && v$.cognoms.email.$invalid"
+                                            message="Aquest camp ha de tenir com a mínim 3 caràcters." />
                                     </div>
                                 </ion-col>
                             </ion-row>
-                            <ion-row>
+                            <!--<ion-row>
                                 <ion-col>
                                     <div class="input-container">
                                         <ion-item>
@@ -63,7 +65,7 @@
                                             message="El correu electrònic no és valid" />
                                     </div>
                                 </ion-col>
-                            </ion-row>
+                            </ion-row>-->
                             <ion-row>
                                 <ion-col>
                                     <div class="input-container">
@@ -98,15 +100,19 @@
                             </ion-row>
                             <ion-button class="ion-hide" expand="block" type="submit">Submit</ion-button>
                         </form>
+                        <!--Formulari en cas que l'usuari sigui un establiment-->
                         <form @submit.prevent="confirm()" v-if="userType == 'establiment'">
                             <ion-row>
                                 <ion-col>
                                     <div class="input-container">
                                         <ion-item>
-                                            <ion-input label="Nom" :label-placement="labelPlacement" @ion-blur=""
-                                                v-model="stateEstabliment.nom"></ion-input>
+                                            <ion-input label="Nom" :label-placement="labelPlacement"
+                                                @ion-blur="v$.nom.$touch" v-model="stateEstabliment.nom"></ion-input>
                                         </ion-item>
-                                        <ErrorMessage></ErrorMessage>
+                                        <ErrorMessage v-if="v$.nom.$error && v$.nom.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.nom.$error && v$.nom.minLength.$invalid"
+                                            message="Aquest camp no compleix amb la llargada mínima (3 caràcters)" />
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -115,31 +121,45 @@
                                     <div class="input-container">
                                         <ion-item>
                                             <ion-textarea label="Descripció" :label-placement="labelPlacement"
-                                                @ion-blur="" v-model="stateEstabliment.descripcio"></ion-textarea>
+                                                @ion-blur="v$.descripcio.$touch"
+                                                v-model="stateEstabliment.descripcio"></ion-textarea>
                                         </ion-item>
-                                        <ErrorMessage></ErrorMessage>
+                                        <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.descripcio.$error && v$.descripcio.minLength.$invalid"
+                                            message="Aquest camp no compleix amb la llargada mínima (3 caràcters)" />
                                     </div>
                                 </ion-col>
                             </ion-row>
-                            <ion-row>
+                            <!--<ion-row>
                                 <ion-col>
                                     <div class="input-container">
                                         <ion-item>
-                                            <ion-input label="Correu" :label-placement="labelPlacement" @ion-blur=""
+                                            <ion-input label="Correu" :label-placement="labelPlacement"
+                                                @ion-blur="v$.correu.$touch"
                                                 v-model="stateEstabliment.correu"></ion-input>
                                         </ion-item>
-                                        <ErrorMessage></ErrorMessage>
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.correu.$error && v$.correu.email.$invalid"
+                                            message="El correu introduït no és vàlid." />
                                     </div>
                                 </ion-col>
-                            </ion-row>
+                            </ion-row>-->
                             <ion-row>
                                 <ion-col>
                                     <div class="input-container">
                                         <ion-item>
-                                            <ion-input label="Telèfon" :label-placement="labelPlacement" @ion-blur=""
-                                                v-model="stateEstabliment.telf"></ion-input>
+                                            <ion-input label="Telèfon" :label-placement="labelPlacement"
+                                                @ion-blur="v$.telf.$touch" v-model="stateEstabliment.telf"></ion-input>
                                         </ion-item>
-                                        <ErrorMessage></ErrorMessage>
+                                        <ErrorMessage v-if="v$.telf.$error && v$.telf.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage v-if="v$.telf.$error && v$.telf.numeric.$invalid"
+                                            message="Aquest camp ha de contenir únicament números. Ni prefixes ni espais" />
+                                        <ErrorMessage
+                                            v-if="v$.telf.$error && (v$.telf.minLength.$invalid || v$.telf.maxLength.$invalid)"
+                                            message="Aquest camp ha de contenir 5 numeros. " />
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -148,10 +168,15 @@
                                 <ion-col>
                                     <div class="input-container">
                                         <ion-item>
-                                            <ion-input label="Horari" :label-placement="labelPlacement" @ion-blur=""
+                                            <ion-input label="Horari" :label-placement="labelPlacement"
+                                                @ion-blur="v$.horari.$touch"
                                                 v-model="stateEstabliment.horari"></ion-input>
                                         </ion-item>
-                                        <ErrorMessage></ErrorMessage>
+                                        <ErrorMessage v-if="v$.horari.$error && v$.horari.required.$invalid"
+                                            message="Aquest camp és obligatori" />
+                                        <ErrorMessage
+                                            v-if="v$.horari.$error && v$.horari.customHorariValidator.$invalid"
+                                            message="Has de posar l'horari amb el format HH:MM-HH:MM. Pots posar més d'un interval separant per comes HH:MM-HH:MM,HH:MM-HH:MM" />
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -160,15 +185,18 @@
                                     <div class="input-container">
                                         <ion-item>
                                             <ion-select label="Tipus d'establiment" :label-placement="labelPlacement"
-                                                @ion-blur="" v-model="stateEstabliment.tipus">
+                                                @ion-blur="v$.telf.$touch" v-model="stateEstabliment.tipus">
                                                 <ion-select-option value="restaurant">Restaurant</ion-select-option>
                                                 <ion-select-option value="supermercat">Supermercat</ion-select-option>
                                                 <ion-select-option value="fleca">Fleca</ion-select-option>
                                                 <ion-select-option value="peixateria">Peixateria</ion-select-option>
                                                 <ion-select-option value="carnisseria">Carnisseria</ion-select-option>
-                                                <ion-select-option valuie="fruiteria_verduleria">Fruita/Verdura</ion-select-option>
+                                                <ion-select-option
+                                                    valuie="fruiteria_verduleria">Fruita/Verdura</ion-select-option>
                                             </ion-select>
                                         </ion-item>
+                                        <ErrorMessage v-if="v$.nom.$error && v$.nom.required.$invalid"
+                                            message="Aquest camp és obligatori" />
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -252,8 +280,8 @@
     </ion-page>
 </template>
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonContent, IonToolbar, IonButtons, IonButton, IonTitle, IonGrid, IonRow, IonCol, modalController, IonList, IonInput, IonItem, IonTextarea, IonSelect, IonSelectOption,IonIcon } from '@ionic/vue';
-import { checkmark,close } from 'ionicons/icons';
+import { IonPage, IonHeader, IonContent, IonToolbar, IonButtons, IonButton, IonTitle, IonGrid, IonRow, IonCol, modalController, IonList, IonInput, IonItem, IonTextarea, IonSelect, IonSelectOption, IonIcon } from '@ionic/vue';
+import { checkmark, close } from 'ionicons/icons';
 import { reactive, onMounted } from 'vue';
 
 import { useVuelidate } from '@vuelidate/core'
@@ -275,7 +303,7 @@ const labelPlacement = "floating"
 const stateUser = reactive({
     nom: '',
     cognoms: '',
-    correu: '',
+    //correu: '',
     telf: '',
     data_naixement: '',
 })
@@ -283,7 +311,7 @@ const stateUser = reactive({
 const rulesUser = {
     nom: { required, minLength: minLength(3) },
     cognoms: { required, minLength: minLength(3) },
-    correu: { required, email },
+    //correu: { required, email },
     telf: { required, minLength: minLength(9), maxLength: maxLength(9), numeric },
     data_naixement: { required },
 }
@@ -294,7 +322,7 @@ const customHorariValidator = (value: string) => {
 const stateEstabliment = reactive({
     nom: '',
     descripcio: '',
-    correu: '',
+    //correu: '',
     telf: '',
     url_imatge: '',
     url_fondo: '',
@@ -311,8 +339,8 @@ const stateEstabliment = reactive({
 
 const rulesEstabliment = {
     nom: { required, minLength: minLength(3) },
-    descripcio: { required, minLength: minLength(3) },
-    correu: { required, email },
+    descripcio: { required, minLength: minLength(10) },
+    //correu: { required, email },
     telf: { required, minLength: minLength(9), maxLength: maxLength(9), numeric },
     horari: { required, customHorariValidator },
     tipus: { required },
@@ -325,9 +353,9 @@ const rulesEstabliment = {
     }
 }
 
-let v$ = userType.value == 'client' 
-? useVuelidate(rulesUser, stateUser) 
-: useVuelidate(rulesEstabliment, stateEstabliment);
+let v$ = userType.value == 'client'
+    ? useVuelidate(rulesUser, stateUser)
+    : useVuelidate(rulesEstabliment, stateEstabliment);
 
 const fill = () => {
     getPerfil((err: any, data: any) => {
@@ -335,13 +363,11 @@ const fill = () => {
         if (userType.value == 'client') {
             stateUser.nom = data.perfil.nom
             stateUser.cognoms = data.perfil.cognoms
-            stateUser.correu = data.perfil.correu
             stateUser.data_naixement = format(data.perfil.data_naixement, 'yyyy-MM-dd')
             stateUser.telf = data.perfil.telf
         } else {
             stateEstabliment.nom = data.perfil.nom
             stateEstabliment.descripcio = data.perfil.descripcio
-            stateEstabliment.correu = data.perfil.correu
             stateEstabliment.telf = data.perfil.telf
             stateEstabliment.url_imatge = data.perfil.url_imatge
             stateEstabliment.url_fondo = data.perfil.url_fondo
@@ -383,7 +409,7 @@ const confirmEstabliment = async () => {
             alert.present()
         })
 
-    } catch (err:any) {
+    } catch (err: any) {
         if (err.message == "COORDENADES") {
             let alert = await showAlert("L'adreça podria contenir un error ja que el sistema no aconsegueix extrere'n les coordenades")
             alert.present()
@@ -393,7 +419,7 @@ const confirmEstabliment = async () => {
 }
 
 const parseHorari = (horariList: any) => {
-    return horariList.map((el:any) => `${el.inici}-${el.final}`).join(",")
+    return horariList.map((el: any) => `${el.inici}-${el.final}`).join(",")
 }
 const formatHorari = (horariString: any) => {
     let res: Object[] = []

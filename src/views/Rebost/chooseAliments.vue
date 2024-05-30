@@ -10,7 +10,7 @@
                 <ion-icon color="primary" @click="onboardingElement?.start()" :icon="informationCircle"></ion-icon>
             </ion-title>
             <ion-buttons slot="end">
-                <ion-button @click="confirm" color="primary">
+                <ion-button @click="confirm" color="tertiary">
                     <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
                 </ion-button>
             </ion-buttons>

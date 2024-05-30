@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 export const useFiltresStore = defineStore('filtres', () => {
   const preu = reactive({
     lower: 0,
-    upper: 10,
+    upper: 25,
   });
   const horari = reactive({
     lower: 24,

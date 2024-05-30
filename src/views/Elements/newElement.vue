@@ -9,7 +9,7 @@
             <ion-title v-if="element" class="ion-text-center">Editar element</ion-title>
             <ion-buttons slot="end">
                 
-                <ion-button color="primary" @click="confirm">
+                <ion-button color="tertiary" @click="confirm">
                     <ion-icon :icon="checkmark" slot="icon-only"></ion-icon>
                 </ion-button>
             </ion-buttons>

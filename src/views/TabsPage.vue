@@ -87,6 +87,11 @@ const tabsUser = ref([{
   icon: cog,
   label: 'Config.',
   id: "config"
+}, {
+  tabName: 'tab7',
+  hrf: "/tabs/aliments",
+  icon: fastFood,
+  label: "Afegir aliments"
 }])
 
 </script>

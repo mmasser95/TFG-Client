@@ -23,11 +23,13 @@
                             <div class="container-img-fondo">
                                 <favButton class="fav" :establimentId="establiment._id"></favButton>
                                 <img v-if="establiment.url_fondo" class="img_fondo"
-                                    :src="`https://app.flyfood.online/${establiment.url_fondo}`" :alt="`Imatge del fons del negoci ${establiment.nom}`"/>
+                                    :src="`https://app.flyfood.online/${establiment.url_fondo}`"
+                                    :alt="`Imatge del fons del negoci ${establiment.nom}`" />
                                 <img v-else class="img_fondo" :alt="`Imatge del fons del negoci ${establiment.nom}`"
                                     src="https://cdn-prod.medicalnewstoday.com/content/images/articles/325/325253/assortment-of-fruits.jpg" />
                                 <ion-thumbnail class="img_perfil">
-                                    <img v-if="establiment.url_imatge" :alt="`Imatge del logotip del negoci ${establiment.nom}`"
+                                    <img v-if="establiment.url_imatge"
+                                        :alt="`Imatge del logotip del negoci ${establiment.nom}`"
                                         :src="`https://app.flyfood.online/${establiment.url_imatge}`">
                                     <img v-else :alt="`Imatge del logotip del negoci ${establiment.nom}`"
                                         src="https://ionicframework.com/docs/img/demos/card-media.png" />
@@ -55,7 +57,7 @@
                                         </div>
                                     </ion-badge>
                                 </div>
-                                <div v-else-if="label=='Tipus'">
+                                <div v-else-if="label == 'Tipus'">
                                     <badgeTipus :tipus="establiment[k]"></badgeTipus>
                                 </div>
                                 <div v-else>
@@ -94,9 +96,17 @@
                 <ion-row>
                     <ion-col></ion-col>
                     <ion-col size="12" sizeXl="4" sizeLg="6" sizeMd="8" sizeSm="10">
-
-                        <cardOferta v-for="oferta in ofertesActives" :key="oferta._id" :establimentId="idd"
-                            :oferta="oferta"></cardOferta>
+                        <div v-if="ofertesActives != null">
+                            <cardOferta v-if="ofertesActives.length > 0" v-for="oferta in ofertesActives"
+                                :key="oferta._id" :establimentId="idd" :oferta="oferta"></cardOferta>
+                            <div v-else>
+                                <p class="ion-text-center">Aquest establiment actualment no disposa d'ofertes actives.
+                                </p>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p class="ion-text-center">Aquest establiment actualment no disposa d'ofertes actives.</p>
+                        </div>
                     </ion-col>
                     <ion-col></ion-col>
                 </ion-row>
@@ -224,7 +234,7 @@ onMounted(async () => {
 </script>
 <style scoped>
 .telfBadge {
-    
+
     display: flex;
     align-items: center;
 }
@@ -257,6 +267,7 @@ ion-thumbnail {
     --size: 75px;
     --border-radius: 10px;
 }
+
 .fav {
     position: absolute;
     top: 25px;

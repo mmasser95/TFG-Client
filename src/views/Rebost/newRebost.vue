@@ -2,12 +2,17 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="cancel()">Cancel</ion-button>
+                <ion-button color="secondary" @click="cancel()">
+                    <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                </ion-button>
             </ion-buttons>
+            <!-- Titol que canvia si s'edita un rebost o si es crea-->
             <ion-title v-if="props.update == ''" class="ion-text-center">Nou Rebost</ion-title>
             <ion-title v-if="props.update != ''" class="ion-text-center">Editar Rebost</ion-title>
             <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirm()">Confirma</ion-button>
+                <ion-button color="tertiary" :strong="true" @click="confirm()">
+                    <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
+                </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
@@ -15,7 +20,8 @@
         <ion-grid>
             <ion-row>
                 <ion-col>
-                    <form action="" @submit.prevent="confirm">
+                    <!-- Formulari de creació del rebost -->
+                    <form @submit.prevent="confirm">
                         <ion-row>
                             <ion-col>
                                 <div class="input-container">
@@ -40,22 +46,25 @@
     </ion-content>
 </template>
 <script setup lang="ts">
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonModal, IonButtons, IonItem, IonInput, modalController, IonGrid, IonRow, IonCol } from '@ionic/vue';
+/** Llibreries necessaries */
+import { IonHeader, IonIcon, IonToolbar, IonTitle, IonContent, IonButton, IonModal, IonButtons, IonItem, IonInput, modalController, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { ref, reactive, computed, onMounted, defineProps } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
+import { checkmark, close } from 'ionicons/icons';
 import { required, maxLength, minLength } from '@vuelidate/validators'
-import { storeToRefs } from 'pinia'
-import { useLoginStore } from '../../store/loginStore';
 import { getRebost, crearRebost, updateRebost } from '../../APIService/rebosts'
 import ErrorMessage from '@/components/ErrorMessage.vue'
+
+/** Es defineixen les propietats del component */
 const props = defineProps({
     update: String
 })
-
+/** Es defineix l'estructura de dades reactiva que s'enviarà al servidor */
 const state = reactive({
     nom: ''
 });
 
+/** Es defineixen les regles de validació */
 const rules = {
     nom: {
         required,
@@ -63,14 +72,15 @@ const rules = {
         maxLength: maxLength(20)
     }
 }
-
+/** S'inicialitza la validació */
 const v$ = useVuelidate(rules, state);
-
+/** Funció per a amagar el modal */
 const cancel = () => modalController.dismiss(null, 'cancel');
+/** Funció que envia la petició a la API amb les dades validades*/
 const confirm = async () => {
     const valid = await v$.value.$validate();
     if (valid) {
-        if (props.update != undefined&&props.update!="") {
+        if (props.update != undefined && props.update != "") {
             updateRebost(props.update, { nom: state.nom }, (err: any, data: any) => {
                 if (err) return
                 modalController.dismiss(null, 'confirm');

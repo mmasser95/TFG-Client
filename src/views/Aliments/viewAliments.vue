@@ -99,7 +99,7 @@ const openModalCreate = async () => {
     modal.present()
     const { data, role } = await modal.onWillDismiss()
     if (role == "confirm")
-        fillAliments()
+        await fillAliments()
 
 }
 const openModalUpdate = async (aliment: any) => {
@@ -112,7 +112,7 @@ const openModalUpdate = async (aliment: any) => {
     modal.present()
     const { data, role } = await modal.onWillDismiss()
     if (role == "confirm")
-        fillAliments()
+        await fillAliments()
 
 }
 
